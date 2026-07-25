@@ -66,8 +66,8 @@ var HEADERS = ['Joined At','Position','Name','Email','Exam Target','Source','Cod
 
 // Links used in the EARNWINGS welcome-email template.
 var INSTAGRAM_URL = 'https://www.instagram.com/flywithearnwings/';
-var SITE_URL      = 'https://earnwings.com';
-var LOGO_URL      = 'https://earnwings.com/assets/logo-full.png'; // header logo (alt text falls back to "EARNWINGS")
+var SITE_URL      = 'https://earnwings.org';
+var LOGO_URL      = 'https://earnwings.org/assets/logo-full.png'; // header logo (alt text falls back to "EARNWINGS")
 
 // ───────────────────────── ENTRY POINTS ─────────────────────────
 
