@@ -115,7 +115,7 @@ export function HeroSection() {
               className="mt-[0.18em] flex justify-center lg:justify-start"
               aria-hidden
             >
-              <SplitFlapWord text="Wings" startDelay={1150} start={revealed} />
+              <SplitFlapWord text="Wings" startDelay={1400} start={revealed} />
             </div>
           </motion.h1>
 
@@ -503,7 +503,7 @@ function SplitFlapWord({
     const timers: ReturnType<typeof setTimeout>[] = [];
     slots.forEach((finalCh, i) => {
       if (finalCh === " ") return;
-      const spins = 11 + i * 2; // a bit longer — later tiles keep spinning
+      const spins = 14 + i * 2; // longer — later tiles keep spinning
       const begin = window.setTimeout(() => {
         let count = 0;
         const iv = window.setInterval(() => {
@@ -527,9 +527,9 @@ function SplitFlapWord({
             n[i] = count;
             return n;
           });
-        }, 60);
+        }, 66);
         timers.push(iv as unknown as ReturnType<typeof setTimeout>);
-      }, startDelay + i * 95);
+      }, startDelay + i * 105);
       timers.push(begin);
     });
     return () => timers.forEach((t) => clearTimeout(t));

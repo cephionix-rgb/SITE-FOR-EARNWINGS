@@ -75,11 +75,28 @@ var LOGO_URL      = 'https://earnwings.org/assets/logo-full.png'; // header logo
 function doGet(e) {
   try {
     var action = (e && e.parameter && e.parameter.action) || 'stats';
-    if (action === 'status') return _json(_status(e.parameter.email, e.parameter.code));
+    if (action === 'status')   return _json(_status(e.parameter.email, e.parameter.code));
+    if (action === 'selftest') return _json(_selftest(e.parameter.to)); // ← open /exec?action=selftest&to=you@mail.com
     return _json(_stats());
   } catch (err) {
     return _json({ ok: false, error: String(err) });
   }
+}
+
+/**
+ * Live mail check THROUGH THE DEPLOYED WEB APP (not just the editor).
+ * Open in a browser:  <your /exec URL>?action=selftest&to=you@example.com
+ * It returns whether the deployment can actually send, the exact error if not,
+ * and the remaining Gmail quota — so "mail not sending" is never a mystery again.
+ */
+function _selftest(to) {
+  var quota = -1;
+  try { quota = MailApp.getRemainingDailyQuota(); } catch (_) {}
+  to = String(to || '').trim();
+  if (!to) { try { to = Session.getEffectiveUser().getEmail(); } catch (_) {} }
+  if (!to) return { ok: false, error: 'no_recipient — add &to=you@example.com', remainingQuota: quota };
+  var r = _sendWelcomeEmailSafe(to, 'Test Cadet', 0);
+  return { ok: r.sent, sent: r.sent, error: r.error, to: to, remainingQuota: quota };
 }
 
 /** POST: default = join the waitlist; { action:'redeem', email|code } = activate perks + start the 1-week clock. */
@@ -143,13 +160,35 @@ function _join(body) {
     phone, wouldPay
   ]);
 
-  // Fire off the branded thank-you email (never let a mail hiccup fail the join).
-  try { _sendWelcomeEmail(email, String(body.name || ''), position); } catch (_) {}
+  // Fire off the branded thank-you email. Never let a mail hiccup fail the join,
+  // but DO surface the result so failures are visible (not silently swallowed).
+  var mail = _sendWelcomeEmailSafe(email, String(body.name || ''), position);
 
   return {
     ok: true, position: position, code: code, perks: PERKS,
-    remaining: Math.max(0, CAPACITY - position), capacity: CAPACITY
+    remaining: Math.max(0, CAPACITY - position), capacity: CAPACITY,
+    emailSent: mail.sent, emailError: mail.error
   };
+}
+
+/**
+ * Sends the welcome email but NEVER throws — returns { sent, error } instead.
+ * If the deployment lacks the Gmail permission (the usual "mail not sending"
+ * cause) or the daily quota is spent, you get a clear reason back rather than
+ * a silent miss. Errors are also written to the Apps Script execution log.
+ */
+function _sendWelcomeEmailSafe(email, name, position) {
+  try {
+    if (MailApp.getRemainingDailyQuota() <= 0) {
+      Logger.log('MAIL SKIPPED: daily quota exhausted (to ' + email + ')');
+      return { sent: false, error: 'quota_exhausted' };
+    }
+    _sendWelcomeEmail(email, name, position);
+    return { sent: true, error: '' };
+  } catch (err) {
+    Logger.log('MAIL ERROR to ' + email + ': ' + err);
+    return { sent: false, error: String(err) };
+  }
 }
 
 /** The EARNWINGS branded thank-you email, sent to every new founder cadet. */
