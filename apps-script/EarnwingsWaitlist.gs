@@ -156,7 +156,7 @@ function _join(body) {
 function _sendWelcomeEmail(email, name, position) {
   var first = String(name || '').trim().split(' ')[0] || 'Cadet';
   var subject = 'Welcome aboard, ' + first + ' — you’re on the EARNWINGS founder waitlist ✈️';
-  var seat = position ? ('Founder cadet #' + position) : 'Founder cadet';
+  var seat = 'Founder cadet'; // no position number shown to the cadet
 
   var perkItems = [
     'Full app access for 1 week',
@@ -220,6 +220,18 @@ function _sendWelcomeEmail(email, name, position) {
     name: 'EARNWINGS',
     replyTo: 'cephionix@gmail.com'
   });
+}
+
+/**
+ * RUN THIS ONCE from the editor to fix "mail not sending".
+ * Pick `testEmail` in the function dropdown → Run → APPROVE the permission popup
+ * (that grant is the Gmail-send permission the web app was missing). You'll get a
+ * test email at TEST_TO — check inbox AND spam. After this, every signup emails.
+ */
+function testEmail() {
+  var TEST_TO = 'cephionix@gmail.com'; // ← change to any address you can check
+  _sendWelcomeEmail(TEST_TO, 'Test Cadet', 1);
+  Logger.log('Test welcome email sent to ' + TEST_TO + ' — check inbox & spam.');
 }
 
 /** The app calls this when a cadet redeems — flips them to active and starts the 7-day clock. */

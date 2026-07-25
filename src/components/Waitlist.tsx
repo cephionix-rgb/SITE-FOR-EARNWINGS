@@ -22,7 +22,6 @@ type Status = "idle" | "submitting" | "done" | "error";
 
 export function Waitlist() {
   const [status, setStatus] = useState<Status>("idle");
-  const [position, setPosition] = useState<number>(0);
   const [alreadyJoined, setAlreadyJoined] = useState(false);
   const [error, setError] = useState<string>("");
 
@@ -77,7 +76,6 @@ export function Waitlist() {
         if (!d.ok) {
           throw new Error(d.error === "invalid_email" ? "Please enter a valid email." : "Something went wrong.");
         }
-        setPosition(Number(d.position) || 0);
         setAlreadyJoined(!!d.alreadyJoined);
         // Remember who this cadet is so the "Cadet to Commander" quiz can upgrade their perks.
         try {
@@ -87,7 +85,6 @@ export function Waitlist() {
       } else {
         // Demo mode — no endpoint configured yet.
         await new Promise((r) => setTimeout(r, 900));
-        setPosition(42);
         setStatus("done");
       }
     } catch (err) {
@@ -122,14 +119,7 @@ export function Waitlist() {
               {alreadyJoined ? "You're already on the list ✈️" : "You're cleared for takeoff! ✈️"}
             </h3>
             <p className="mt-2" style={{ color: "#5F7499" }}>
-              {position > 0 ? (
-                <>
-                  You're founder cadet <b style={{ color: "#C9981F" }}>#{position}</b> — cleared for boarding. We'll
-                  email you the moment we open the doors.
-                </>
-              ) : (
-                <>You're on the list — we'll email your boarding call.</>
-              )}
+              You're cleared for boarding, founder cadet — we'll email you the moment we open the doors.
             </p>
 
             {/* Founder perks unlocked */}
