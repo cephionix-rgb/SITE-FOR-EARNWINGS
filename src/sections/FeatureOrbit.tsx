@@ -8,6 +8,7 @@ import {
 import { prefersReducedMotion } from "../lib/scroll";
 import { PhoneFrame } from "../components/DeviceFrame";
 import { inView, rise } from "../lib/motion";
+import { Link } from "../lib/router";
 
 /**
  * "Cockpit orbit" section: a large phone joined to the brand's gold streak ring,
@@ -226,6 +227,14 @@ export function FeatureOrbit() {
             Every tool, one home screen — <b style={{ color: "#1B3A7A" }}>tap or swipe</b> to
             preview each one live on the phone.
           </p>
+          <Link
+            to="/features#study"
+            className="btn-ghost mt-6 text-sm"
+            aria-label="Learn it once, remember it — see notes, summaries and flowcharts"
+          >
+            <BookOpen size={16} /> Learn it once, remember it — notes, summaries &amp; flowcharts
+            <ChevronRight size={16} />
+          </Link>
         </motion.div>
 
         {orbit ? (

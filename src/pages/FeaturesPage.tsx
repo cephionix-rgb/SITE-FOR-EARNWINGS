@@ -456,7 +456,7 @@ export function FeaturesPage() {
         </section>
 
         {/* Notes, summaries & flowcharts — interactive coverflow */}
-        <section className="mt-16">
+        <section id="study" className="mt-16 scroll-mt-24">
           <div className="text-center">
             <span className="eyebrow"><BookOpen size={14} /> Learn it once, remember it</span>
             <h2 className="mt-3 text-2xl font-black sm:text-3xl" style={{ color: "#0D1629" }}>Notes, summaries &amp; flowcharts</h2>
