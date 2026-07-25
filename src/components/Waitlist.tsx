@@ -198,7 +198,7 @@ export function Waitlist() {
                   min="1"
                   step="1"
                   inputMode="numeric"
-                  placeholder="Amount / month (e.g. 499)"
+                  placeholder="Amount / month"
                   className="w-full rounded-xl border py-3 pl-8 pr-4 outline-none focus:ring-2"
                   style={{ background: "#F0F5FF", borderColor: "rgba(27,58,122,0.12)", color: "#1B3A7A" }}
                 />
