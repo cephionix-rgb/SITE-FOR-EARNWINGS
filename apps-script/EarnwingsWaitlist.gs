@@ -162,7 +162,7 @@ function _join(body) {
 
   // Fire off the branded thank-you email. Never let a mail hiccup fail the join,
   // but DO surface the result so failures are visible (not silently swallowed).
-  var mail = _sendWelcomeEmailSafe(email, String(body.name || ''), position);
+  var mail = _sendWelcomeEmailSafe(email, String(body.name || ''), position, code);
 
   return {
     ok: true, position: position, code: code, perks: PERKS,
@@ -177,13 +177,13 @@ function _join(body) {
  * cause) or the daily quota is spent, you get a clear reason back rather than
  * a silent miss. Errors are also written to the Apps Script execution log.
  */
-function _sendWelcomeEmailSafe(email, name, position) {
+function _sendWelcomeEmailSafe(email, name, position, code) {
   try {
     if (MailApp.getRemainingDailyQuota() <= 0) {
       Logger.log('MAIL SKIPPED: daily quota exhausted (to ' + email + ')');
       return { sent: false, error: 'quota_exhausted' };
     }
-    _sendWelcomeEmail(email, name, position);
+    _sendWelcomeEmail(email, name, position, code);
     return { sent: true, error: '' };
   } catch (err) {
     Logger.log('MAIL ERROR to ' + email + ': ' + err);
@@ -192,10 +192,17 @@ function _sendWelcomeEmailSafe(email, name, position) {
 }
 
 /** The EARNWINGS branded thank-you email, sent to every new founder cadet. */
-function _sendWelcomeEmail(email, name, position) {
-  var first = String(name || '').trim().split(' ')[0] || 'Cadet';
-  var subject = 'Welcome aboard, ' + first + ' — you’re on the EARNWINGS founder waitlist ✈️';
-  var seat = 'Founder cadet'; // no position number shown to the cadet
+function _sendWelcomeEmail(email, name, position, code) {
+  var full      = String(name || '').trim();
+  var first     = full.split(' ')[0] || 'Cadet';
+  var passenger = full ? full : 'Future Captain';
+  var ref       = String(code || '').trim() || 'EW-FOUNDER';
+  var seat      = _seatFromCode(ref); // unique per cadet, derived from their boarding ref (not their waitlist position)
+  var subject   = first + ', your EARNWINGS boarding pass is confirmed ✈️';
+  var barcode   =
+    '<div style="font-family:\'Courier New\',monospace;font-size:26px;line-height:1;letter-spacing:1px;color:#0D1629;">' +
+    '&#9646;&#9647;&#9646;&#9646;&#9647;&#9646;&#9647;&#9647;&#9646;&#9647;&#9646;&#9646;&#9647;&#9646;&#9646;&#9647;&#9646;&#9647;&#9646;' +
+    '</div>';
 
   var perkItems = [
     'Full app access for 1 week',
@@ -214,48 +221,117 @@ function _sendWelcomeEmail(email, name, position) {
   var html =
   '<!doctype html><html><body style="margin:0;padding:0;background:#e9f1ff;">' +
     // hidden inbox-preview text
-    '<div style="display:none;max-height:0;overflow:hidden;opacity:0;">You’re cleared for takeoff — welcome to the EARNWINGS founder waitlist.</div>' +
+    '<div style="display:none;max-height:0;overflow:hidden;opacity:0;">' + _esc(first) + ', your founder seat is confirmed — welcome aboard EARNWINGS.</div>' +
     '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#e9f1ff;padding:28px 12px;font-family:Arial,Helvetica,sans-serif;">' +
       '<tr><td align="center">' +
-        '<table role="presentation" width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;background:#ffffff;border-radius:18px;overflow:hidden;box-shadow:0 20px 60px -30px rgba(13,36,80,0.5);">' +
-          // brand logo band
-          '<tr><td align="center" style="padding:22px 30px 14px;background:#ffffff;">' +
+        '<table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">' +
+
+          // logo
+          '<tr><td align="center" style="padding:4px 0 16px;">' +
             '<img src="' + LOGO_URL + '" alt="EARNWINGS" height="34" style="height:34px;display:inline-block;border:0;outline:none;text-decoration:none;">' +
           '</td></tr>' +
-          // navy hero band
-          '<tr><td style="background:linear-gradient(135deg,#0D2450 0%,#1B3A7A 100%);padding:26px 30px;text-align:center;">' +
-            '<div style="color:#F5D97A;font-size:11px;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;">&#9992; Founder waitlist &#183; confirmed</div>' +
-            '<div style="margin-top:10px;color:#ffffff;font-size:24px;font-weight:800;line-height:1.2;">You’re cleared for takeoff, ' + first + '!</div>' +
-            '<div style="margin-top:12px;display:inline-block;background:rgba(245,217,122,0.16);color:#F5D97A;font-size:12px;font-weight:700;padding:5px 14px;border-radius:999px;">' + seat + '</div>' +
+
+          // ===== THE BOARDING PASS =====
+          '<tr><td>' +
+            '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 22px 60px -30px rgba(13,36,80,0.55);">' +
+              // header strip
+              '<tr><td style="background:linear-gradient(135deg,#0D2450 0%,#1B3A7A 100%);padding:13px 22px;">' +
+                '<table role="presentation" width="100%"><tr>' +
+                  '<td align="left" style="color:#F5D97A;font-size:15px;font-weight:800;letter-spacing:0.5px;">&#9992;&#65039;&nbsp; EARNWINGS</td>' +
+                  '<td align="right" style="color:#cdd8ef;font-size:11px;font-weight:800;letter-spacing:2.5px;">BOARDING PASS</td>' +
+                '</tr></table>' +
+              '</td></tr>' +
+              // main + tear-off stub
+              '<tr><td>' +
+                '<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>' +
+                  // MAIN
+                  '<td valign="top" style="width:63%;padding:20px 22px;">' +
+                    '<div style="color:#9a7415;font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;">Passenger</div>' +
+                    '<div style="color:#0D1629;font-size:23px;font-weight:800;line-height:1.15;text-transform:uppercase;margin:3px 0 16px;">' + _esc(passenger) + '</div>' +
+                    // route: Ground School --✈-- Your Wings
+                    '<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>' +
+                      '<td valign="bottom" style="width:42%;">' +
+                        '<div style="color:#9aa9c4;font-size:9px;font-weight:800;letter-spacing:1.5px;">FROM</div>' +
+                        '<div style="color:#1B3A7A;font-size:15px;font-weight:800;">Ground School</div>' +
+                      '</td>' +
+                      '<td valign="bottom" align="center" style="width:16%;border-bottom:2px dotted #cbb06a;padding-bottom:5px;">' +
+                        '<span style="font-size:17px;color:#C9981F;">&#9992;&#65039;</span>' +
+                      '</td>' +
+                      '<td valign="bottom" align="right" style="width:42%;">' +
+                        '<div style="color:#9aa9c4;font-size:9px;font-weight:800;letter-spacing:1.5px;">TO</div>' +
+                        '<div style="color:#1B3A7A;font-size:15px;font-weight:800;">Your Wings</div>' +
+                      '</td>' +
+                    '</tr></table>' +
+                    // class / flight / status
+                    '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:16px;"><tr>' +
+                      '<td valign="top" style="width:34%;">' + _field('Class', 'Founder Cadet') + '</td>' +
+                      '<td valign="top" style="width:30%;">' + _field('Flight', 'EW-001') + '</td>' +
+                      '<td valign="top" style="width:36%;">' + _field('Status', 'Confirmed') + '</td>' +
+                    '</tr></table>' +
+                  '</td>' +
+                  // STUB
+                  '<td valign="top" align="center" style="width:37%;padding:20px 14px;background:#FFF8E6;border-left:2px dashed #E3CE93;">' +
+                    '<div style="color:#9a7415;font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;">Founder Cadet</div>' +
+                    '<div style="color:#0D1629;font-size:30px;font-weight:800;line-height:1;margin:8px 0 2px;">' + _esc(seat) + '</div>' +
+                    '<div style="color:#9aa9c4;font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;">Seat</div>' +
+                    '<div style="margin:14px 0 6px;">' + barcode + '</div>' +
+                    '<div style="color:#5f7499;font-size:10px;font-weight:700;letter-spacing:0.5px;">REF ' + _esc(ref) + '</div>' +
+                  '</td>' +
+                '</tr></table>' +
+              '</td></tr>' +
+            '</table>' +
           '</td></tr>' +
-          // body
-          '<tr><td style="padding:26px 30px 6px;">' +
-            '<p style="margin:0 0 16px;color:#40506e;font-size:15px;line-height:1.65;">Thank you for joining the <b style="color:#1B3A7A;">EARNWINGS founder waitlist</b>. You’ll be among the very first in the cockpit when we open the doors — with founder perks waiting for you:</p>' +
+
+          '<tr><td style="height:14px;line-height:14px;font-size:0;">&nbsp;</td></tr>' +
+
+          // ===== MESSAGE + PERKS =====
+          '<tr><td style="background:#ffffff;border-radius:16px;box-shadow:0 22px 60px -34px rgba(13,36,80,0.5);padding:24px 26px;">' +
+            '<div style="color:#0D1629;font-size:20px;font-weight:800;line-height:1.25;">Welcome aboard, ' + _esc(first) + '! &#9992;&#65039;</div>' +
+            '<p style="margin:10px 0 16px;color:#40506e;font-size:15px;line-height:1.65;">Your <b style="color:#1B3A7A;">founder seat</b> on EARNWINGS is confirmed. You&#8217;ll be among the very first in the cockpit when we open the doors &#8212; and these founder perks are already loaded onto your boarding pass:</p>' +
             '<div style="margin:0 0 20px;padding:16px 18px;background:#f5f8ff;border:1px solid #e4ecfb;border-radius:12px;">' +
-              '<div style="color:#9a7415;font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;">Your founder perks</div>' +
+              '<div style="color:#9a7415;font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;">Included with your seat</div>' +
               '<table role="presentation" width="100%" cellpadding="0" cellspacing="0">' + perkItems + '</table>' +
             '</div>' +
-            '<p style="margin:0 0 18px;color:#40506e;font-size:15px;line-height:1.65;">We’ll email your boarding call the moment your seat opens. Until then, follow the journey for sneak peeks:</p>' +
-            '<table role="presentation" cellpadding="0" cellspacing="0" width="100%"><tr><td align="center" style="padding:2px 0 24px;">' +
-              '<a href="' + INSTAGRAM_URL + '" style="display:inline-block;background:linear-gradient(135deg,#F5D97A,#C9981F);color:#3d2c00;text-decoration:none;font-weight:800;font-size:15px;padding:13px 28px;border-radius:999px;">Follow @flywithearnwings on Instagram</a>' +
+            '<table role="presentation" cellpadding="0" cellspacing="0" width="100%"><tr><td align="center" style="padding:2px 0 4px;">' +
+              '<a href="' + INSTAGRAM_URL + '" style="display:inline-block;background:linear-gradient(135deg,#F5D97A,#C9981F);color:#3d2c00;text-decoration:none;font-weight:800;font-size:15px;padding:13px 30px;border-radius:999px;">Follow the journey on Instagram</a>' +
             '</td></tr></table>' +
           '</td></tr>' +
+
           // footer
-          '<tr><td style="background:#0D2450;padding:20px 30px;text-align:center;color:#7690c0;font-size:12px;line-height:1.7;">' +
-            '<a href="' + SITE_URL + '" style="color:#F5D97A;text-decoration:none;font-weight:700;">earnwings.com</a>' +
+          '<tr><td style="padding:18px 10px 4px;text-align:center;color:#7690c0;font-size:12px;line-height:1.7;">' +
+            '<a href="' + SITE_URL + '" style="color:#1B3A7A;text-decoration:none;font-weight:700;">earnwings.org</a>' +
             '&nbsp;&nbsp;&#183;&nbsp;&nbsp;' +
-            '<a href="' + INSTAGRAM_URL + '" style="color:#F5D97A;text-decoration:none;font-weight:700;">Instagram</a>' +
-            '<div style="margin-top:8px;color:#5f79ad;">&#169; EARNWINGS &#183; Elevate your aviation journey &#183; Made for DGCA aspirants in India</div>' +
+            '<a href="' + INSTAGRAM_URL + '" style="color:#1B3A7A;text-decoration:none;font-weight:700;">@flywithearnwings</a>' +
+            '<div style="margin-top:8px;color:#8ea0c4;">&#169; EARNWINGS &#183; Elevate your aviation journey &#183; Made for DGCA aspirants in India</div>' +
           '</td></tr>' +
+
         '</table>' +
       '</td></tr>' +
     '</table>' +
   '</body></html>';
 
+  var text =
+    first + ', welcome aboard EARNWINGS!\n\n' +
+    'BOARDING PASS — Founder Cadet\n' +
+    'Passenger: ' + passenger + '\n' +
+    'Flight EW-001   From: Ground School   To: Your Wings   Seat ' + seat + '\n' +
+    'Boarding ref: ' + ref + '\n\n' +
+    'Included with your founder seat:\n' +
+    '- Full app access for 1 week\n' +
+    '- 5 RT practice sessions\n' +
+    '- First 5 chapters unlocked\n' +
+    '- 1 sample paper in every subject\n' +
+    '- MCQs for your first 5 chapters\n' +
+    '- 5 flight plans\n' +
+    '- 5 Ask-Captain doubts\n' +
+    '- 5 weight & balance calculations\n\n' +
+    'Follow the journey: ' + INSTAGRAM_URL + '\n' + SITE_URL;
+
   MailApp.sendEmail({
     to: email,
     subject: subject,
     htmlBody: html,
+    body: text,
     name: 'EARNWINGS',
     replyTo: 'cephionix@gmail.com'
   });
@@ -269,7 +345,7 @@ function _sendWelcomeEmail(email, name, position) {
  */
 function testEmail() {
   var TEST_TO = 'cephionix@gmail.com'; // ← change to any address you can check
-  _sendWelcomeEmail(TEST_TO, 'Test Cadet', 1);
+  _sendWelcomeEmail(TEST_TO, 'Arjun Mehta', 1, 'EW-TEST01');
   Logger.log('Test welcome email sent to ' + TEST_TO + ' — check inbox & spam.');
 }
 
@@ -375,6 +451,32 @@ function _find(email, code) {
 }
 
 function _perks(v) { try { return JSON.parse(v); } catch (_) { return PERKS; } }
+
+/** Minimal HTML-escape so a cadet's name can't break the email markup. */
+function _esc(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+/**
+ * A stable, unique-looking seat for the boarding pass, derived from the cadet's
+ * boarding ref (their EW-xxxx code). Same cadet always gets the same seat, but it
+ * reveals nothing about their real waitlist position. e.g. "27C", "8F".
+ */
+function _seatFromCode(code) {
+  var s = String(code || 'EW-FOUNDER');
+  var h = 0;
+  for (var i = 0; i < s.length; i++) { h = (h * 31 + s.charCodeAt(i)) >>> 0; }
+  var row = (h % 48) + 1;                    // rows 1..48
+  var letter = 'ABCDEF'.charAt((h >>> 6) % 6); // seats A..F
+  return row + letter;
+}
+
+/** A tiny "LABEL / value" block used inside the boarding pass. */
+function _field(label, value) {
+  return '<div style="color:#9aa9c4;font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;">' + label + '</div>' +
+         '<div style="color:#1B3A7A;font-size:14px;font-weight:800;margin-top:1px;">' + value + '</div>';
+}
 
 function _json(obj) {
   return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
