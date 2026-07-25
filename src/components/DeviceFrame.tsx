@@ -117,3 +117,151 @@ export function PhoneFrame({
     </div>
   );
 }
+
+/** A CSS MacBook-style laptop: a 16:10 screen lid over a silver hinge base. */
+export function LaptopFrame({
+  src,
+  alt,
+  width = 520,
+  className,
+}: {
+  src?: string;
+  alt?: string;
+  width?: number;
+  className?: string;
+}) {
+  const bezel = Math.round(width * 0.016);
+  const topBezel = Math.round(width * 0.03);
+  return (
+    <div className={className} style={{ width }}>
+      {/* screen lid */}
+      <div
+        style={{
+          width,
+          aspectRatio: "16 / 10.2",
+          borderRadius: Math.round(width * 0.028),
+          padding: bezel,
+          paddingTop: topBezel,
+          background: "linear-gradient(155deg, #2a3550 0%, #0d1629 55%, #1b2540 100%)",
+          boxShadow:
+            "0 34px 70px -30px rgba(13,22,41,0.6), inset 0 1px 2px rgba(255,255,255,0.22)",
+          position: "relative",
+        }}
+      >
+        {/* camera dot */}
+        <span
+          style={{
+            position: "absolute",
+            top: Math.round(topBezel * 0.32),
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: Math.max(3, Math.round(width * 0.008)),
+            height: Math.max(3, Math.round(width * 0.008)),
+            borderRadius: 999,
+            background: "radial-gradient(circle at 40% 40%, #33445f 0%, #05080e 70%)",
+          }}
+        />
+        <div
+          style={{
+            width: "100%",
+            height: "100%",
+            borderRadius: Math.round(width * 0.014),
+            overflow: "hidden",
+            background: "#F4F8FF",
+          }}
+        >
+          {src ? (
+            <img
+              src={src}
+              alt={alt ?? ""}
+              style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top center" }}
+            />
+          ) : null}
+        </div>
+      </div>
+      {/* hinge / base */}
+      <div
+        style={{
+          width: Math.round(width * 1.14),
+          marginLeft: Math.round(width * -0.07),
+          height: Math.round(width * 0.028),
+          borderRadius: `0 0 ${Math.round(width * 0.02)}px ${Math.round(width * 0.02)}px`,
+          background: "linear-gradient(180deg, #c7d0de 0%, #9aa8bf 55%, #7a8aa3 100%)",
+          boxShadow: "0 20px 34px -16px rgba(13,22,41,0.5)",
+        }}
+      >
+        {/* opening notch */}
+        <div
+          style={{
+            width: Math.round(width * 0.14),
+            height: Math.round(width * 0.009),
+            margin: "0 auto",
+            borderRadius: `0 0 ${Math.round(width * 0.01)}px ${Math.round(width * 0.01)}px`,
+            background: "#6d7c94",
+          }}
+        />
+      </div>
+    </div>
+  );
+}
+
+/** A CSS iPad-style tablet: portrait 3:4 screen in a slim dark bezel. */
+export function TabletFrame({
+  src,
+  alt,
+  width = 180,
+  className,
+}: {
+  src?: string;
+  alt?: string;
+  width?: number;
+  className?: string;
+}) {
+  const pad = Math.round(width * 0.045);
+  return (
+    <div
+      className={className}
+      style={{
+        width,
+        aspectRatio: "3 / 4",
+        borderRadius: Math.round(width * 0.07),
+        padding: pad,
+        background: "linear-gradient(155deg, #2a3550 0%, #0d1629 55%, #1b2540 100%)",
+        boxShadow:
+          "0 30px 60px -28px rgba(13,22,41,0.55), inset 0 1px 2px rgba(255,255,255,0.22)",
+        position: "relative",
+      }}
+    >
+      {/* front camera */}
+      <span
+        style={{
+          position: "absolute",
+          top: Math.round(pad * 0.42),
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: Math.max(3, Math.round(width * 0.02)),
+          height: Math.max(3, Math.round(width * 0.02)),
+          borderRadius: 999,
+          background: "radial-gradient(circle at 40% 40%, #26364f 0%, #05080e 70%)",
+        }}
+      />
+      <div
+        style={{
+          height: "100%",
+          width: "100%",
+          borderRadius: Math.round(width * 0.045),
+          overflow: "hidden",
+          background: "#F4F8FF",
+        }}
+      >
+        {src ? (
+          <img
+            src={src}
+            alt={alt ?? ""}
+            style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top center" }}
+          />
+        ) : null}
+      </div>
+    </div>
+  );
+}
