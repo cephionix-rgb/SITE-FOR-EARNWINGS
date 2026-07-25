@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Route, Radio, Bot, GraduationCap, Trophy, BookOpen, LayoutDashboard,
   PlaneTakeoff, Video, CloudSun, CalendarCheck, Swords,
-  Wind, Megaphone, LayoutGrid, Images, Medal, Mountain,
+  Wind, Megaphone, LayoutGrid, Images, Medal, Mountain, ChevronLeft, ChevronRight,
 } from "lucide-react";
 import { prefersReducedMotion } from "../lib/scroll";
 import { PhoneFrame } from "../components/DeviceFrame";
@@ -154,6 +154,24 @@ export function FeatureOrbit() {
 
   const [active, setActive] = useState(0);
 
+  // Desktop = the orbit; phones = a swipeable phone (window-width based so the two
+  // layouts switch cleanly without depending on the measured stage).
+  const [isDesktop, setIsDesktop] = useState(
+    () => typeof window === "undefined" || window.matchMedia("(min-width: 768px)").matches,
+  );
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 768px)");
+    const on = () => setIsDesktop(mq.matches);
+    mq.addEventListener("change", on);
+    return () => mq.removeEventListener("change", on);
+  }, []);
+
+  // Change the active feature + fire a little haptic tap on phones.
+  const selectFeature = (i: number) => {
+    setActive(i);
+    try { navigator.vibrate?.(12); } catch { /* unsupported */ }
+  };
+
   const t = useMotionValue(0);
   const pausedRef = useRef(false);
   const visibleRef = useRef(true);
@@ -182,7 +200,7 @@ export function FeatureOrbit() {
   const { w, h } = dims;
   const cx = w / 2;
   const cy = h / 2;
-  const orbit = !reduced && w >= 700;
+  const orbit = !reduced && isDesktop;
 
   const phoneW = Math.max(172, Math.min(300, Math.round((h * 0.8 * 9) / 19.3)));
   const ringRx = Math.max(220, Math.min(480, Math.round(w * 0.44)));
@@ -205,15 +223,16 @@ export function FeatureOrbit() {
             Your whole ground school, <span className="text-gradient-gold">in orbit</span>
           </h2>
           <p className="mt-4 text-lg" style={{ color: "#40506e" }}>
-            Every tool circles one home screen — <b style={{ color: "#1B3A7A" }}>tap any feature</b> to
-            preview it live on the phone.
+            Every tool, one home screen — <b style={{ color: "#1B3A7A" }}>tap or swipe</b> to
+            preview each one live on the phone.
           </p>
         </motion.div>
 
+        {orbit ? (
         <motion.div
           ref={stageRef}
           style={{ y: stageY }}
-          className="relative mx-auto mt-8 h-[520px] w-full max-w-6xl sm:mt-12 sm:h-[620px] lg:h-[760px]"
+          className="relative mx-auto mt-8 h-[700px] w-full max-w-6xl sm:mt-12 lg:h-[760px]"
         >
           {/* Gold streak ring + orbiting sparks */}
           <svg className="pointer-events-none absolute inset-0 h-full w-full" viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none" aria-hidden>
@@ -257,8 +276,8 @@ export function FeatureOrbit() {
           />
 
           {/* Feature circles revolving around the phone (desktop) */}
-          {orbit && FEATURES.map((feature, i) => (
-            <OrbitChip key={feature.key} feature={feature} i={i} count={FEATURES.length} t={t} rx={ringRx} ry={ringRy} table={table} active={active === i} onSelect={() => setActive(i)} onPause={(p) => (pausedRef.current = p)} />
+          {FEATURES.map((feature, i) => (
+            <OrbitChip key={feature.key} feature={feature} i={i} count={FEATURES.length} t={t} rx={ringRx} ry={ringRy} table={table} active={active === i} onSelect={() => selectFeature(i)} onPause={(p) => (pausedRef.current = p)} />
           ))}
 
           {/* The phone — big, centred, joined to the ring, above the circles */}
@@ -290,17 +309,97 @@ export function FeatureOrbit() {
             </motion.div>
           </div>
         </motion.div>
-
-        {/* Mobile / reduced-motion: tappable circle grid under the phone */}
-        {!orbit && (
-          <div className="mx-auto mt-8 flex max-w-md flex-wrap items-start justify-center gap-x-4 gap-y-5">
-            {FEATURES.map((feature, i) => (
-              <ChipButton key={feature.key} feature={feature} active={active === i} alwaysLabel onSelect={() => setActive(i)} />
-            ))}
-          </div>
+        ) : (
+          <MobileCockpit active={active} onSelect={selectFeature} />
         )}
       </div>
     </section>
+  );
+}
+
+/**
+ * Phone-only cockpit: one big SWIPEABLE phone (drag left/right to change the
+ * feature screen) + a tappable chip row. Every change fires a haptic tap. No
+ * orbit ring (it doesn't read well on a narrow screen).
+ */
+function MobileCockpit({ active, onSelect }: { active: number; onSelect: (i: number) => void }) {
+  const n = FEATURES.length;
+  const cur = FEATURES[active];
+  const CurIcon = cur.icon;
+  const go = (i: number) => onSelect(((i % n) + n) % n); // wraps around
+
+  return (
+    <div className="mx-auto mt-8 flex max-w-sm flex-col items-center px-2">
+      {/* current feature */}
+      <div className="mb-4 flex items-center gap-2.5">
+        <span className="flex h-9 w-9 items-center justify-center rounded-xl" style={{ background: `${cur.accent}18`, color: cur.accent }}>
+          <CurIcon size={18} strokeWidth={2.3} />
+        </span>
+        <span className="text-lg font-extrabold font-display" style={{ color: "#1B3A7A" }}>{cur.label}</span>
+      </div>
+
+      {/* swipeable phone */}
+      <div className="relative">
+        <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl" style={{ width: 320, height: 320, background: "radial-gradient(circle, rgba(245,217,122,0.42), transparent 70%)" }} />
+        <motion.div
+          drag="x"
+          dragConstraints={{ left: 0, right: 0 }}
+          dragElastic={0.16}
+          dragMomentum={false}
+          onDragEnd={(_, info) => {
+            if (info.offset.x < -55) go(active + 1);
+            else if (info.offset.x > 55) go(active - 1);
+          }}
+          whileTap={{ cursor: "grabbing" }}
+          className="relative cursor-grab"
+        >
+          <div style={{ filter: "drop-shadow(0 28px 56px rgba(13,36,80,0.42))" }}>
+            <PhoneFrame width={230}>
+              <div className="relative h-full w-full overflow-hidden" style={{ background: "#F4F8FF" }}>
+                <AnimatePresence>
+                  <motion.div key={cur.key} initial={{ opacity: 0, scale: 1.05 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }} className="absolute inset-0 h-full w-full">
+                    {cur.screen ? (
+                      <img src={cur.screen} alt={cur.label} draggable={false} className="h-full w-full" style={{ objectFit: "cover", objectPosition: "top center" }} />
+                    ) : (
+                      <ScreenPlaceholder feature={cur} />
+                    )}
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+            </PhoneFrame>
+          </div>
+        </motion.div>
+      </div>
+
+      {/* swipe hint */}
+      <div className="mt-4 flex items-center gap-1.5 text-[13px] font-semibold" style={{ color: "#5F7499" }}>
+        <ChevronLeft size={15} /> swipe to explore <ChevronRight size={15} />
+      </div>
+
+      {/* tappable chip row (horizontal scroll) */}
+      <div className="mt-5 flex w-full snap-x gap-2 overflow-x-auto pb-2" style={{ scrollbarWidth: "none", WebkitOverflowScrolling: "touch" }}>
+        {FEATURES.map((f, i) => {
+          const Ic = f.icon;
+          const on = i === active;
+          return (
+            <button
+              key={f.key}
+              type="button"
+              onClick={() => go(i)}
+              className="flex shrink-0 snap-start items-center gap-1.5 rounded-full px-3 py-1.5 text-[12px] font-bold transition-colors"
+              style={{
+                background: on ? f.accent : "rgba(255,255,255,0.92)",
+                color: on ? "#fff" : "#1B3A7A",
+                boxShadow: on ? `0 8px 20px -8px ${f.accent}` : "0 6px 16px -10px rgba(13,36,80,0.4), inset 0 0 0 1px rgba(27,58,122,0.1)",
+              }}
+            >
+              <Ic size={13} strokeWidth={2.3} style={{ color: on ? "#fff" : f.accent }} />
+              {f.label}
+            </button>
+          );
+        })}
+      </div>
+    </div>
   );
 }
 
