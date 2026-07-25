@@ -103,26 +103,26 @@ export function HeroSection() {
           <motion.h1
             aria-label="Earn Your Wings"
             initial={{ opacity: 0, y: 22 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: easeOutExpo, delay: 0.05 }}
+            animate={{ opacity: revealed ? 1 : 0, y: revealed ? 0 : 22 }}
+            transition={{ duration: 0.7, ease: easeOutExpo }}
             className="font-black uppercase leading-none"
             style={{ fontSize: "clamp(2.05rem,6.4vw,4.3rem)" }}
           >
             <div className="flex justify-center lg:justify-start" aria-hidden>
-              <SplitFlapWord text="Earn Your" startDelay={150} start={revealed} />
+              <SplitFlapWord text="Earn Your" startDelay={250} start={revealed} />
             </div>
             <div
               className="mt-[0.18em] flex justify-center lg:justify-start"
               aria-hidden
             >
-              <SplitFlapWord text="Wings" startDelay={1400} start={revealed} />
+              <SplitFlapWord text="Wings" startDelay={1500} start={revealed} />
             </div>
           </motion.h1>
 
           {/* Departure-board status line — completes the airport concept */}
           <motion.div
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            animate={{ opacity: revealed ? 1 : 0 }}
             transition={{ duration: 0.6, delay: 1.6 }}
             className="mt-4 flex items-center gap-2 font-mono text-[0.72rem] font-bold tracking-[0.18em]"
             style={{ color: "#9a7415" }}
@@ -494,7 +494,7 @@ function SplitFlapWord({
   const slots = target.split("");
   // Displayed glyph + a per-slot "tick" counter that re-keys the flap animation.
   const [display, setDisplay] = useState<string[]>(() =>
-    slots.map((c) => (c === " " ? " " : "A")),
+    slots.map((c) => (c === " " ? " " : "")), // blank until it starts — no "AAAA" flash
   );
   const [ticks, setTicks] = useState<number[]>(() => slots.map(() => 0));
 
@@ -503,7 +503,7 @@ function SplitFlapWord({
     const timers: ReturnType<typeof setTimeout>[] = [];
     slots.forEach((finalCh, i) => {
       if (finalCh === " ") return;
-      const spins = 14 + i * 2; // longer — later tiles keep spinning
+      const spins = 18 + i * 2; // longer — later tiles keep spinning
       const begin = window.setTimeout(() => {
         let count = 0;
         const iv = window.setInterval(() => {
@@ -527,9 +527,9 @@ function SplitFlapWord({
             n[i] = count;
             return n;
           });
-        }, 66);
+        }, 76);
         timers.push(iv as unknown as ReturnType<typeof setTimeout>);
-      }, startDelay + i * 105);
+      }, startDelay + i * 115);
       timers.push(begin);
     });
     return () => timers.forEach((t) => clearTimeout(t));

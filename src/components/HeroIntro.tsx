@@ -39,39 +39,40 @@ export function HeroIntro() {
     };
   }, [active]);
 
-  // Drive unmuted playback; if autoplay-with-sound is blocked, start on the
-  // first user gesture. Only during the video phase.
+  // Always autoplay. Try with sound first; if the browser blocks that (typical
+  // on desktop), fall back to MUTED autoplay immediately so the video still
+  // starts by itself, then unmute on the visitor's first interaction.
   useEffect(() => {
     if (phase !== "video") return;
     const v = videoRef.current;
     let cleanup = () => {};
     if (v) {
-      v.muted = isMobile; // phones: muted so it autoplays; desktop: with sound
+      v.muted = isMobile; // phones: muted so it autoplays; desktop: try with sound
       v.volume = 1;
       v.play().catch(() => {
-        const start = () => {
-          if (!videoRef.current) return;
-          videoRef.current.muted = false;
-          void videoRef.current.play().catch(() => {});
+        const el = videoRef.current;
+        if (!el) return;
+        el.muted = true; // muted autoplay is always allowed
+        void el.play().catch(() => {});
+        const unmute = () => {
+          if (videoRef.current) videoRef.current.muted = false;
           cleanup();
         };
         const events = ["pointerdown", "keydown", "touchstart", "wheel"] as const;
         const opts = { once: true } as AddEventListenerOptions;
-        events.forEach((e) => window.addEventListener(e, start, opts));
-        cleanup = () => events.forEach((e) => window.removeEventListener(e, start));
+        events.forEach((e) => window.addEventListener(e, unmute, opts));
+        cleanup = () => events.forEach((e) => window.removeEventListener(e, unmute));
       });
     }
     return () => cleanup();
   }, [phase]);
 
-  // Hold the splash while the ring draws, then slide it down — and signal the
-  // hero so its "Earn Your Wings" flip plays as the splash reveals the page.
+  // Hold the splash while the ring draws, then slide it down. (The hero's
+  // "Earn Your Wings" flip is fired later in finish(), once the splash has fully
+  // slid away — so the whole animation plays on the visible page.)
   useEffect(() => {
     if (phase !== "splash") return;
-    const t = setTimeout(() => {
-      setSlide(true);
-      try { window.dispatchEvent(new Event("ew:intro-done")); } catch { /* noop */ }
-    }, 2000);
+    const t = setTimeout(() => setSlide(true), 2000);
     return () => clearTimeout(t);
   }, [phase]);
 
@@ -81,6 +82,8 @@ export function HeroIntro() {
     } catch {
       /* private mode — fine */
     }
+    // Splash is fully gone → now let the hero's "Earn Your Wings" board flip in.
+    try { window.dispatchEvent(new Event("ew:intro-done")); } catch { /* noop */ }
     setPhase("done");
   }
 
