@@ -24,9 +24,9 @@ const QUIZ: { q: string; opts: string[]; a: number }[] = [
 const PERKS: { label: string; cadet: string; commander: string; up: boolean }[] = [
   { label: "Full app access", cadet: "7 days", commander: "10 days", up: true },
   { label: "RT practice sessions", cadet: "5", commander: "10", up: true },
-  { label: "Chapters unlocked", cadet: "5", commander: "10", up: true },
+  { label: "Chapters / subject", cadet: "2", commander: "4", up: true },
   { label: "Sample paper / subject", cadet: "1", commander: "1", up: false },
-  { label: "Chapter MCQ sets", cadet: "5", commander: "10", up: true },
+  { label: "Chapter MCQ sets", cadet: "2", commander: "4", up: true },
   { label: "Flight plans", cadet: "5", commander: "10", up: true },
   { label: "Ask-Captain doubts", cadet: "5", commander: "10", up: true },
   { label: "Weight & balance", cadet: "5", commander: "10", up: true },

@@ -10,9 +10,9 @@ const EXAMS = ["CPL", "ATPL", "PPL", "RTR (A)", "Just exploring"];
 const PERKS = [
   "Full app access for 1 week",
   "5 RT practice sessions",
-  "First 5 chapters unlocked",
+  "First 2 chapters of all 5 subjects unlocked",
   "1 sample paper in every subject",
-  "MCQs for your first 5 chapters",
+  "MCQs for your first 2 chapters",
   "5 flight plans",
   "5 Ask-Captain doubts",
   "5 weight & balance calcs",

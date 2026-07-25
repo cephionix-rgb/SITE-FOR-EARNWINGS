@@ -38,23 +38,24 @@ var PERKS = {
   tier:                  'cadet',
   fullAccessDays:        7,   // use the full app for one week
   rtSessions:            5,   // 5 RT (radio-telephony) sessions
-  unlockedChapters:      5,   // first 5 chapters unlocked
+  unlockedChapters:      2,   // first 2 chapters unlocked in EVERY subject (all 5)
   samplePapersPerSubject:1,   // 1 sample paper unlocked in every subject
-  mcqChapters:           5,   // MCQs unlocked for those first 5 chapters
+  mcqChapters:           2,   // MCQs for the first 2 chapters
   flightPlans:           5,   // 5 flight plans
   captainDoubts:         5,   // 5 doubts to Ask Captain
   weightAndBalance:      5    // 5 weight & balance calculations
 };
 
 // Commander tier — earned by scoring 5+/10 on the "Cadet to Commander" quiz.
-// Every 5 becomes 10, the week becomes 10 days; the 1 sample paper stays.
+// Every 5 becomes 10, the week becomes 10 days; chapters/MCQs double to the
+// first 4 per subject; the 1 sample paper stays.
 var COMMANDER_PERKS = {
   tier:                  'commander',
   fullAccessDays:        10,
   rtSessions:            10,
-  unlockedChapters:      10,
+  unlockedChapters:      4,   // first 4 chapters unlocked in EVERY subject
   samplePapersPerSubject:1,
-  mcqChapters:           10,
+  mcqChapters:           4,   // MCQs for the first 4 chapters
   flightPlans:           10,
   captainDoubts:         10,
   weightAndBalance:      10
@@ -207,9 +208,9 @@ function _sendWelcomeEmail(email, name, position, code) {
   var perkItems = [
     'Full app access for 1 week',
     '5 radio-telephony (RT) practice sessions',
-    'First 5 chapters unlocked',
+    'First 2 chapters of all 5 subjects unlocked',
     '1 sample paper in every subject',
-    'MCQs for your first 5 chapters',
+    'MCQs for your first 2 chapters',
     '5 live flight plans',
     '5 Ask-Captain doubts',
     '5 weight & balance calculations'
@@ -319,9 +320,9 @@ function _sendWelcomeEmail(email, name, position, code) {
     'Included with your founder seat:\n' +
     '- Full app access for 1 week\n' +
     '- 5 RT practice sessions\n' +
-    '- First 5 chapters unlocked\n' +
+    '- First 2 chapters of all 5 subjects unlocked\n' +
     '- 1 sample paper in every subject\n' +
-    '- MCQs for your first 5 chapters\n' +
+    '- MCQs for your first 2 chapters\n' +
     '- 5 flight plans\n' +
     '- 5 Ask-Captain doubts\n' +
     '- 5 weight & balance calculations\n\n' +
