@@ -1,0 +1,63 @@
+@import "tailwindcss";
+
+/* ===== EARNWINGS brand tokens (mirrors student app src/styles/theme.css) ===== */
+:root {
+  /* Base font size — bumped +2px so all rem-based type reads larger site-wide. */
+  --font-size: 18px;
+  --background: #ebf3ff;
+  --foreground: #0d1629;
+  --card: #ffffff;
+  --card-foreground: #0d1629;
+  --primary: #1b3a7a;
+  --primary-foreground: #ffffff;
+  --secondary: #e4eeff;
+  --secondary-foreground: #1b3a7a;
+  --muted: #f0f5ff;
+  --muted-foreground: #5f7499;
+  --accent: #c9981f;
+  --accent-foreground: #ffffff;
+  --border: rgba(27, 58, 122, 0.12);
+  --ring: #2e6be5;
+  --radius: 0.75rem;
+  /* brand extras */
+  --navy: #1b3a7a;
+  --navy-deep: #0d2450;
+  --blue: #2e6be5;
+  --sky: #5ba4e8;
+  --sky-soft: #a9cef4;
+  --gold: #c9981f;
+  --gold-light: #f5d97a;
+  --surface: #f7faff;
+  --cloud: #ebf3ff;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+  --color-navy: var(--navy);
+  --color-navy-deep: var(--navy-deep);
+  --color-blue: var(--blue);
+  --color-sky: var(--sky);
+  --color-sky-soft: var(--sky-soft);
+  --color-gold: var(--gold);
+  --color-gold-light: var(--gold-light);
+  --color-surface: var(--surface);
+  --color-cloud: var(--cloud);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --font-sans: "Inter", system-ui, sans-serif;
+}
