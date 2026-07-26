@@ -12,6 +12,7 @@ import { easeOutExpo } from "../lib/motion";
 import { CtaMicro } from "../components/CtaMicro";
 import { track } from "../lib/track";
 import { FOUNDER_SEATS } from "../lib/siteConfig";
+import { HERO_H1, HERO_H1_BRAND, HERO_INTRO, HERO_CTA } from "../content/hero";
 
 /*
  * Hero headline options (Task 1 — implementing #1):
@@ -119,9 +120,8 @@ export function HeroSection() {
             className="font-black tracking-tight"
             style={{ fontSize: "clamp(2.3rem,5.6vw,4rem)", lineHeight: 1.02, color: "#0D1629" }}
           >
-            Pass DGCA <span className="text-gradient-gold">faster.</span>
-            <br /> Fly sooner.
-            <span className="sr-only"> with EARNWINGS</span>
+            {HERO_H1[0]}<span className="text-gradient-gold">{HERO_H1[1]}</span>
+            <br />{HERO_H1[2]}<span className="sr-only">{HERO_H1_BRAND}</span>
           </motion.h1>
 
           {/* Supporting brand line — the split-flap board, preserved (decorative) */}
@@ -165,9 +165,7 @@ export function HeroSection() {
             className="mt-7 max-w-xl text-[1.12rem] leading-relaxed sm:text-lg"
             style={{ color: "#40506e" }}
           >
-            Real-airway flight planning, voice radio-telephony, an AI ground
-            instructor and full DGCA mock exams — one cockpit. Walk into your
-            exam prepared, not just studied.
+            {HERO_INTRO}
           </motion.p>
 
           <motion.div
@@ -182,7 +180,7 @@ export function HeroSection() {
               className="btn-gold"
               style={{ fontSize: "1.15rem", padding: "1.05rem 2.1rem" }}
             >
-              <Plane size={20} /> Reserve My Captain Seat
+              <Plane size={20} /> {HERO_CTA}
             </a>
             <a
               href="#play"

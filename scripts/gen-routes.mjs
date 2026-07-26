@@ -18,6 +18,12 @@ import {
   existsSync,
 } from "node:fs";
 import { join } from "node:path";
+import {
+  HERO_H1,
+  HERO_H1_BRAND,
+  HERO_INTRO,
+  HERO_CTA,
+} from "../src/content/hero.js";
 
 const DIST = "dist";
 const INDEX = join(DIST, "index.html");
@@ -110,9 +116,10 @@ function pageHtml(route, m) {
   return html;
 }
 
-// SPA fallback for unmatched paths.
+// SPA fallback for unmatched paths (empty root, like the original shell).
 copyFileSync(INDEX, join(DIST, "404.html"));
 
+// Sub-routes: per-route meta, empty root (they do not render the hero).
 for (const [route, m] of Object.entries(ROUTES)) {
   const html = pageHtml(route, m);
   writeFileSync(join(DIST, `${route}.html`), html); // /about   -> 200
@@ -120,6 +127,26 @@ for (const [route, m] of Object.entries(ROUTES)) {
   writeFileSync(join(DIST, route, "index.html"), html); // /about/ -> 200
 }
 
+// Home route only: inject a minimal, crawlable static shell of the hero (h1,
+// intro, CTA) into #root. It is byte-identical to what React renders (built from
+// the SAME src/content/hero.js the component uses) and React replaces it on
+// mount, so it is not cloaking. Visually hidden so there is no flash of unstyled
+// content before hydration.
+const HERO_SHELL =
+  '<div style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);border:0;padding:0;margin:-1px;">' +
+  `<h1>${HERO_H1[0]}<span>${HERO_H1[1]}</span><br/>${HERO_H1[2]}<span>${HERO_H1_BRAND}</span></h1>` +
+  `<p>${HERO_INTRO}</p>` +
+  `<a href="#waitlist">${HERO_CTA}</a>` +
+  "</div>";
+const home = base.replace(
+  /<div id="root">\s*<\/div>/,
+  `<div id="root">${HERO_SHELL}</div>`,
+);
+if (home === base) {
+  console.warn("gen-routes: hero shell not injected (root div did not match)");
+}
+writeFileSync(INDEX, home);
+
 console.log(
-  `gen-routes: baked per-route meta for ${Object.keys(ROUTES).length} routes + 404.html`,
+  `gen-routes: baked per-route meta for ${Object.keys(ROUTES).length} routes + 404.html + home hero shell`,
 );
