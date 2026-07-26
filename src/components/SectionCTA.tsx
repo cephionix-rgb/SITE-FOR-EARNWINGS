@@ -17,13 +17,13 @@ type Variant =
   | "default";
 
 const COPY: Record<Variant, { label: string; sub: string }> = {
-  flightdeck: { label: "Reserve My Captain Seat", sub: "Get the entire DGCA syllabus in one place." },
-  cockpit: { label: "Reserve My Captain Seat", sub: "Put every study tool one tap away." },
-  play: { label: "Reserve My Captain Seat", sub: "Keep these tools for your real exam prep." },
-  journey: { label: "Reserve My Captain Seat", sub: "Start climbing from Cadet today." },
-  app: { label: "Reserve My Captain Seat", sub: "Carry your whole cockpit everywhere." },
+  flightdeck: { label: "Get the full syllabus", sub: "Every DGCA subject in one place. Reserve your seat." },
+  cockpit: { label: "Put every tool one tap away", sub: "Reserve your founding-cadet seat in about 20 seconds." },
+  play: { label: "Keep these tools for exam day", sub: "Founding cadets keep them all the way to launch." },
+  journey: { label: "Claim a founding seat", sub: "Start your climb from Cadet today." },
+  app: { label: "Get early access", sub: "Be first in the day we open the doors." },
   proof: { label: "Reserve My Captain Seat", sub: "Join the founding cohort before launch." },
-  founder: { label: "Reserve My Captain Seat", sub: "Claim these founding benefits before they close." },
+  founder: { label: "Reserve My Captain Seat", sub: "Join before public launch to lock these in." },
   default: { label: "Reserve My Captain Seat", sub: "Join the founding cohort." },
 };
 

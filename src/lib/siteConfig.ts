@@ -4,6 +4,15 @@
 // components. Every figure below is real / confirmed by the founder.
 // ---------------------------------------------------------------------------
 
+/**
+ * Public contact address. Kept as the founder's cephionix@gmail.com for now so
+ * every touchpoint (footer, Privacy, Terms, Organization schema) matches.
+ * TODO(founder): switch to a branded support@earnwings.org once the domain
+ * mailbox is set up, then update Footer.tsx, PrivacyPage.tsx, TermsPage.tsx and
+ * scripts/gen-routes.mjs (contactPoint.email) together.
+ */
+export const SUPPORT_EMAIL = "cephionix@gmail.com";
+
 /** Content-scale figures shown across the site (hero stats + proof band). */
 export const siteStats = {
   subjects: 5, // DGCA exam subjects
@@ -45,3 +54,14 @@ export const ASPIRATION_IMAGE = "";
  */
 export type Testimonial = { quote: string; name: string; role: string };
 export const TESTIMONIALS: Testimonial[] = [];
+
+/**
+ * Named instructors / advisors behind the course. Empty by default — the
+ * Instructors block renders NOTHING until real, cleared-to-name people are added
+ * here. Do NOT invent names, titles, or credentials.
+ * TODO(founder): add the real DGCA Chief Ground Instructor and flight instructor
+ * as { name, title, credentials?, image? } once you have permission to name them.
+ * The generic CREDIBILITY_LINE above stays accurate until then.
+ */
+export type Instructor = { name: string; title: string; credentials?: string; image?: string };
+export const INSTRUCTORS: Instructor[] = [];

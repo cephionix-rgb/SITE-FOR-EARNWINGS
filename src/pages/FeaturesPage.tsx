@@ -10,6 +10,7 @@ import { Nav } from "../components/Nav";
 import { Footer } from "../components/Footer";
 import { CloudBackground } from "../components/CloudBackground";
 import { FEATURES_H1, FEATURES_INTRO } from "../content/features";
+import { FAQ } from "../content/faq";
 import { PhoneFrame } from "../components/DeviceFrame";
 import { Link } from "../lib/router";
 import { STATS } from "../lib/data";
@@ -395,7 +396,7 @@ function StudyPack() {
           <button key={i} onClick={() => setIdx(i)} aria-label={`Page ${i + 1}`} className="h-2 rounded-full transition-all" style={{ width: i === idx ? 24 : 8, background: i === idx ? meta.accent : "rgba(27,58,122,0.2)" }} />
         ))}
       </div>
-      <p className="mt-3 text-center text-xs" style={{ color: "#8aa0c8" }}>Tap the front page for full size</p>
+      <p className="mt-3 text-center text-xs" style={{ color: "#4A5A78" }}>Tap the front page for full size</p>
 
       {/* Lightbox */}
       <AnimatePresence>
@@ -453,6 +454,7 @@ export function FeaturesPage() {
 
         {/* Interactive explorer */}
         <section className="mt-8">
+          <h2 className="sr-only">Explore every feature</h2>
           <PhoneDeck />
         </section>
 
@@ -502,8 +504,29 @@ export function FeaturesPage() {
           </div>
         </section>
 
+        {/* FAQ */}
+        <section id="faq" className="mt-16 scroll-mt-24">
+          <div className="text-center">
+            <span className="eyebrow"><ListChecks size={14} /> Questions, answered</span>
+            <h2 className="mt-3 text-2xl font-black sm:text-3xl" style={{ color: "#0D1629" }}>Frequently asked questions</h2>
+          </div>
+          <div className="mx-auto mt-8 max-w-2xl divide-y" style={{ borderColor: "rgba(27,58,122,0.1)" }}>
+            {FAQ.map((item) => (
+              <details key={item.q} className="group py-4">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-left text-[16.5px] font-bold" style={{ color: "#1B3A7A" }}>
+                  {item.q}
+                  <ChevronRight size={18} className="shrink-0 transition-transform group-open:rotate-90" style={{ color: "#886611" }} />
+                </summary>
+                <p className="mt-2.5 text-[15px] leading-7" style={{ color: "#41527A" }}>
+                  {item.a}
+                </p>
+              </details>
+            ))}
+          </div>
+        </section>
+
         {/* CTA */}
-        <section className="mt-8 overflow-hidden rounded-3xl px-6 py-12 text-center" style={{ background: "linear-gradient(150deg,#0f2450,#0a1836)" }}>
+        <section className="mt-16 overflow-hidden rounded-3xl px-6 py-12 text-center" style={{ background: "linear-gradient(150deg,#0f2450,#0a1836)" }}>
           <h2 className="text-3xl font-black text-white">Get all of it — earn your wings</h2>
           <p className="mx-auto mt-3 max-w-lg text-[15px] leading-7" style={{ color: "#93A9D6" }}>
             Founder cadets get the full app for a week, plus RT sessions, unlocked chapters, sample papers, flight plans and more.

@@ -2,6 +2,7 @@ import { useState, type FormEvent } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Plane, Check, Loader2 } from "lucide-react";
 import { track } from "../lib/track";
+import { Link } from "../lib/router";
 
 // Primary CTA label (Task 2). Alternatives, kept for easy swapping:
 //   "Get Early Boarding Access" | "Become a Founding Cadet" | "Secure My Founder Wings"
@@ -44,9 +45,9 @@ export function Waitlist() {
     }
 
     const phone = String(data.get("phone") || "").trim();
-    if (phone.replace(/\D/g, "").length < 7) {
+    if (phone && phone.replace(/\D/g, "").length < 7) {
       setStatus("error");
-      setError("Please enter a valid phone number.");
+      setError("Please enter a valid phone number, or leave it blank.");
       return;
     }
 
@@ -172,9 +173,8 @@ export function Waitlist() {
               <input
                 name="phone"
                 type="tel"
-                required
                 inputMode="tel"
-                placeholder="Phone number"
+                placeholder="Phone number (optional)"
                 autoComplete="tel"
                 className="rounded-xl border px-4 py-3 outline-none focus:ring-2"
                 style={{ background: "#F0F5FF", borderColor: "rgba(27,58,122,0.12)" }}
@@ -242,6 +242,13 @@ export function Waitlist() {
             </button>
             <p className="mt-3 text-center text-xs" style={{ color: "#4A5A78" }}>
               Founder cadets get the full app for a week + RT, chapters, papers, flight plans &amp; more. No spam.
+            </p>
+            <p className="mt-1.5 text-center text-xs" style={{ color: "#4A5A78" }}>
+              We only use your details to send early-access updates. See our{" "}
+              <Link to="/privacy" className="font-semibold underline" style={{ color: "#1B3A7A" }}>
+                Privacy Policy
+              </Link>
+              .
             </p>
           </motion.form>
         )}

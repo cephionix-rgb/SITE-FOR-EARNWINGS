@@ -25,6 +25,7 @@ import {
   HERO_CTA,
 } from "../src/content/hero.js";
 import { FEATURES_H1, FEATURES_INTRO } from "../src/content/features.js";
+import { FAQ } from "../src/content/faq.js";
 
 const DIST = "dist";
 const INDEX = join(DIST, "index.html");
@@ -123,11 +124,31 @@ copyFileSync(INDEX, join(DIST, "404.html"));
 // /features gets its real (byte-identical) hero shell too - it is the sub-route
 // that will carry FAQPage schema and target non-brand queries. /about, /privacy
 // and /terms keep an empty root (their meta is enough).
+// The FAQ text is baked into the shell too (visually hidden) so the served HTML
+// carries the exact Q&A that the FAQPage JSON-LD references — keeping the
+// structured data matched to on-page content, which Google requires.
+const FAQ_SHELL = FAQ.map(
+  (f) => `<h2>${esc(f.q)}</h2><p>${esc(f.a)}</p>`,
+).join("");
 const FEATURES_SHELL =
   '<div style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);border:0;padding:0;margin:-1px;">' +
   `<h1>${FEATURES_H1[0]}<span>${FEATURES_H1[1]}</span>${FEATURES_H1[2]}</h1>` +
   `<p>${esc(FEATURES_INTRO)}</p>` +
+  FAQ_SHELL +
   "</div>";
+
+// FAQPage structured data for /features — built from the SAME faq.js the page
+// renders, so schema text is byte-identical to the visible answers.
+const faqLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: FAQ.map((f) => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: f.a },
+  })),
+};
+const faqScript = `<script type="application/ld+json">${JSON.stringify(faqLd)}</script>`;
 
 for (const [route, m] of Object.entries(ROUTES)) {
   let html = pageHtml(route, m);
@@ -136,6 +157,7 @@ for (const [route, m] of Object.entries(ROUTES)) {
       /<div id="root">\s*<\/div>/,
       `<div id="root">${FEATURES_SHELL}</div>`,
     );
+    html = html.replace("</head>", `    ${faqScript}\n  </head>`);
   }
   writeFileSync(join(DIST, `${route}.html`), html); // /about   -> 200
   mkdirSync(join(DIST, route), { recursive: true });

@@ -1,5 +1,6 @@
 import { motion } from "motion/react";
 import { PageShell } from "../components/PageShell";
+import { Instructors } from "../components/Instructors";
 import { Link } from "../lib/router";
 import { FEATURES, STATS } from "../lib/data";
 
@@ -126,6 +127,9 @@ export function AboutPage() {
           ))}
         </div>
       </section>
+
+      {/* Instructors — empty-safe: renders only when real, named people exist */}
+      <Instructors />
 
       {/* CTA */}
       <section className="mt-16 rounded-3xl px-6 py-10 text-center" style={{ background: "linear-gradient(135deg,#EAF2FF,#DCEBFF)" }}>

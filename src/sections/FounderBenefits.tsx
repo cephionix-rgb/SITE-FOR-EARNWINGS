@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
 import { motion } from "motion/react";
 import { inView, rise, stagger } from "../lib/motion";
-import { FOUNDER_SEATS } from "../lib/siteConfig";
 import { track } from "../lib/track";
 import { SectionCTA } from "../components/SectionCTA";
 
@@ -55,8 +54,8 @@ export function FounderBenefits() {
           Join before launch. <span className="text-gradient-gold">Lock these forever.</span>
         </h2>
         <p className="mt-4 text-lg" style={{ color: "#40506e" }}>
-          The first {FOUNDER_SEATS} to board become Founding Cadets — and keep
-          every one of these, permanently.
+          Join before public launch to become a Founding Cadet — and keep every
+          one of these, permanently.
         </p>
       </motion.div>
 
@@ -87,17 +86,17 @@ export function FounderBenefits() {
         ))}
       </motion.div>
 
-      {/* Loss made explicit */}
+      {/* Founding-member framing (calm, not high-pressure) */}
       <motion.p
         variants={rise}
         initial="hidden"
         whileInView="show"
         viewport={inView}
         className="mx-auto mt-8 max-w-xl text-center text-[15px] font-semibold"
-        style={{ color: "#9a7415" }}
+        style={{ color: "#886611" }}
       >
-        These founding benefits disappear the day we open to the public. Once the
-        cohort fills, they are gone for good.
+        These are founding-member benefits — reserved for cadets who join before
+        we open to the public.
       </motion.p>
 
       <SectionCTA variant="founder" />

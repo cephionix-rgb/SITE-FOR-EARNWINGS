@@ -274,6 +274,21 @@ html.lenis body {
   }
 }
 
+/* Hero logo "emerging from cloud" base-fade. Only applied on desktop (>=1024px),
+   where the emblem is large. On mobile the mark is small and should read crisp
+   and complete, so no bottom mask (the foreground cloud bank is hidden there too
+   via max-lg:hidden) — that removes the blurred/cut-off look on phones. */
+.hero-logo-fade {
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+@media (min-width: 1024px) {
+  .hero-logo-fade {
+    -webkit-mask-image: linear-gradient(to bottom, black 78%, transparent 99%);
+    mask-image: linear-gradient(to bottom, black 78%, transparent 99%);
+  }
+}
+
 /* Visible keyboard focus on every interactive element (a11y). !important so it
    beats the utility `outline-none` on inputs / quiz options / airport selectors. */
 :focus-visible {

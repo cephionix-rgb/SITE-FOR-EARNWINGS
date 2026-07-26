@@ -217,13 +217,13 @@ export function HeroSection() {
             className="mt-6 flex items-center gap-2 rounded-full px-3.5 py-2 text-[13px] font-semibold"
             style={{
               background: "rgba(201,152,31,0.12)",
-              color: "#9a7415",
+              color: "#886611",
               border: "1px solid rgba(201,152,31,0.3)",
             }}
           >
             <Lock size={13} />
             Only the first {FOUNDER_SEATS} become Founding Cadets — these perks
-            lock in now and disappear at public launch.
+            lock in now and stay yours at public launch.
           </motion.div>
         </motion.div>
 
@@ -274,23 +274,21 @@ export function HeroSection() {
               initial={{ opacity: 0, scale: 0.72, y: 40 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ duration: 1.1, ease: easeOutExpo, delay: 0.15 }}
-              className="h-[clamp(160px,25vh,230px)] w-auto select-none lg:h-[clamp(270px,52vh,560px)]"
+              className="hero-logo-fade h-[clamp(160px,25vh,230px)] w-auto select-none lg:h-[clamp(270px,52vh,560px)]"
               style={{
                 filter:
                   "drop-shadow(0 28px 46px rgba(13,22,41,0.3)) drop-shadow(0 6px 14px rgba(201,152,31,0.32))",
                 animation: "floaty 7.5s ease-in-out infinite",
-                WebkitMaskImage:
-                  "linear-gradient(to bottom, black 78%, transparent 99%)",
-                maskImage:
-                  "linear-gradient(to bottom, black 78%, transparent 99%)",
               }}
             />
           </motion.div>
 
-          {/* Drifting foreground cloud bank — sells "emerging from the clouds" */}
+          {/* Drifting foreground cloud bank — sells "emerging from the clouds".
+              Desktop only: on mobile the small emblem sat under this white blur
+              and looked hazy/cut, so it's hidden there (max-lg:hidden). */}
           <motion.div
             style={{ x: cloudFgX }}
-            className="pointer-events-none absolute inset-0 z-20"
+            className="pointer-events-none absolute inset-0 z-20 max-lg:hidden"
           >
             <motion.div
               className="absolute bottom-[6%] left-[-6%] h-40 w-[70%] rounded-full"
