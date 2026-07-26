@@ -52,12 +52,18 @@ export function navigate(to: string) {
   else window.scrollTo({ top: 0 });
 }
 
+/** Normalise a pathname: drop any trailing slash (GitHub Pages may serve
+ *  "/about/" for a prerendered "/about") so route matching stays exact. */
+function normalizePath(p: string): string {
+  return p.length > 1 ? p.replace(/\/+$/, "") || "/" : p;
+}
+
 /** Current pathname; re-renders on navigate() or browser back/forward. */
 export function useRoute(): string {
-  const [path, setPath] = useState(() => window.location.pathname);
+  const [path, setPath] = useState(() => normalizePath(window.location.pathname));
   useEffect(() => {
     const update = () => {
-      setPath(window.location.pathname);
+      setPath(normalizePath(window.location.pathname));
       if (window.location.hash) scrollWhenReady(window.location.hash);
     };
     listeners.add(update);

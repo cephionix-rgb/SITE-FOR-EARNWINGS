@@ -24,9 +24,10 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm install
+      # `npm run build` runs a postbuild step (scripts/gen-routes.mjs) that emits a
+      # real 200 HTML page per route (/features, /about, …) plus a 404.html SPA
+      # fallback, so deep links are crawlable (not served with a 404 status).
       - run: npm run build
-      # SPA fallback: serve the app for deep links (/features, /about, …) so refresh doesn't 404.
-      - run: cp dist/index.html dist/404.html
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
