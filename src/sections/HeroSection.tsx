@@ -6,9 +6,21 @@ import {
   useSpring,
   useTransform,
 } from "motion/react";
-import { ChevronDown, Sparkles, Plane } from "lucide-react";
+import { ChevronDown, Sparkles, Plane, Lock } from "lucide-react";
 import { CloudLayers } from "../components/CloudLayers";
 import { easeOutExpo } from "../lib/motion";
+import { CtaMicro } from "../components/CtaMicro";
+import { track } from "../lib/track";
+import { FOUNDER_SEATS } from "../lib/siteConfig";
+
+/*
+ * Hero headline options (Task 1 — implementing #1):
+ *   1. Pass DGCA faster. Fly sooner.
+ *   2. India's smartest DGCA ground school.
+ *   3. The cockpit every student pilot wishes they had on day one.
+ * The outcome headline is the primary H1; the "EARN YOUR WINGS" split-flap
+ * board is kept as the supporting brand line (preserves the animation + brand).
+ */
 
 /**
  * Hero — editorial split, cinematic.
@@ -99,25 +111,35 @@ export function HeroSection() {
             <Sparkles size={14} /> DGCA CPL &amp; ATPL prep, reimagined
           </motion.span>
 
-          {/* Airport split-flap departure board that locks into the headline */}
+          {/* Primary outcome headline (Task 1). Brand kept in title/meta + sr-only. */}
           <motion.h1
-            aria-label="Earn Your Wings"
             initial={{ opacity: 0, y: 22 }}
             animate={{ opacity: revealed ? 1 : 0, y: revealed ? 0 : 22 }}
             transition={{ duration: 0.7, ease: easeOutExpo }}
-            className="font-black uppercase leading-none"
-            style={{ fontSize: "clamp(2.05rem,6.4vw,4.3rem)" }}
+            className="font-black tracking-tight"
+            style={{ fontSize: "clamp(2.3rem,5.6vw,4rem)", lineHeight: 1.02, color: "#0D1629" }}
           >
-            <div className="flex justify-center lg:justify-start" aria-hidden>
+            Pass DGCA <span className="text-gradient-gold">faster.</span>
+            <br /> Fly sooner.
+            <span className="sr-only"> with EARNWINGS</span>
+          </motion.h1>
+
+          {/* Supporting brand line — the split-flap board, preserved (decorative) */}
+          <motion.div
+            aria-hidden
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: revealed ? 1 : 0, y: revealed ? 0 : 18 }}
+            transition={{ duration: 0.6, ease: easeOutExpo, delay: 0.1 }}
+            className="mt-4 font-black uppercase leading-none"
+            style={{ fontSize: "clamp(1.5rem,4.4vw,2.9rem)" }}
+          >
+            <div className="flex justify-center lg:justify-start">
               <SplitFlapWord text="Earn Your" startDelay={250} start={revealed} />
             </div>
-            <div
-              className="mt-[0.18em] flex justify-center lg:justify-start"
-              aria-hidden
-            >
+            <div className="mt-[0.16em] flex justify-center lg:justify-start">
               <SplitFlapWord text="Wings" startDelay={1500} start={revealed} />
             </div>
-          </motion.h1>
+          </motion.div>
 
           {/* Departure-board status line — completes the airport concept */}
           <motion.div
@@ -143,9 +165,9 @@ export function HeroSection() {
             className="mt-7 max-w-xl text-[1.12rem] leading-relaxed sm:text-lg"
             style={{ color: "#40506e" }}
           >
-            Flight planning on real airways, voice radio-telephony, an AI captain
-            and full DGCA mock exams — your entire ground school in one beautiful
-            cockpit.
+            Real-airway flight planning, voice radio-telephony, an AI ground
+            instructor and full DGCA mock exams — one cockpit. Walk into your
+            exam prepared, not just studied.
           </motion.p>
 
           <motion.div
@@ -156,13 +178,15 @@ export function HeroSection() {
           >
             <a
               href="#waitlist"
+              onClick={() => track("hero_cta_click", { cta: "primary" })}
               className="btn-gold"
               style={{ fontSize: "1.15rem", padding: "1.05rem 2.1rem" }}
             >
-              <Plane size={20} /> Join the Waitlist
+              <Plane size={20} /> Reserve My Captain Seat
             </a>
             <a
               href="#play"
+              onClick={() => track("hero_cta_click", { cta: "secondary" })}
               className="btn-ghost"
               style={{ fontSize: "1.15rem", padding: "1.05rem 2.1rem" }}
             >
@@ -170,31 +194,23 @@ export function HeroSection() {
             </a>
           </motion.div>
 
+          <CtaMicro className="lg:text-left" />
+
+          {/* Scarcity strip (Task 1) — cohort framing, loss made explicit */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6 }}
-            className="mt-8 flex items-center gap-3 rounded-full px-3 py-2"
+            className="mt-6 flex items-center gap-2 rounded-full px-3.5 py-2 text-[13px] font-semibold"
             style={{
-              background: "rgba(255,255,255,0.55)",
-              border: "1px solid rgba(27,58,122,0.12)",
-              backdropFilter: "blur(10px)",
-              boxShadow: "0 12px 34px -18px rgba(27,58,122,0.4)",
+              background: "rgba(201,152,31,0.12)",
+              color: "#9a7415",
+              border: "1px solid rgba(201,152,31,0.3)",
             }}
           >
-            <div className="flex -space-x-2">
-              {["#1B3A7A", "#2E6BE5", "#5BA4E8", "#C9981F"].map((c) => (
-                <span
-                  key={c}
-                  className="h-6 w-6 rounded-full border-2 border-white"
-                  style={{ background: c }}
-                />
-              ))}
-            </div>
-            <span className="text-sm" style={{ color: "#5F7499" }}>
-              Join <b style={{ color: "#1B3A7A" }}>2,000+</b> future pilots on the
-              list
-            </span>
+            <Lock size={13} />
+            Only the first {FOUNDER_SEATS} become Founding Cadets — these perks
+            lock in now and disappear at public launch.
           </motion.div>
         </motion.div>
 

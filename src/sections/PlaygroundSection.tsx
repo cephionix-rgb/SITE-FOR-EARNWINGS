@@ -346,8 +346,8 @@ export function PlaygroundSection() {
           Don't just read about it. <span className="text-gradient-navy">Play with it.</span>
         </h2>
         <p className="mt-4 text-lg" style={{ color: "#40506e" }}>
-          Boot up the EARNWINGS flight bag — plan a route across real Indian airports,
-          then decode live METARs pulled straight from the app's weather feed.
+          Plan a route across real Indian airports and decode a live METAR right now —
+          the exact tools you'll use on exam day and in the cockpit. No signup, no download.
         </p>
       </motion.div>
 

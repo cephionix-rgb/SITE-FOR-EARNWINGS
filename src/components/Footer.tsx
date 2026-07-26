@@ -41,7 +41,7 @@ export function Footer() {
             Company
           </h4>
           <ul className="space-y-2 text-sm">
-            <li><Link to="/#waitlist" className="hover:text-white">Join waitlist</Link></li>
+            <li><Link to="/#waitlist" className="hover:text-white">Reserve seat</Link></li>
             <li><Link to="/about" className="hover:text-white">About</Link></li>
             <li><Link to="/privacy" className="hover:text-white">Privacy</Link></li>
             <li><Link to="/terms" className="hover:text-white">Terms</Link></li>

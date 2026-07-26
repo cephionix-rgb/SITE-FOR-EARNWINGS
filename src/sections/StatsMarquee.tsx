@@ -1,14 +1,16 @@
 import { motion } from "motion/react";
 import { BookOpen, FileText, Radio, Trophy } from "lucide-react";
 import { inView, rise, stagger } from "../lib/motion";
+import { siteStats } from "../lib/siteConfig";
 
 // Styled exactly like the EARNWINGS app's dashboard stat cards
 // (white rounded card + coloured icon chip + bold navy value + muted label).
+// Numbers come from the single siteStats config — never hardcoded here.
 const STAT_CARDS = [
-  { icon: BookOpen, value: "5", label: "Subjects", color: "#2E6BE5", bg: "#EBF1FF" },
-  { icon: FileText, value: "10,000+", label: "Questions", color: "#C9981F", bg: "#FFF8E7" },
+  { icon: BookOpen, value: String(siteStats.subjects), label: "Subjects", color: "#2E6BE5", bg: "#EBF1FF" },
+  { icon: FileText, value: `${siteStats.questions.toLocaleString()}+`, label: "Questions", color: "#C9981F", bg: "#FFF8E7" },
   { icon: Radio, value: "∞", label: "RT scenarios", color: "#059669", bg: "#E8F8F2" },
-  { icon: Trophy, value: "15", label: "Ranks", color: "#7C3AED", bg: "#F3EEFF" },
+  { icon: Trophy, value: String(siteStats.ranks), label: "Ranks", color: "#7C3AED", bg: "#F3EEFF" },
 ];
 
 export function StatsMarquee() {

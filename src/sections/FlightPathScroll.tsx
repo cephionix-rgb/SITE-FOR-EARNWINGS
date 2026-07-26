@@ -108,8 +108,8 @@ export function FlightPathScroll() {
             Everything a cadet needs, <span className="text-gradient-gold">on one runway</span>
           </h2>
           <p className="mt-4 text-lg" style={{ color: "#40506e" }}>
-            The entire DGCA CPL &amp; ATPL ground syllabus, cleared for departure —{" "}
-            <b style={{ color: "#1B3A7A" }}>{ROWS.length} subjects</b>, <b style={{ color: "#1B3A7A" }}>{TOTAL}+ chapters</b>, every one fully loaded.
+            Stop stitching PDFs, YouTube and coaching notes together. The whole DGCA CPL &amp; ATPL syllabus —{" "}
+            <b style={{ color: "#1B3A7A" }}>{ROWS.length} subjects</b>, <b style={{ color: "#1B3A7A" }}>{TOTAL}+ chapters</b> — lives in one place, so you always know exactly what to study next.
           </p>
         </motion.div>
 

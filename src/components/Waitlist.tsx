@@ -1,6 +1,11 @@
 import { useState, type FormEvent } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Plane, Check, Loader2 } from "lucide-react";
+import { track } from "../lib/track";
+
+// Primary CTA label (Task 2). Alternatives, kept for easy swapping:
+//   "Get Early Boarding Access" | "Become a Founding Cadet" | "Secure My Founder Wings"
+const CTA_LABEL = "Reserve My Captain Seat";
 
 const ENDPOINT = import.meta.env.VITE_WAITLIST_ENDPOINT as string | undefined;
 const CAPACITY = 200;
@@ -54,6 +59,7 @@ export function Waitlist() {
 
     setStatus("submitting");
     setError("");
+    track("waitlist_submit", { examTarget: String(data.get("examTarget") || "") });
 
     const payload = {
       email,
@@ -229,7 +235,7 @@ export function Waitlist() {
                 </>
               ) : (
                 <>
-                  <Plane size={18} /> Claim my founder seat
+                  <Plane size={18} /> {CTA_LABEL}
                 </>
               )}
             </button>

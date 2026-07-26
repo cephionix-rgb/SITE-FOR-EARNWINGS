@@ -156,9 +156,9 @@ export function JourneySection() {
           Climb from <span style={{ color: "#5BA4E8" }}>Cadet</span> to <span className="text-gradient-gold">Commander</span>
         </h2>
         <p className="mt-4 text-lg" style={{ color: "#40506e" }}>
-          Prove your basics. Answer <b>{PASS} of {QUIZ.length}</b> aviation questions correctly to earn your{" "}
-          <b style={{ color: "#C9981F" }}>Commander Wings</b> — and every founder perk <b>doubles</b>: all the 5s become
-          10s, your week becomes <b>10 days</b>, and your Captain doubts jump to <b>10</b>.
+          DGCA prep is a grind — so every chapter, mock and flight plan earns XP and moves you up a rank.
+          Prove your basics: answer <b>{PASS} of {QUIZ.length}</b> aviation questions correctly to earn your{" "}
+          <b style={{ color: "#C9981F" }}>Commander Wings</b> — and every founder perk <b>doubles</b>.
         </p>
       </motion.div>
 
@@ -258,7 +258,7 @@ export function JourneySection() {
 
               <div className="mt-auto flex flex-col gap-2.5 pt-5">
                 {!joined && (
-                  <a href="#waitlist" className="btn-gold w-full text-base"><Zap size={18} /> {passed ? "Claim these perks — join the waitlist" : "Join the waitlist"}</a>
+                  <a href="#waitlist" className="btn-gold w-full text-base"><Zap size={18} /> {passed ? "Claim these perks — Reserve My Captain Seat" : "Reserve My Captain Seat"}</a>
                 )}
                 <button onClick={reset} className="flex items-center justify-center gap-2 rounded-full py-2.5 text-sm font-semibold" style={{ background: "rgba(27,58,122,0.06)", color: "#1B3A7A" }}>
                   <RotateCcw size={15} /> {passed ? "Fly again" : "Try again"}

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Menu, X } from "lucide-react";
 import { Link } from "../lib/router";
+import { track } from "../lib/track";
 
 // Section links point at "/#id" so they work from every page: on the landing
 // page they smooth-scroll, from a sub-page they navigate home then scroll.
@@ -68,8 +69,12 @@ export function Nav({ solid = false }: { solid?: boolean }) {
               {l.label}
             </Link>
           ))}
-          <Link to="/#waitlist" className="btn-gold text-sm">
-            Join Waitlist
+          <Link
+            to="/#waitlist"
+            onClick={() => track("nav_cta_click")}
+            className="btn-gold text-sm"
+          >
+            Reserve Seat
           </Link>
         </nav>
 
@@ -105,10 +110,13 @@ export function Nav({ solid = false }: { solid?: boolean }) {
               ))}
               <Link
                 to="/#waitlist"
-                onClick={() => setOpen(false)}
+                onClick={() => {
+                  track("nav_cta_click", { menu: "mobile" });
+                  setOpen(false);
+                }}
                 className="btn-gold mt-2 w-full"
               >
-                Join Waitlist
+                Reserve Seat
               </Link>
             </div>
           </motion.div>

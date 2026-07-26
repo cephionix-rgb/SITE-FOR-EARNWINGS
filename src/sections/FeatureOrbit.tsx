@@ -224,8 +224,8 @@ export function FeatureOrbit() {
             Your whole ground school, <span className="text-gradient-gold">in orbit</span>
           </h2>
           <p className="mt-4 text-lg" style={{ color: "#40506e" }}>
-            Every tool, one home screen — <b style={{ color: "#1B3A7A" }}>tap or swipe</b> to
-            preview each one live on the phone.
+            Every tool you need to pass is one <b style={{ color: "#1B3A7A" }}>tap or swipe</b> away —
+            so nothing about DGCA ever catches you off guard. Preview each one live on the phone.
           </p>
           <Link
             to="/features#study"

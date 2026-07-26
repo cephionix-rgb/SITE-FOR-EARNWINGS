@@ -137,7 +137,7 @@ export function AboutPage() {
           claim your seat and founder perks.
         </p>
         <Link to="/#waitlist" className="btn-gold mt-6">
-          Join the waitlist
+          Reserve My Captain Seat
         </Link>
       </section>
     </PageShell>

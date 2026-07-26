@@ -508,7 +508,7 @@ export function FeaturesPage() {
             Founder cadets get the full app for a week, plus RT sessions, unlocked chapters, sample papers, flight plans and more.
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-            <Link to="/#waitlist" className="btn-gold"><Plane size={18} /> Join the waitlist</Link>
+            <Link to="/#waitlist" className="btn-gold"><Plane size={18} /> Reserve My Captain Seat</Link>
             <Link to="/#play" className="rounded-full px-5 py-3 text-sm font-bold text-white" style={{ background: "rgba(255,255,255,0.1)" }}>Try it live</Link>
           </div>
         </section>
