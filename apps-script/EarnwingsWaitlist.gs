@@ -304,6 +304,8 @@ function _sendWelcomeEmail(email, name, position, code) {
             '&nbsp;&nbsp;&#183;&nbsp;&nbsp;' +
             '<a href="' + INSTAGRAM_URL + '" style="color:#1B3A7A;text-decoration:none;font-weight:700;">@flywithearnwings</a>' +
             '<div style="margin-top:8px;color:#8ea0c4;">&#169; EARNWINGS &#183; Elevate your aviation journey &#183; Made for DGCA aspirants in India</div>' +
+            '<div style="margin-top:6px;color:#8ea0c4;">You&#8217;re getting this because you joined the EARNWINGS founder waitlist. ' +
+              '<a href="mailto:cephionix@gmail.com?subject=Unsubscribe%20EARNWINGS" style="color:#8ea0c4;text-decoration:underline;">Unsubscribe</a>.</div>' +
           '</td></tr>' +
 
         '</table>' +
@@ -326,7 +328,9 @@ function _sendWelcomeEmail(email, name, position, code) {
     '- 5 flight plans\n' +
     '- 5 Ask-Captain doubts\n' +
     '- 5 weight & balance calculations\n\n' +
-    'Follow the journey: ' + INSTAGRAM_URL + '\n' + SITE_URL;
+    'Follow the journey: ' + INSTAGRAM_URL + '\n' + SITE_URL + '\n\n' +
+    'You are receiving this because you joined the EARNWINGS founder waitlist. ' +
+    'Reply "unsubscribe" to opt out.';
 
   MailApp.sendEmail({
     to: email,

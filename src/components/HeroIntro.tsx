@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
+import { Volume2 } from "lucide-react";
 
 /** Bump the version to force the intro to show again for returning visitors. */
 const SEEN_KEY = "ew_intro_seen_v1";
@@ -19,7 +20,20 @@ export function HeroIntro() {
   const [phase, setPhase] = useState<Phase>(first ? "video" : "done");
   const [progress, setProgress] = useState(0);
   const [slide, setSlide] = useState(false);
+  const [soundOn, setSoundOn] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Turn the intro's sound on. Browsers only allow this from a user gesture
+  // (tap / scroll / key / click) — it can't happen automatically, on any device.
+  function enableSound() {
+    const el = videoRef.current;
+    if (el) {
+      el.muted = false;
+      el.volume = 1;
+      void el.play().catch(() => {});
+    }
+    setSoundOn(true);
+  }
 
   const active = phase !== "done";
 
@@ -39,32 +53,24 @@ export function HeroIntro() {
     };
   }, [active]);
 
-  // Always autoplay. Try with sound first; if the browser blocks that (typical
-  // on desktop), fall back to MUTED autoplay immediately so the video still
-  // starts by itself, then unmute on the visitor's first interaction.
+  // Autoplay is ONLY guaranteed when the video is muted — every modern browser,
+  // and all of mobile, blocks sound until the visitor interacts. So we always
+  // start muted + playing (so it truly plays by itself), then switch sound on at
+  // the first tap / scroll / key / click.
   useEffect(() => {
     if (phase !== "video") return;
     const v = videoRef.current;
-    let cleanup = () => {};
-    if (v) {
-      v.muted = isMobile; // phones: muted so it autoplays; desktop: try with sound
-      v.volume = 1;
-      v.play().catch(() => {
-        const el = videoRef.current;
-        if (!el) return;
-        el.muted = true; // muted autoplay is always allowed
-        void el.play().catch(() => {});
-        const unmute = () => {
-          if (videoRef.current) videoRef.current.muted = false;
-          cleanup();
-        };
-        const events = ["pointerdown", "keydown", "touchstart", "wheel"] as const;
-        const opts = { once: true } as AddEventListenerOptions;
-        events.forEach((e) => window.addEventListener(e, unmute, opts));
-        cleanup = () => events.forEach((e) => window.removeEventListener(e, unmute));
-      });
-    }
-    return () => cleanup();
+    if (!v) return;
+    v.muted = true;
+    v.volume = 1;
+    void v.play().catch(() => {});
+
+    const events = ["pointerdown", "touchstart", "keydown", "wheel", "click"] as const;
+    const opts = { once: true } as AddEventListenerOptions;
+    const onGesture = () => enableSound();
+    events.forEach((e) => window.addEventListener(e, onGesture, opts));
+    return () => events.forEach((e) => window.removeEventListener(e, onGesture));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase]);
 
   // Hold the splash while the ring draws, then slide it down. (The hero's
@@ -102,15 +108,16 @@ export function HeroIntro() {
             poster={introPoster}
             autoPlay
             playsInline
-            muted={isMobile}
+            muted
             preload="auto"
+            onClick={enableSound}
             onEnded={() => setPhase("splash")}
             onError={() => setPhase("splash")}
             onTimeUpdate={(e) => {
               const v = e.currentTarget;
               if (v.duration) setProgress(v.currentTime / v.duration);
             }}
-            className="h-full w-full object-cover"
+            className="h-full w-full cursor-pointer object-cover"
           />
           <div
             className="pointer-events-none absolute inset-0"
@@ -122,6 +129,25 @@ export function HeroIntro() {
               style={{ transform: `scaleX(${progress})`, background: "linear-gradient(90deg,#F5D97A,#C9981F)" }}
             />
           </div>
+
+          {/* Sound can't start on its own (browser policy) — one tap turns it on. */}
+          {!soundOn && (
+            <motion.button
+              type="button"
+              onClick={enableSound}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+              className="absolute bottom-7 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold text-white"
+              style={{
+                background: "rgba(255,255,255,0.12)",
+                border: "1px solid rgba(255,255,255,0.25)",
+                backdropFilter: "blur(8px)",
+              }}
+            >
+              <Volume2 size={16} /> Tap for sound
+            </motion.button>
+          )}
         </motion.div>
       )}
 
