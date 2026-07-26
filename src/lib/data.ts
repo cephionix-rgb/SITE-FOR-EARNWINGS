@@ -24,7 +24,7 @@ export const FEATURES: Feature[] = [
     key: "flight-planning",
     title: "Real Flight Planning",
     desc: "Plan live routes over real ATS airways with NOTAM-aware reroutes, weight & balance and a 5-algorithm solver.",
-    screen: "/screens/app-flightplan.png",
+    screen: "/screens/app-flightplan.webp",
     accent: "#2E6BE5",
     tagline: "From VIDP to VOMM in three taps — on airways that actually exist.",
     highlights: [
@@ -37,7 +37,7 @@ export const FEATURES: Feature[] = [
     key: "rt-trainer",
     title: "Radio Telephony Trainer",
     desc: "Voice-first RT practice in an animated airport scene — speak the call, get scored instantly.",
-    screen: "/screens/app-rt.png",
+    screen: "/screens/app-rt.webp",
     accent: "#C9981F",
     tagline: "Grab the mic. ATC is waiting — and it's grading you.",
     highlights: [
@@ -50,7 +50,7 @@ export const FEATURES: Feature[] = [
     key: "ai-captain",
     title: "AI Captain",
     desc: "Your personal DGCA ground instructor. Grounded in your notes, it explains, quizzes and never invents.",
-    screen: "/screens/app-captain.png",
+    screen: "/screens/app-captain.webp",
     accent: "#1B3A7A",
     tagline: "A ground instructor that never sleeps — and never bluffs.",
     highlights: [
@@ -63,7 +63,7 @@ export const FEATURES: Feature[] = [
     key: "dgca-exams",
     title: "DGCA Mock Exams",
     desc: "Full composite papers across every subject, timed and marked exactly like the real DGCA exam.",
-    screen: "/screens/app-exams.png",
+    screen: "/screens/app-exams.webp",
     accent: "#5BA4E8",
     tagline: "Sit the real paper before the real paper.",
     highlights: [
@@ -76,7 +76,7 @@ export const FEATURES: Feature[] = [
     key: "journey",
     title: "Gamified Journey",
     desc: "Earn XP for every note, chapter and test. Climb 15 ranks from Cadet to Commander.",
-    screen: "/screens/app-journey.png",
+    screen: "/screens/app-journey.webp",
     accent: "#C9981F",
     tagline: "Turn studying into a climb you actually want to make.",
     highlights: [

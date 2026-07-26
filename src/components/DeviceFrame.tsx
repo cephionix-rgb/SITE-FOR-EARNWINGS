@@ -106,7 +106,7 @@ export function PhoneFrame({
         <StatusBar width={width} />
         {src ? (
           <img
-            src={src}
+            src={src} loading="lazy" decoding="async"
             alt={alt ?? ""}
             style={{ flex: 1, minHeight: 0, width: "100%", objectFit: "cover", objectPosition: "top center" }}
           />
@@ -172,7 +172,7 @@ export function LaptopFrame({
         >
           {src ? (
             <img
-              src={src}
+              src={src} loading="lazy" decoding="async"
               alt={alt ?? ""}
               style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top center" }}
             />
@@ -256,7 +256,7 @@ export function TabletFrame({
       >
         {src ? (
           <img
-            src={src}
+            src={src} loading="lazy" decoding="async"
             alt={alt ?? ""}
             style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top center" }}
           />

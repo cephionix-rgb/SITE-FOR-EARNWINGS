@@ -23,22 +23,22 @@ import { Link } from "../lib/router";
 type Feature = { key: string; label: string; icon: typeof Route; accent: string; screen?: string };
 
 const FEATURES: Feature[] = [
-  { key: "home", label: "Home Dashboard", icon: LayoutDashboard, accent: "#1B3A7A", screen: "/screens/app-dashboard.png" },
-  { key: "flightplan", label: "Flight Planning", icon: Route, accent: "#2E6BE5", screen: "/screens/app-flightplan.png" },
-  { key: "rt", label: "RT Trainer", icon: Radio, accent: "#C9981F", screen: "/screens/app-rt.png" },
-  { key: "captain", label: "AI Captain", icon: Bot, accent: "#1B3A7A", screen: "/screens/app-captain.png" },
-  { key: "exams", label: "DGCA Exams", icon: GraduationCap, accent: "#5BA4E8", screen: "/screens/app-exams.png" },
-  { key: "learn", label: "Learning Hub", icon: BookOpen, accent: "#2E6BE5", screen: "/screens/app-learn.png" },
-  { key: "visual", label: "Visual Notes", icon: Images, accent: "#5BA4E8", screen: "/screens/app-visual.png" },
-  { key: "metar", label: "METAR Decoder", icon: Wind, accent: "#5BA4E8", screen: "/screens/app-metar.png" },
-  { key: "weather", label: "Weather", icon: CloudSun, accent: "#1B3A7A", screen: "/screens/app-weather.png" },
-  { key: "notam", label: "NOTAM System", icon: Megaphone, accent: "#C9981F", screen: "/screens/app-notam.png" },
-  { key: "flightops", label: "Flight Ops", icon: LayoutGrid, accent: "#1B3A7A", screen: "/screens/app-flightops.png" },
-  { key: "planner", label: "Course Planner", icon: CalendarCheck, accent: "#C9981F", screen: "/screens/app-planner.png" },
-  { key: "compete", label: "Compete", icon: Swords, accent: "#2E6BE5", screen: "/screens/app-compete.png" },
-  { key: "leaderboard", label: "Leaderboard", icon: Medal, accent: "#C9981F", screen: "/screens/app-leaderboard.png" },
-  { key: "journey", label: "XP & Ranks", icon: Trophy, accent: "#C9981F", screen: "/screens/app-journey.png" },
-  { key: "myjourney", label: "My Journey", icon: Mountain, accent: "#1B3A7A", screen: "/screens/app-myjourney.png" },
+  { key: "home", label: "Home Dashboard", icon: LayoutDashboard, accent: "#1B3A7A", screen: "/screens/app-dashboard.webp" },
+  { key: "flightplan", label: "Flight Planning", icon: Route, accent: "#2E6BE5", screen: "/screens/app-flightplan.webp" },
+  { key: "rt", label: "RT Trainer", icon: Radio, accent: "#C9981F", screen: "/screens/app-rt.webp" },
+  { key: "captain", label: "AI Captain", icon: Bot, accent: "#1B3A7A", screen: "/screens/app-captain.webp" },
+  { key: "exams", label: "DGCA Exams", icon: GraduationCap, accent: "#5BA4E8", screen: "/screens/app-exams.webp" },
+  { key: "learn", label: "Learning Hub", icon: BookOpen, accent: "#2E6BE5", screen: "/screens/app-learn.webp" },
+  { key: "visual", label: "Visual Notes", icon: Images, accent: "#5BA4E8", screen: "/screens/app-visual.webp" },
+  { key: "metar", label: "METAR Decoder", icon: Wind, accent: "#5BA4E8", screen: "/screens/app-metar.webp" },
+  { key: "weather", label: "Weather", icon: CloudSun, accent: "#1B3A7A", screen: "/screens/app-weather.webp" },
+  { key: "notam", label: "NOTAM System", icon: Megaphone, accent: "#C9981F", screen: "/screens/app-notam.webp" },
+  { key: "flightops", label: "Flight Ops", icon: LayoutGrid, accent: "#1B3A7A", screen: "/screens/app-flightops.webp" },
+  { key: "planner", label: "Course Planner", icon: CalendarCheck, accent: "#C9981F", screen: "/screens/app-planner.webp" },
+  { key: "compete", label: "Compete", icon: Swords, accent: "#2E6BE5", screen: "/screens/app-compete.webp" },
+  { key: "leaderboard", label: "Leaderboard", icon: Medal, accent: "#C9981F", screen: "/screens/app-leaderboard.webp" },
+  { key: "journey", label: "XP & Ranks", icon: Trophy, accent: "#C9981F", screen: "/screens/app-journey.webp" },
+  { key: "myjourney", label: "My Journey", icon: Mountain, accent: "#1B3A7A", screen: "/screens/app-myjourney.webp" },
   // --- still placeholder (no screenshot yet) ---
   { key: "sim", label: "Flight Sim", icon: PlaneTakeoff, accent: "#2E6BE5" },
   { key: "video", label: "Video Lessons", icon: Video, accent: "#5BA4E8" },
@@ -304,7 +304,7 @@ export function FeatureOrbit() {
                         <AnimatePresence>
                           <motion.div key={cur.key} initial={{ opacity: 0, scale: 1.05 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }} className="absolute inset-0 h-full w-full">
                             {cur.screen ? (
-                              <img src={cur.screen} alt={cur.label} className="h-full w-full" style={{ objectFit: "cover", objectPosition: "top center" }} />
+                              <img src={cur.screen} loading="lazy" decoding="async" alt={cur.label} className="h-full w-full" style={{ objectFit: "cover", objectPosition: "top center" }} />
                             ) : (
                               <ScreenPlaceholder feature={cur} />
                             )}
@@ -368,7 +368,7 @@ function MobileCockpit({ active, onSelect }: { active: number; onSelect: (i: num
                 <AnimatePresence>
                   <motion.div key={cur.key} initial={{ opacity: 0, scale: 1.05 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }} className="absolute inset-0 h-full w-full">
                     {cur.screen ? (
-                      <img src={cur.screen} alt={cur.label} draggable={false} className="h-full w-full" style={{ objectFit: "cover", objectPosition: "top center" }} />
+                      <img src={cur.screen} loading="lazy" decoding="async" alt={cur.label} draggable={false} className="h-full w-full" style={{ objectFit: "cover", objectPosition: "top center" }} />
                     ) : (
                       <ScreenPlaceholder feature={cur} />
                     )}

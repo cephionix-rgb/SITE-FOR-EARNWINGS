@@ -90,7 +90,7 @@ export function HeroSection() {
     >
       <CloudLayers />
 
-      <div className="relative z-10 mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-6 px-5 pt-28 pb-24 sm:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-4">
+      <div className="relative z-10 mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-3 px-5 pt-20 pb-16 sm:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-4 lg:pt-28 lg:pb-24">
         {/* ================= LEFT — editorial copy ================= */}
         <motion.div
           style={{ y: copyY }}
@@ -100,7 +100,7 @@ export function HeroSection() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: easeOutExpo }}
-            className="pill mb-6"
+            className="pill mb-6 max-lg:hidden"
             style={{
               background: "rgba(255,255,255,0.66)",
               color: "#9a7415",
@@ -123,6 +123,21 @@ export function HeroSection() {
             {HERO_H1[0]}<span className="text-gradient-gold">{HERO_H1[1]}</span>
             <br />{HERO_H1[2]}<span className="sr-only">{HERO_H1_BRAND}</span>
           </motion.h1>
+
+          {/* Brand tie-in (mobile only) — makes the one-screen phone hero read
+              "Pass DGCA faster. Fly sooner. with EARNWINGS". On desktop the brand
+              already lives in the h1 sr-only suffix + the split-flap board below,
+              so this stays hidden (lg:hidden) to keep that layout untouched. */}
+          <motion.p
+            aria-hidden
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: revealed ? 1 : 0, y: revealed ? 0 : 10 }}
+            transition={{ duration: 0.6, ease: easeOutExpo, delay: 0.2 }}
+            className="mt-2 text-[1.05rem] font-bold tracking-tight lg:hidden"
+            style={{ color: "#7a6a3a" }}
+          >
+            with <span className="text-gradient-gold font-black">EARNWINGS</span>
+          </motion.p>
 
           {/* Supporting brand line — the split-flap board, preserved (decorative) */}
           <motion.div
@@ -215,7 +230,7 @@ export function HeroSection() {
         {/* ================= RIGHT — the logo, emerging from cloud ================= */}
         <motion.div
           style={{ y: stageY, opacity: stageOpacity, perspective: 1200 }}
-          className="relative order-1 flex h-[clamp(340px,60vh,620px)] items-center justify-center lg:order-2"
+          className="relative order-1 flex h-[clamp(190px,28vh,290px)] items-center justify-center lg:order-2 lg:h-[clamp(340px,60vh,620px)]"
         >
           {/* Soft gold glow bloom behind the mark */}
           <motion.div
@@ -259,7 +274,7 @@ export function HeroSection() {
               initial={{ opacity: 0, scale: 0.72, y: 40 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ duration: 1.1, ease: easeOutExpo, delay: 0.15 }}
-              className="h-[clamp(270px,52vh,560px)] w-auto select-none"
+              className="h-[clamp(160px,25vh,230px)] w-auto select-none lg:h-[clamp(270px,52vh,560px)]"
               style={{
                 filter:
                   "drop-shadow(0 28px 46px rgba(13,22,41,0.3)) drop-shadow(0 6px 14px rgba(201,152,31,0.32))",

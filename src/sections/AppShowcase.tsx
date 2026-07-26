@@ -75,19 +75,19 @@ export function AppShowcase() {
             className="hidden items-end justify-center md:flex"
           >
             <TabletFrame
-              src="/screens/app-learn.png"
+              src="/screens/app-learn.webp"
               alt="EARNWINGS on tablet"
               width={168}
               className="relative z-10 mr-[-42px] mb-8 rotate-[-5deg]"
             />
             <LaptopFrame
-              src="/screens/flight-airways.png"
+              src="/screens/flight-airways.webp"
               alt="EARNWINGS flight planning on laptop"
               width={520}
               className="relative z-20"
             />
             <PhoneFrame
-              src="/screens/app-dashboard.png"
+              src="/screens/app-dashboard.webp"
               alt="EARNWINGS on phone"
               width={150}
               className="relative z-30 mb-1 ml-[-46px] rotate-[3deg]"
@@ -103,13 +103,13 @@ export function AppShowcase() {
             className="flex items-end justify-center md:hidden"
           >
             <LaptopFrame
-              src="/screens/flight-airways.png"
+              src="/screens/flight-airways.webp"
               alt="EARNWINGS flight planning on laptop"
               width={300}
               className="relative z-10"
             />
             <PhoneFrame
-              src="/screens/app-dashboard.png"
+              src="/screens/app-dashboard.webp"
               alt="EARNWINGS on phone"
               width={104}
               className="relative z-20 mb-1 ml-[-30px] rotate-[3deg]"

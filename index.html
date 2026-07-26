@@ -33,10 +33,24 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Fonts loaded non-render-blocking (display=swap paints system fallback
+         first, then swaps) so they do not delay FCP/LCP. -->
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Oswald:wght@500;600;700&family=Sora:wght@600;700;800&display=swap"
       rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
     />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Oswald:wght@500;600;700&family=Sora:wght@600;700;800&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
+
+    <!-- Preload the LCP intro poster (only the variant matching the viewport). -->
+    <link rel="preload" as="image" href="/assets/intro-poster-1920.jpg" media="(min-width: 768px)" />
+    <link rel="preload" as="image" href="/assets/paper-airplane-mobile-poster.jpg" media="(max-width: 767px)" />
   </head>
   <body>
     <div id="root"></div>

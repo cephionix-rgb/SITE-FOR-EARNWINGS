@@ -25,7 +25,7 @@ const FEATURES: Feat[] = [
     key: "planning", icon: Map, accent: "#2E6BE5", title: "Flight Planning",
     tagline: "Plan live routes over airways that actually exist.",
     desc: "Type a departure and destination and EARNWINGS routes you over real ARINC-424 airways — then hands you a full pilot brief you can fly.",
-    screen: "/screens/app-flightplan.png",
+    screen: "/screens/app-flightplan.webp",
     callouts: ["ATS airways", "5-algo solver", "Brief PDF"],
     points: [
       "Real ARINC-424 airways, waypoints & aerodromes (Lido-grade)",
@@ -38,7 +38,7 @@ const FEATURES: Feat[] = [
     key: "airways", icon: Compass, accent: "#2E6BE5", title: "Airways & Charts",
     tagline: "The whole airspace, at your fingertips.",
     desc: "Explore real worldwide ATS airways, airspace boundaries and approach plates — pan the map, tap a sector, read the chart.",
-    screen: "/screens/worldwide-airways.png",
+    screen: "/screens/worldwide-airways.webp",
     callouts: ["Global airways", "Live airspace", "Charts"],
     points: [
       "Real global ATS airways & waypoints on an interactive map",
@@ -51,7 +51,7 @@ const FEATURES: Feat[] = [
     key: "weather", icon: Radar, accent: "#5BA4E8", title: "Weather & Currency",
     tagline: "Never fly a stale plan.",
     desc: "Live weather and NOTAMs reshape your route automatically, and self-updating charts keep every procedure current.",
-    screen: "/screens/airport-chart.png",
+    screen: "/screens/airport-chart.webp",
     callouts: ["METAR · TAF", "Auto-reroute", "Satellite"],
     points: [
       "METAR / TAF / SIGMET decode with VFR·MVFR·IFR·LIFR tagging",
@@ -64,7 +64,7 @@ const FEATURES: Feat[] = [
     key: "rt", icon: Radio, accent: "#C9981F", title: "RT Trainer",
     tagline: "Grab the mic. ATC is grading you.",
     desc: "Speak your radio calls in an animated airport scene; speech-to-text scores your phraseology the instant you talk.",
-    screen: "/screens/app-rt.png",
+    screen: "/screens/app-rt.webp",
     callouts: ["Speak the call", "Auto-scored", "Scenarios"],
     points: [
       "Voice-first practice with a real Cessna 172 in 3D",
@@ -77,7 +77,7 @@ const FEATURES: Feat[] = [
     key: "captain", icon: Bot, accent: "#1B3A7A", title: "AI Captain",
     tagline: "A ground instructor that never bluffs.",
     desc: "Ask anything. The Captain answers from your own notes, shows its working, quizzes you — and says ‘I don’t know’ rather than inventing.",
-    screen: "/screens/app-captain.png",
+    screen: "/screens/app-captain.webp",
     callouts: ["Your notes", "Quizzes", "Study plan"],
     points: [
       "Answers grounded in your notes with anti-hallucination retrieval",
@@ -90,7 +90,7 @@ const FEATURES: Feat[] = [
     key: "exams", icon: GraduationCap, accent: "#2E6BE5", title: "DGCA Mock Exams",
     tagline: "Sit the real paper before the real paper.",
     desc: "Full composite papers for every subject — timed and marked exactly like the DGCA, then analysed answer-by-answer.",
-    screen: "/screens/app-exams.png",
+    screen: "/screens/app-exams.webp",
     callouts: ["DGCA marks", "Figures", "Analysis"],
     points: [
       "Composite papers for every DGCA subject",
@@ -103,7 +103,7 @@ const FEATURES: Feat[] = [
     key: "content", icon: BookOpen, accent: "#5BA4E8", title: "Ground School",
     tagline: "Your whole ground school, organised.",
     desc: "Structured notes and video lectures across all five subjects, paced by interactive chapter outlines that track what you’ve finished.",
-    screen: "/screens/app-learn.png",
+    screen: "/screens/app-learn.webp",
     callouts: ["Paged notes", "Videos", "Progress"],
     points: [
       "Clean paged A4 notes across all 5 core subjects",
@@ -116,7 +116,7 @@ const FEATURES: Feat[] = [
     key: "journey", icon: Trophy, accent: "#C9981F", title: "Gamified Journey",
     tagline: "Turn studying into a climb.",
     desc: "Earn XP for everything you learn and climb 15 ranks from Cadet to Commander — each one unlocking a real perk.",
-    screen: "/screens/app-journey.png",
+    screen: "/screens/app-journey.webp",
     callouts: ["XP for all", "15 ranks", "Perks"],
     points: [
       "Learning-driven XP for every note, chapter, book & test",
@@ -129,7 +129,7 @@ const FEATURES: Feat[] = [
     key: "dashboard", icon: LayoutDashboard, accent: "#1B3A7A", title: "Home Dashboard",
     tagline: "Your daily flight deck.",
     desc: "Everything the moment you land — your rank, XP and credits up top, and one-tap quick actions into every tool.",
-    screen: "/screens/app-dashboard.png",
+    screen: "/screens/app-dashboard.webp",
     callouts: ["Rank & XP", "Quick actions", "Daily deck"],
     points: [
       "A personalised home that greets you by name",
