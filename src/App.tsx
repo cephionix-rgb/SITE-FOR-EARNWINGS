@@ -1,12 +1,16 @@
-import { useEffect } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { useLenis } from "./lib/scroll";
 import { useRoute } from "./lib/router";
 import { initAnalytics, trackPageView } from "./lib/analytics";
 import { LandingPage } from "./pages/LandingPage";
-import { FeaturesPage } from "./pages/FeaturesPage";
-import { AboutPage } from "./pages/AboutPage";
-import { PrivacyPage } from "./pages/PrivacyPage";
-import { TermsPage } from "./pages/TermsPage";
+
+// Sub-pages are code-split (4.2e): each loads only when its route is visited, so
+// none of them sit in the initial landing-page bundle. LandingPage stays eager
+// (it is the default route and the one almost everyone lands on).
+const FeaturesPage = lazy(() => import("./pages/FeaturesPage").then((m) => ({ default: m.FeaturesPage })));
+const AboutPage = lazy(() => import("./pages/AboutPage").then((m) => ({ default: m.AboutPage })));
+const PrivacyPage = lazy(() => import("./pages/PrivacyPage").then((m) => ({ default: m.PrivacyPage })));
+const TermsPage = lazy(() => import("./pages/TermsPage").then((m) => ({ default: m.TermsPage })));
 
 export default function App() {
   // Lenis (smooth scroll) lives at the app root so it survives page changes.
@@ -17,16 +21,13 @@ export default function App() {
   useEffect(() => { initAnalytics(); }, []);
   useEffect(() => { trackPageView(path); }, [path]);
 
+  let page;
   switch (path) {
-    case "/features":
-      return <FeaturesPage />;
-    case "/about":
-      return <AboutPage />;
-    case "/privacy":
-      return <PrivacyPage />;
-    case "/terms":
-      return <TermsPage />;
-    default:
-      return <LandingPage />;
+    case "/features": page = <FeaturesPage />; break;
+    case "/about": page = <AboutPage />; break;
+    case "/privacy": page = <PrivacyPage />; break;
+    case "/terms": page = <TermsPage />; break;
+    default: page = <LandingPage />;
   }
+  return <Suspense fallback={null}>{page}</Suspense>;
 }

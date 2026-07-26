@@ -17,7 +17,10 @@ type Phase = "video" | "splash" | "done";
  */
 export function HeroIntro() {
   const first = typeof window !== "undefined" && sessionStorage.getItem(SEEN_KEY) !== "1";
-  const [phase, setPhase] = useState<Phase>(first ? "video" : "done");
+  // prefers-reduced-motion (4.2c): skip the whole intro (no autoplaying video or
+  // splash) and reveal the site immediately.
+  const reduced = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const [phase, setPhase] = useState<Phase>(first && !reduced ? "video" : "done");
   const [progress, setProgress] = useState(0);
   const [slide, setSlide] = useState(false);
   const [soundOn, setSoundOn] = useState(false);
@@ -37,10 +40,18 @@ export function HeroIntro() {
 
   const active = phase !== "done";
 
-  // Phones get the dedicated 9:16 intro; desktop keeps the wide 4K one.
+  // Phones get the dedicated 9:16 intro; desktop the 16:9 one. Only the variant
+  // that matches the viewport is ever fetched (single <video src>), and only on
+  // a first visit (returning visitors never mount the video).
   const isMobile = typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches;
-  const introSrc = isMobile ? "/assets/paper-airplane-mobile.mp4" : "/assets/paper-airplane-intro-1080.mp4";
+  const introSrc = isMobile ? "/assets/intro-mobile.mp4" : "/assets/intro-desktop.mp4";
   const introPoster = isMobile ? "/assets/paper-airplane-mobile-poster.jpg" : "/assets/intro-poster-1920.jpg";
+
+  // Reduced-motion first visit: skip straight past the intro and let the hero in.
+  useEffect(() => {
+    if (first && reduced) finish();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Lock scroll + pin to top while the overlay covers the page.
   useEffect(() => {
@@ -123,7 +134,7 @@ export function HeroIntro() {
             autoPlay
             playsInline
             muted={!soundOn}
-            preload="auto"
+            preload="none"
             onClick={enableSound}
             onEnded={() => setPhase("splash")}
             onError={() => setPhase("splash")}
