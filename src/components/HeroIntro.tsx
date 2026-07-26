@@ -61,12 +61,25 @@ export function HeroIntro() {
     if (phase !== "video") return;
     const v = videoRef.current;
     if (!v) return;
-    v.muted = true;
     v.volume = 1;
-    void v.play().catch(() => {});
 
-    const events = ["pointerdown", "touchstart", "keydown", "wheel", "click"] as const;
-    const opts = { once: true } as AddEventListenerOptions;
+    // Try to autoplay WITH sound first — some desktop browsers allow it once the
+    // site is "trusted". If (as usual) it's blocked, the muted={!soundOn} attr
+    // keeps it playing muted, and sound switches on at the first interaction.
+    v.muted = false;
+    v.play()
+      .then(() => setSoundOn(true))
+      .catch(() => {
+        const el = videoRef.current;
+        if (!el) return;
+        el.muted = true;
+        void el.play().catch(() => {});
+      });
+
+    // First interaction of ANY kind (move, scroll, tap, key, click) → sound on.
+    // On a laptop a mouse move alone flips it; on mobile the first touch does.
+    const events = ["pointermove", "pointerdown", "touchstart", "keydown", "wheel", "scroll", "click"] as const;
+    const opts = { once: true, passive: true } as AddEventListenerOptions;
     const onGesture = () => enableSound();
     events.forEach((e) => window.addEventListener(e, onGesture, opts));
     return () => events.forEach((e) => window.removeEventListener(e, onGesture));
@@ -108,7 +121,7 @@ export function HeroIntro() {
             poster={introPoster}
             autoPlay
             playsInline
-            muted
+            muted={!soundOn}
             preload="auto"
             onClick={enableSound}
             onEnded={() => setPhase("splash")}
