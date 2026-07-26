@@ -38,7 +38,11 @@
       background-position: center;
       background-size: cover;
       background-repeat: no-repeat;
-      background-image: url('/assets/hero-clouds.png');
+      background-image: url('/assets/hero-clouds-1920.jpg'); /* fallback */
+      background-image: image-set(
+        url('/assets/hero-clouds-1920.avif') type('image/avif'),
+        url('/assets/hero-clouds-1920.webp') type('image/webp'),
+        url('/assets/hero-clouds-1920.jpg') type('image/jpeg'));
       filter: blur(1.5px);
       will-change: transform;
     }

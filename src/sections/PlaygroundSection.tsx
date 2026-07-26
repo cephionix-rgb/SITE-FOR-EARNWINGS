@@ -79,7 +79,7 @@ function RoutePlanner() {
       {/* Real EARNWINGS flight map (Leaflet / Lido airways) with route overlay */}
       <div className="relative overflow-hidden rounded-2xl" style={{ aspectRatio: `${MAP_W} / ${MAP_H}`, background: "#0b1c3f" }}>
         <svg viewBox={`0 0 ${MAP_W} ${MAP_H}`} className="h-full w-full" preserveAspectRatio="xMidYMid slice">
-          <image href="/assets/india-flightmap.png" x={0} y={0} width={MAP_W} height={MAP_H} />
+          <image href="/assets/india-flightmap.webp" x={0} y={0} width={MAP_W} height={MAP_H} />
 
           {pathD && (
             <>

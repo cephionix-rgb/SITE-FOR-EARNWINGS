@@ -16,7 +16,16 @@ export function Footer() {
             to="/"
             className="inline-flex items-center rounded-2xl bg-white/95 px-3 py-2 shadow-lg"
           >
-            <img src="/assets/logo-full.png" alt="EARNWINGS" className="h-9 w-auto" />
+            <picture>
+              <source type="image/webp" srcSet="/assets/logo-full.webp" />
+              <img
+                src="/assets/logo-full.png"
+                alt="EARNWINGS"
+                className="h-9 w-auto"
+                loading="lazy"
+                decoding="async"
+              />
+            </picture>
           </Link>
           <p className="mt-4 max-w-xs text-sm" style={{ color: "#93A9D6" }}>
             The all-in-one training cockpit for future pilots. Learn, plan, practice

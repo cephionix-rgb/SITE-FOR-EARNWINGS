@@ -32,27 +32,55 @@ export function CloudLayers() {
         style={{ y: back, opacity: fade }}
         className="absolute inset-x-0 top-0 h-[130%]"
       >
-        <img
-          src="/assets/hero-clouds.png"
-          alt=""
-          className="h-full w-full object-cover opacity-90"
-        />
+        <picture className="block h-full w-full">
+          <source
+            type="image/avif"
+            srcSet="/assets/hero-clouds-1024.avif 1024w, /assets/hero-clouds-1920.avif 1920w"
+            sizes="100vw"
+          />
+          <source
+            type="image/webp"
+            srcSet="/assets/hero-clouds-1024.webp 1024w, /assets/hero-clouds-1920.webp 1920w"
+            sizes="100vw"
+          />
+          <img
+            src="/assets/hero-clouds-1920.jpg"
+            srcSet="/assets/hero-clouds-1024.jpg 1024w, /assets/hero-clouds-1920.jpg 1920w"
+            sizes="100vw"
+            alt=""
+            className="h-full w-full object-cover opacity-90"
+          />
+        </picture>
       </motion.div>
       {/* Near cloud layer (bottom, larger, faster) */}
       <motion.div
         style={{ y: front, opacity: fade }}
         className="absolute inset-x-0 bottom-0 h-[80%]"
       >
-        <img
-          src="/assets/hero-clouds.png"
-          alt=""
-          className="h-full w-full scale-125 object-cover"
-          style={{
-            transform: "scaleX(-1)",
-            maskImage: "linear-gradient(to top, black 40%, transparent 100%)",
-            WebkitMaskImage: "linear-gradient(to top, black 40%, transparent 100%)",
-          }}
-        />
+        <picture className="block h-full w-full">
+          <source
+            type="image/avif"
+            srcSet="/assets/hero-clouds-1024.avif 1024w, /assets/hero-clouds-1920.avif 1920w"
+            sizes="100vw"
+          />
+          <source
+            type="image/webp"
+            srcSet="/assets/hero-clouds-1024.webp 1024w, /assets/hero-clouds-1920.webp 1920w"
+            sizes="100vw"
+          />
+          <img
+            src="/assets/hero-clouds-1920.jpg"
+            srcSet="/assets/hero-clouds-1024.jpg 1024w, /assets/hero-clouds-1920.jpg 1920w"
+            sizes="100vw"
+            alt=""
+            className="h-full w-full scale-125 object-cover"
+            style={{
+              transform: "scaleX(-1)",
+              maskImage: "linear-gradient(to top, black 40%, transparent 100%)",
+              WebkitMaskImage: "linear-gradient(to top, black 40%, transparent 100%)",
+            }}
+          />
+        </picture>
       </motion.div>
       {/* Soft white floor so content below blends in */}
       <div

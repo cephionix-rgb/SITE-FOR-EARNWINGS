@@ -40,7 +40,7 @@ export function HeroIntro() {
   // Phones get the dedicated 9:16 intro; desktop keeps the wide 4K one.
   const isMobile = typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches;
   const introSrc = isMobile ? "/assets/paper-airplane-mobile.mp4" : "/assets/paper-airplane-intro-1080.mp4";
-  const introPoster = isMobile ? "/assets/paper-airplane-mobile-poster.jpg" : "/assets/paper-airplane-intro-poster.jpg";
+  const introPoster = isMobile ? "/assets/paper-airplane-mobile-poster.jpg" : "/assets/intro-poster-1920.jpg";
 
   // Lock scroll + pin to top while the overlay covers the page.
   useEffect(() => {
@@ -245,7 +245,7 @@ export function HeroIntro() {
                 />
               </svg>
               <motion.img
-                src="/assets/logo-mark.png"
+                src="/assets/logo-mark.webp"
                 alt="EARNWINGS"
                 className="relative h-36 w-36 sm:h-40 sm:w-40 drop-shadow-[0_10px_40px_rgba(0,0,0,0.5)]"
                 animate={{ y: [0, -6, 0] }}

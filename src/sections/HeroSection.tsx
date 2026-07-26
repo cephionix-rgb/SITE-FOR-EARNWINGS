@@ -251,7 +251,7 @@ export function HeroSection() {
             {/* Golden wingtip contrails, tucked behind the plane */}
             <Contrails />
             <motion.img
-              src="/assets/logo-mark.png"
+              src="/assets/logo-mark.webp"
               alt="EARNWINGS"
               draggable={false}
               initial={{ opacity: 0, scale: 0.72, y: 40 }}

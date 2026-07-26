@@ -8,6 +8,7 @@
     "build": "tsc -b && vite build",
     "postbuild": "node scripts/gen-routes.mjs",
     "og": "node scripts/make-og.mjs",
+    "images": "node scripts/make-images.mjs",
     "preview": "vite preview"
   },
   "dependencies": {
