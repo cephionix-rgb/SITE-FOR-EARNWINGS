@@ -30,7 +30,7 @@ const COPY: Record<Variant, { label: string; sub: string }> = {
 export function SectionCTA({ variant = "default" }: { variant?: Variant }) {
   const c = COPY[variant];
   return (
-    <div className="mt-12 flex flex-col items-center">
+    <div className="mt-12 mb-16 flex flex-col items-center">
       <a
         href="#waitlist"
         onClick={() => track("section_cta_click", { section: variant })}

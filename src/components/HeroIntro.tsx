@@ -39,7 +39,7 @@ export function HeroIntro() {
 
   // Phones get the dedicated 9:16 intro; desktop keeps the wide 4K one.
   const isMobile = typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches;
-  const introSrc = isMobile ? "/assets/paper-airplane-mobile.mp4" : "/assets/paper-airplane-intro-4k.mp4";
+  const introSrc = isMobile ? "/assets/paper-airplane-mobile.mp4" : "/assets/paper-airplane-intro-1080.mp4";
   const introPoster = isMobile ? "/assets/paper-airplane-mobile-poster.jpg" : "/assets/paper-airplane-intro-poster.jpg";
 
   // Lock scroll + pin to top while the overlay covers the page.
@@ -76,10 +76,11 @@ export function HeroIntro() {
         void el.play().catch(() => {});
       });
 
-    // First interaction of ANY kind (move, scroll, tap, key, click) → sound on.
-    // On a laptop a mouse move alone flips it; on mobile the first touch does.
-    const events = ["pointermove", "pointerdown", "touchstart", "keydown", "wheel", "scroll", "click"] as const;
-    const opts = { once: true, passive: true } as AddEventListenerOptions;
+    // Sound needs a real "user activation" gesture — a tap, click or key press.
+    // Mouse-move / scroll / wheel do NOT count (the browser ignores them and
+    // would pause playback), so we only listen for genuine activation events.
+    const events = ["pointerdown", "touchstart", "keydown", "click"] as const;
+    const opts = { once: true } as AddEventListenerOptions;
     const onGesture = () => enableSound();
     events.forEach((e) => window.addEventListener(e, onGesture, opts));
     return () => events.forEach((e) => window.removeEventListener(e, onGesture));
@@ -148,17 +149,20 @@ export function HeroIntro() {
             <motion.button
               type="button"
               onClick={enableSound}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 }}
-              className="absolute bottom-7 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold text-white"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0, scale: [1, 1.05, 1] }}
+              transition={{
+                opacity: { delay: 0.5, duration: 0.4 },
+                y: { delay: 0.5, duration: 0.4 },
+                scale: { repeat: Infinity, duration: 1.8, ease: "easeInOut", delay: 0.9 },
+              }}
+              className="absolute bottom-9 left-1/2 flex -translate-x-1/2 items-center gap-2.5 rounded-full px-6 py-3 text-base font-bold text-[#0D1629]"
               style={{
-                background: "rgba(255,255,255,0.12)",
-                border: "1px solid rgba(255,255,255,0.25)",
-                backdropFilter: "blur(8px)",
+                background: "linear-gradient(135deg,#F5D97A,#C9981F)",
+                boxShadow: "0 12px 34px -10px rgba(201,152,31,0.7)",
               }}
             >
-              <Volume2 size={16} /> Tap for sound
+              <Volume2 size={18} /> Tap for sound
             </motion.button>
           )}
         </motion.div>
