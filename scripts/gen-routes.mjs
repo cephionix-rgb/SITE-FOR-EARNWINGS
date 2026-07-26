@@ -138,15 +138,61 @@ const HERO_SHELL =
   `<p>${HERO_INTRO}</p>` +
   `<a href="#waitlist">${HERO_CTA}</a>` +
   "</div>";
-const home = base.replace(
+let home = base.replace(
   /<div id="root">\s*<\/div>/,
   `<div id="root">${HERO_SHELL}</div>`,
 );
 if (home === base) {
   console.warn("gen-routes: hero shell not injected (root div did not match)");
 }
+
+// Phase 3: structured data on the home page. No SearchAction (there is no site
+// search) and no aggregateRating/review markup (there are no reviews) - both
+// would be false signals / a manual-action risk.
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "EARNWINGS",
+    url: `${ORIGIN}/`,
+    logo: `${ORIGIN}/assets/logo-full.png`,
+    sameAs: [
+      "https://www.instagram.com/flywithearnwings/",
+      "https://www.youtube.com/@flywithearnwings",
+    ],
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: "customer support",
+      email: "cephionix@gmail.com",
+    },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "EARNWINGS",
+    url: `${ORIGIN}/`,
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: "EARNWINGS",
+    applicationCategory: "EducationalApplication",
+    operatingSystem: "iOS, Android, Web, macOS, Windows",
+    description:
+      "DGCA CPL and ATPL ground-school app: real-airway flight planning, an RT trainer, an AI Captain and full mock exams.",
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "INR",
+      availability: "https://schema.org/PreOrder",
+    },
+  },
+];
+const ldScript = `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>`;
+home = home.replace("</head>", `    ${ldScript}\n  </head>`);
+
 writeFileSync(INDEX, home);
 
 console.log(
-  `gen-routes: baked per-route meta for ${Object.keys(ROUTES).length} routes + 404.html + home hero shell`,
+  `gen-routes: baked meta for ${Object.keys(ROUTES).length} routes + 404.html + home hero shell + JSON-LD`,
 );
