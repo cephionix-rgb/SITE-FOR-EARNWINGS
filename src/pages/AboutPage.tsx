@@ -46,7 +46,7 @@ export function AboutPage() {
             </div>
             <div
               className="mt-1 text-xs font-semibold uppercase tracking-wide"
-              style={{ color: "#5F7499" }}
+              style={{ color: "#4A5A78" }}
             >
               {s.label}
             </div>
@@ -108,7 +108,7 @@ export function AboutPage() {
               body: "Our AI Captain answers from your own notes and cites its source — it says 'I don't know' rather than inventing.",
             },
             {
-              title: "Made in India 🇮🇳",
+              title: "Made in India",
               body: "Purpose-built for DGCA CPL & ATPL aspirants, tuned to the exams, airspace and paperwork you actually face.",
             },
           ].map((v) => (

@@ -100,7 +100,7 @@ export function HeroSection() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: easeOutExpo }}
-            className="pill mb-6 max-lg:hidden"
+            className="pill mb-6 max-lg:hidden!"
             style={{
               background: "rgba(255,255,255,0.66)",
               color: "#9a7415",
@@ -320,7 +320,7 @@ export function HeroSection() {
       <motion.a
         href="#cockpit"
         className="absolute bottom-6 left-1/2 z-30 flex -translate-x-1/2 flex-col items-center gap-1 text-xs font-semibold"
-        style={{ color: "#5F7499" }}
+        style={{ color: "#4A5A78" }}
         animate={{ y: [0, 8, 0] }}
         transition={{ repeat: Infinity, duration: 1.8, ease: "easeInOut" }}
       >

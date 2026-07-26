@@ -207,6 +207,15 @@ export function JourneySection() {
                 </motion.div>
               </AnimatePresence>
 
+              {/* Screen-reader announcement of the result after each answer */}
+              <div aria-live="polite" className="sr-only">
+                {picked !== null
+                  ? picked === q.a
+                    ? "Correct."
+                    : "Incorrect. The correct answer is highlighted."
+                  : ""}
+              </div>
+
               <button onClick={next} disabled={picked === null} className="btn-gold mt-5 w-full text-base disabled:opacity-40">
                 {qi < QUIZ.length - 1 ? <>Next question <ChevronRight size={18} /></> : <>See my wings <Trophy size={18} /></>}
               </button>
@@ -218,9 +227,9 @@ export function JourneySection() {
                   {passed ? <Trophy size={30} color="#3d2c00" /> : <Plane size={28} color="#1B3A7A" />}
                 </div>
                 <h3 className="mt-3 text-2xl font-black" style={{ color: "#1B3A7A" }}>
-                  {passed ? "Commander Wings earned! 🎉" : "So close, Cadet"}
+                  {passed ? "Commander Wings earned!" : "So close, Cadet"}
                 </h3>
-                <p className="mt-1 text-sm" style={{ color: "#5F7499" }}>
+                <p className="mt-1 text-sm" style={{ color: "#4A5A78" }}>
                   You scored <b style={{ color: "#C9981F" }}>{correct} / {QUIZ.length}</b>.{" "}
                   {passed ? "Your founder perks just doubled." : `Get ${PASS - correct} more right to double your perks.`}
                 </p>

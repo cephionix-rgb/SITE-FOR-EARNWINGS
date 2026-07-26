@@ -39,7 +39,7 @@ export function SectionCTA({ variant = "default" }: { variant?: Variant }) {
       >
         <Plane size={18} /> {c.label}
       </a>
-      <p className="mt-2.5 text-[13px]" style={{ color: "#5F7499" }}>
+      <p className="mt-2.5 text-[13px]" style={{ color: "#4A5A78" }}>
         {c.sub}
       </p>
     </div>

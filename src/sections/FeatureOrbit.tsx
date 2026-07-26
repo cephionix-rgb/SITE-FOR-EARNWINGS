@@ -381,7 +381,7 @@ function MobileCockpit({ active, onSelect }: { active: number; onSelect: (i: num
       </div>
 
       {/* swipe hint */}
-      <div className="mt-4 flex items-center gap-1.5 text-[13px] font-semibold" style={{ color: "#5F7499" }}>
+      <div className="mt-4 flex items-center gap-1.5 text-[13px] font-semibold" style={{ color: "#4A5A78" }}>
         <ChevronLeft size={15} /> swipe to explore <ChevronRight size={15} />
       </div>
 

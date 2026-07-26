@@ -85,7 +85,9 @@ export function Nav({ solid = false }: { solid?: boolean }) {
           className="flex h-10 w-10 items-center justify-center rounded-full text-navy md:hidden"
           style={{ color: "#1B3A7A", background: "rgba(255,255,255,0.6)" }}
           onClick={() => setOpen((v) => !v)}
-          aria-label="Menu"
+          aria-label={open ? "Close menu" : "Open menu"}
+          aria-expanded={open}
+          aria-controls="mobile-menu"
         >
           {open ? <X size={22} /> : <Menu size={22} />}
         </button>
@@ -94,6 +96,7 @@ export function Nav({ solid = false }: { solid?: boolean }) {
       <AnimatePresence>
         {open && (
           <motion.div
+            id="mobile-menu"
             initial={{ opacity: 0, y: -12 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -12 }}

@@ -14,7 +14,7 @@ export function CtaMicro({
   return (
     <p
       className={`mt-3 text-center text-[13px] leading-snug ${className}`}
-      style={{ color: "#5F7499" }}
+      style={{ color: "#4A5A78" }}
     >
       {children ??
         "Takes about 20 seconds. No payment. You get your Founding Cadet perks and an early-access invite the moment we open the doors."}

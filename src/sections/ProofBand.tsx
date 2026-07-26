@@ -41,7 +41,7 @@ function Counter({ to, suffix = "", label }: { to: number; suffix?: string; labe
         {n.toLocaleString()}
         {suffix}
       </div>
-      <div className="mt-1.5 text-[13px] font-semibold" style={{ color: "#5F7499" }}>
+      <div className="mt-1.5 text-[13px] font-semibold" style={{ color: "#4A5A78" }}>
         {label}
       </div>
     </div>
@@ -118,7 +118,7 @@ export function ProofBand() {
         whileInView="show"
         viewport={inView}
         className="mx-auto mt-6 max-w-xl text-center text-[15px]"
-        style={{ color: "#5F7499" }}
+        style={{ color: "#4A5A78" }}
       >
         Walk into your DGCA exam having already solved {siteStats.questions.toLocaleString()}+ questions.
       </motion.p>

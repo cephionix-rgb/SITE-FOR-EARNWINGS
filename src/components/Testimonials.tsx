@@ -19,7 +19,7 @@ export function Testimonials() {
           </blockquote>
           <figcaption className="mt-4 text-sm font-bold" style={{ color: "#1B3A7A" }}>
             {t.name}{" "}
-            <span className="font-medium" style={{ color: "#5F7499" }}>
+            <span className="font-medium" style={{ color: "#4A5A78" }}>
               — {t.role}
             </span>
           </figcaption>

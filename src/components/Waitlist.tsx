@@ -122,9 +122,9 @@ export function Waitlist() {
               <Check size={28} />
             </div>
             <h3 className="text-2xl font-extrabold" style={{ color: "#1B3A7A" }}>
-              {alreadyJoined ? "You're already on the list ✈️" : "You're cleared for takeoff! ✈️"}
+              {alreadyJoined ? "You're already on the list" : "You're cleared for takeoff!"}
             </h3>
-            <p className="mt-2" style={{ color: "#5F7499" }}>
+            <p className="mt-2" style={{ color: "#4A5A78" }}>
               You're cleared for boarding, founder cadet — we'll email you the moment we open the doors.
             </p>
 
@@ -153,7 +153,7 @@ export function Waitlist() {
             animate={{ opacity: 1, y: 0 }}
             className="card-soft p-6 text-left sm:p-8"
           >
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-bold" style={{ background: "rgba(201,152,31,0.12)", color: "#9a7415" }}>
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-bold" style={{ background: "rgba(201,152,31,0.12)", color: "#886611" }}>
               <span className="h-2 w-2 rounded-full" style={{ background: "#C9981F" }} />
               The first {CAPACITY} to join become founder cadets
             </div>
@@ -196,7 +196,7 @@ export function Waitlist() {
             </p>
             <div className="grid gap-3 sm:grid-cols-2">
               <div className="relative">
-                <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[15px] font-bold" style={{ color: "#5F7499" }}>₹</span>
+                <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[15px] font-bold" style={{ color: "#4A5A78" }}>₹</span>
                 <input
                   name="subscription"
                   type="number"
@@ -211,6 +211,7 @@ export function Waitlist() {
               </div>
               <select
                 name="examTarget"
+                aria-label="Training goal"
                 defaultValue=""
                 className="rounded-xl border px-4 py-3 outline-none focus:ring-2"
                 style={{ background: "#F0F5FF", borderColor: "rgba(27,58,122,0.12)", color: "#1B3A7A" }}
@@ -239,7 +240,7 @@ export function Waitlist() {
                 </>
               )}
             </button>
-            <p className="mt-3 text-center text-xs" style={{ color: "#5F7499" }}>
+            <p className="mt-3 text-center text-xs" style={{ color: "#4A5A78" }}>
               Founder cadets get the full app for a week + RT, chapters, papers, flight plans &amp; more. No spam.
             </p>
           </motion.form>

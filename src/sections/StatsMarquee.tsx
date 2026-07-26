@@ -38,7 +38,7 @@ export function StatsMarquee() {
                   <Icon size={20} style={{ color: s.color }} />
                 </div>
                 <div className="text-2xl font-black" style={{ color: "#1B3A7A" }}>{s.value}</div>
-                <div className="text-[11px] font-semibold uppercase tracking-wide" style={{ color: "#5F7499" }}>
+                <div className="text-[11px] font-semibold uppercase tracking-wide" style={{ color: "#4A5A78" }}>
                   {s.label}
                 </div>
               </motion.div>

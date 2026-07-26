@@ -85,7 +85,7 @@ export function Footer() {
       >
         <span>
           © {new Date().getFullYear()} EARNWINGS · Elevate your aviation journey ·
-          Made for DGCA aspirants in India 🇮🇳
+          Made for DGCA aspirants in India
         </span>
         <span className="flex items-center gap-4">
           <Link to="/about" className="hover:text-white">About</Link>

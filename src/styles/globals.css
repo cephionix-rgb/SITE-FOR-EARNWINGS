@@ -274,6 +274,14 @@ html.lenis body {
   }
 }
 
+/* Visible keyboard focus on every interactive element (a11y). !important so it
+   beats the utility `outline-none` on inputs / quiz options / airport selectors. */
+:focus-visible {
+  outline: 2px solid #2e6be5 !important;
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

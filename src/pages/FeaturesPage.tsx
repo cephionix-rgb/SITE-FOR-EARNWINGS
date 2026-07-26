@@ -276,7 +276,7 @@ function PhoneDeck() {
       <AnimatePresence>
         {!engaged && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.4 }}
-            className="mt-5 flex items-center justify-center gap-2 text-[13px] font-semibold" style={{ color: "#5F7499" }}>
+            className="mt-5 flex items-center justify-center gap-2 text-[13px] font-semibold" style={{ color: "#4A5A78" }}>
             <motion.span animate={{ x: [-4, 4, -4] }} transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }} className="inline-flex"><Hand size={15} /></motion.span>
             Drag the deck · tap a screen to bring it forward
           </motion.div>
@@ -353,7 +353,7 @@ function StudyPack() {
           return (
             <button key={t.key} onClick={() => { setTab(t.key); setIdx(0); }}
               className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-bold transition-all"
-              style={on ? { background: t.accent, color: "#fff", boxShadow: `0 12px 26px -12px ${t.accent}` } : { background: "rgba(255,255,255,0.82)", color: "#5F7499", border: "1px solid rgba(27,58,122,0.12)" }}>
+              style={on ? { background: t.accent, color: "#fff", boxShadow: `0 12px 26px -12px ${t.accent}` } : { background: "rgba(255,255,255,0.82)", color: "#4A5A78", border: "1px solid rgba(27,58,122,0.12)" }}>
               <Icon size={16} /> {t.label}
               <span className="rounded-full px-1.5 text-[11px]" style={{ background: on ? "rgba(255,255,255,0.22)" : "rgba(27,58,122,0.08)" }}>{STUDY[t.key].length}</span>
             </button>
@@ -425,7 +425,7 @@ export function FeaturesPage() {
       {/* Hero */}
       <header className="px-5 pb-8 pt-28 sm:px-6 sm:pt-32">
         <div className="mx-auto max-w-6xl text-center">
-          <Link to="/" className="mb-5 inline-flex items-center gap-1 text-sm font-semibold transition-colors" style={{ color: "#5F7499" }}>
+          <Link to="/" className="mb-5 inline-flex items-center gap-1 text-sm font-semibold transition-colors" style={{ color: "#4A5A78" }}>
             <ChevronLeft size={16} /> Back to home
           </Link>
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}>
@@ -446,7 +446,7 @@ export function FeaturesPage() {
           {STATS.map((s) => (
             <div key={s.label} className="rounded-2xl px-4 py-5 text-center" style={{ background: "rgba(255,255,255,0.8)", border: "1px solid rgba(27,58,122,0.08)" }}>
               <div className="text-3xl font-extrabold" style={{ color: "#C9981F" }}>{s.value}</div>
-              <div className="mt-1 text-xs font-semibold uppercase tracking-wide" style={{ color: "#5F7499" }}>{s.label}</div>
+              <div className="mt-1 text-xs font-semibold uppercase tracking-wide" style={{ color: "#4A5A78" }}>{s.label}</div>
             </div>
           ))}
         </section>
@@ -461,7 +461,7 @@ export function FeaturesPage() {
           <div className="text-center">
             <span className="eyebrow"><BookOpen size={14} /> Learn it once, remember it</span>
             <h2 className="mt-3 text-2xl font-black sm:text-3xl" style={{ color: "#0D1629" }}>Notes, summaries &amp; flowcharts</h2>
-            <p className="mx-auto mt-2 max-w-2xl text-[15px] leading-7" style={{ color: "#5F7499" }}>
+            <p className="mx-auto mt-2 max-w-2xl text-[15px] leading-7" style={{ color: "#4A5A78" }}>
               Every chapter is turned into beautiful full-page notes, a single-glance summary and a concept flowchart. Flip through the real thing — tap a page for full size.
             </p>
           </div>
@@ -471,7 +471,7 @@ export function FeaturesPage() {
         {/* More in the cockpit */}
         <section className="mt-16">
           <h2 className="text-center text-2xl font-black sm:text-3xl" style={{ color: "#0D1629" }}>More in the cockpit</h2>
-          <p className="mx-auto mt-2 max-w-xl text-center text-[15px] leading-7" style={{ color: "#5F7499" }}>
+          <p className="mx-auto mt-2 max-w-xl text-center text-[15px] leading-7" style={{ color: "#4A5A78" }}>
             The flagships above are just the start — here’s more of what’s packed into EARNWINGS.
           </p>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -482,7 +482,7 @@ export function FeaturesPage() {
                   className="rounded-2xl p-5" style={{ background: "rgba(255,255,255,0.85)", border: "1px solid rgba(27,58,122,0.08)", boxShadow: "0 20px 40px -30px rgba(27,58,122,0.35)" }}>
                   <div className="flex h-11 w-11 items-center justify-center rounded-xl" style={{ background: "rgba(46,107,229,0.1)", color: "#2E6BE5" }}><Icon size={20} /></div>
                   <h3 className="mt-3 font-bold" style={{ color: "#1B3A7A" }}>{m.title}</h3>
-                  <p className="mt-1.5 text-[14px] leading-6" style={{ color: "#5F7499" }}>{m.body}</p>
+                  <p className="mt-1.5 text-[14px] leading-6" style={{ color: "#4A5A78" }}>{m.body}</p>
                 </motion.div>
               );
             })}

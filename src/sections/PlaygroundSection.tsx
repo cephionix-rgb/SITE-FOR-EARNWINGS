@@ -284,7 +284,7 @@ function MetarGame() {
         {done ? (
           <motion.div key="done" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} className="rounded-2xl p-8 text-center" style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}>
             <div className="text-6xl font-black" style={{ color: "#F5D97A" }}>{score}/{METAR_QUESTIONS.length}</div>
-            <p className="mt-3 text-lg font-bold text-white">{score === METAR_QUESTIONS.length ? "Perfect readback! 🎧" : "Nice — keep decoding."}</p>
+            <p className="mt-3 text-lg font-bold text-white">{score === METAR_QUESTIONS.length ? "Perfect readback!" : "Nice — keep decoding."}</p>
             <p className="mt-1 text-sm" style={{ color: "#93A9D6" }}>The full app streams hundreds of live METARs, TAFs &amp; SIGMETs.</p>
             <button onClick={restart} className="btn-gold mt-6 text-sm"><RotateCcw size={16} /> Play again</button>
           </motion.div>
