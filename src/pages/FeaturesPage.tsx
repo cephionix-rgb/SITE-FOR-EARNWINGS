@@ -9,6 +9,7 @@ import type { LucideIcon } from "lucide-react";
 import { Nav } from "../components/Nav";
 import { Footer } from "../components/Footer";
 import { CloudBackground } from "../components/CloudBackground";
+import { FEATURES_H1, FEATURES_INTRO } from "../content/features";
 import { PhoneFrame } from "../components/DeviceFrame";
 import { Link } from "../lib/router";
 import { STATS } from "../lib/data";
@@ -430,10 +431,10 @@ export function FeaturesPage() {
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}>
             <span className="eyebrow"><Sparkles size={14} /> Explore the cockpit</span>
             <h1 className="mt-3 text-[clamp(2.2rem,5vw,3.6rem)] font-black leading-tight" style={{ color: "#0D1629" }}>
-              See exactly what <span className="text-gradient-gold">EARNWINGS</span> does
+              {FEATURES_H1[0]}<span className="text-gradient-gold">{FEATURES_H1[1]}</span>{FEATURES_H1[2]}
             </h1>
             <p className="mx-auto mt-4 max-w-2xl text-lg" style={{ color: "#40506e" }}>
-              Tap a system — or let it fly itself — and watch each feature come to life. Your whole DGCA CPL &amp; ATPL toolkit, in one app.
+              {FEATURES_INTRO}
             </p>
           </motion.div>
         </div>

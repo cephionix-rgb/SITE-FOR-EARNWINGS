@@ -252,6 +252,8 @@ export function HeroSection() {
             <Contrails />
             <motion.img
               src="/assets/logo-mark.webp"
+              srcSet="/assets/logo-mark-320.webp 320w, /assets/logo-mark.webp 512w"
+              sizes="(max-width: 640px) 340px, 560px"
               alt="EARNWINGS"
               draggable={false}
               initial={{ opacity: 0, scale: 0.72, y: 40 }}

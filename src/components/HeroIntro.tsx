@@ -245,7 +245,7 @@ export function HeroIntro() {
                 />
               </svg>
               <motion.img
-                src="/assets/logo-mark.webp"
+                src="/assets/logo-mark-320.webp"
                 alt="EARNWINGS"
                 className="relative h-36 w-36 sm:h-40 sm:w-40 drop-shadow-[0_10px_40px_rgba(0,0,0,0.5)]"
                 animate={{ y: [0, -6, 0] }}

@@ -24,6 +24,7 @@ import {
   HERO_INTRO,
   HERO_CTA,
 } from "../src/content/hero.js";
+import { FEATURES_H1, FEATURES_INTRO } from "../src/content/features.js";
 
 const DIST = "dist";
 const INDEX = join(DIST, "index.html");
@@ -119,9 +120,23 @@ function pageHtml(route, m) {
 // SPA fallback for unmatched paths (empty root, like the original shell).
 copyFileSync(INDEX, join(DIST, "404.html"));
 
-// Sub-routes: per-route meta, empty root (they do not render the hero).
+// /features gets its real (byte-identical) hero shell too - it is the sub-route
+// that will carry FAQPage schema and target non-brand queries. /about, /privacy
+// and /terms keep an empty root (their meta is enough).
+const FEATURES_SHELL =
+  '<div style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);border:0;padding:0;margin:-1px;">' +
+  `<h1>${FEATURES_H1[0]}<span>${FEATURES_H1[1]}</span>${FEATURES_H1[2]}</h1>` +
+  `<p>${esc(FEATURES_INTRO)}</p>` +
+  "</div>";
+
 for (const [route, m] of Object.entries(ROUTES)) {
-  const html = pageHtml(route, m);
+  let html = pageHtml(route, m);
+  if (route === "features") {
+    html = html.replace(
+      /<div id="root">\s*<\/div>/,
+      `<div id="root">${FEATURES_SHELL}</div>`,
+    );
+  }
   writeFileSync(join(DIST, `${route}.html`), html); // /about   -> 200
   mkdirSync(join(DIST, route), { recursive: true });
   writeFileSync(join(DIST, route, "index.html"), html); // /about/ -> 200
@@ -155,7 +170,7 @@ const jsonLd = [
     "@type": "Organization",
     name: "EARNWINGS",
     url: `${ORIGIN}/`,
-    logo: `${ORIGIN}/assets/logo-full.png`,
+    logo: `${ORIGIN}/assets/logo-512.png`,
     sameAs: [
       "https://www.instagram.com/flywithearnwings/",
       "https://www.youtube.com/@flywithearnwings",

@@ -7,7 +7,7 @@ import { statSync } from "node:fs";
 const W = 1200;
 const H = 630;
 const OUT = "public/assets/og-image.jpg";
-const LOGO = "public/assets/logo-full.png";
+const LOGO = "image-src/logo-full.png";
 
 const svg = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">
   <defs>

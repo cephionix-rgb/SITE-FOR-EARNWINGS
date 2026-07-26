@@ -17,9 +17,9 @@ export function Footer() {
             className="inline-flex items-center rounded-2xl bg-white/95 px-3 py-2 shadow-lg"
           >
             <picture>
-              <source type="image/webp" srcSet="/assets/logo-full.webp" />
+              <source type="image/webp" srcSet="/assets/logo-full-160.webp" />
               <img
-                src="/assets/logo-full.png"
+                src="/assets/logo-full-160.png"
                 alt="EARNWINGS"
                 className="h-9 w-auto"
                 loading="lazy"
