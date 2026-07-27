@@ -26,10 +26,14 @@ const CSS = `
    cloudless. Aim each layer at a cloud region instead so real clouds fill the
    screen; keep all three drifting (blur only trimmed for scroll perf). */
 @media (max-width:768px){
-  .ewsky-cloud{filter:blur(1px);}
-  .ewsky-c1{background-position:86% 6%;}
-  .ewsky-c2{background-position:6% 82%;}
-  .ewsky-c3{background-position:78% 94%;}
+  /* Size by width so the whole landscape (both cloud groups) shows as a band
+     instead of cover cropping into the empty-sky middle; stack the three layers
+     at top / middle / bottom so clouds fill the phone with sky peeking between. */
+  .ewsky-cloud{filter:blur(1px);background-size:135% auto;}
+  .ewsky-c1{background-position:60% 6%;opacity:.72;}
+  .ewsky-c2{background-position:15% 52%;opacity:.76;}
+  .ewsky-c3{background-position:85% 100%;opacity:.7;}
+  .ewsky-wash{opacity:.5;}
 }
 @media (prefers-reduced-motion:reduce){.ewsky-cloud,.ewsky-sun{animation:none;}}
 `;
