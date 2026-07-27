@@ -37,13 +37,15 @@ var SECRET     = '';           // optional anti-spam: set a string to require pa
 var PERKS = {
   tier:                  'cadet',
   fullAccessDays:        7,   // use the full app for one week
-  rtSessions:            5,   // 5 RT (radio-telephony) sessions
   unlockedChapters:      2,   // first 2 chapters unlocked in EVERY subject (all 5)
+  mcqChapters:           2,   // MCQs for those first 2 chapters, every subject
   samplePapersPerSubject:1,   // 1 sample paper unlocked in every subject
-  mcqChapters:           2,   // MCQs for the first 2 chapters
+  rtSessions:            5,   // 5 RT (radio-telephony) scenarios
   flightPlans:           5,   // 5 flight plans
-  captainDoubts:         5,   // 5 doubts to Ask Captain
-  weightAndBalance:      5    // 5 weight & balance calculations
+  weightAndBalance:      5,   // 5 weight & balance calculations
+  metarChallenges:       5,   // 5 METAR decoding challenges
+  competeMatches:        5,   // 5 compete (head-to-head) matches vs other cadets
+  captainDoubts:         5    // 5 doubts to Ask Captain
 };
 
 // Commander tier — earned by scoring 5+/10 on the "Cadet to Commander" quiz.
@@ -52,13 +54,15 @@ var PERKS = {
 var COMMANDER_PERKS = {
   tier:                  'commander',
   fullAccessDays:        10,
-  rtSessions:            10,
   unlockedChapters:      4,   // first 4 chapters unlocked in EVERY subject
+  mcqChapters:           4,   // MCQs for those first 4 chapters
   samplePapersPerSubject:1,
-  mcqChapters:           4,   // MCQs for the first 4 chapters
+  rtSessions:            10,
   flightPlans:           10,
-  captainDoubts:         10,
-  weightAndBalance:      10
+  weightAndBalance:      10,
+  metarChallenges:       10,
+  competeMatches:        10,
+  captainDoubts:         10
 };
 
 // NOTE: Phone + "Would Pay" are appended at the END on purpose — the code reads

@@ -14,14 +14,16 @@ const EXAMS = ["CPL", "ATPL", "PPL", "RTR (A)", "Just exploring"];
 
 // The founder perks every waitlisted cadet unlocks (mirrors the Apps Script PERKS).
 const PERKS = [
-  "Full app access for 1 week",
-  "5 RT practice sessions",
-  "First 2 chapters of all 5 subjects unlocked",
+  "Full app — free for 7 days",
+  "First 2 chapters unlocked in every subject",
+  "MCQ banks for those 2 chapters",
   "1 sample paper in every subject",
-  "MCQs for your first 2 chapters",
+  "5 RT scenarios",
   "5 flight plans",
-  "5 Ask-Captain doubts",
   "5 weight & balance calcs",
+  "5 METAR decoding challenges",
+  "5 compete matches vs other cadets",
+  "5 Ask-Captain doubts",
 ];
 
 type Status = "idle" | "submitting" | "done" | "error";
@@ -241,7 +243,7 @@ export function Waitlist() {
               )}
             </button>
             <p className="mt-3 text-center text-xs" style={{ color: "#4A5A78" }}>
-              Founder cadets get the full app for a week + RT, chapters, papers, flight plans &amp; more. No spam.
+              Full app free for 7 days + 2 chapters &amp; MCQs per subject, 1 sample paper each, and 5× RT, flight plans, W&amp;B, METAR, compete &amp; Ask-Captain. No spam.
             </p>
             <p className="mt-1.5 text-center text-xs" style={{ color: "#4A5A78" }}>
               We only use your details to send early-access updates. See our{" "}
