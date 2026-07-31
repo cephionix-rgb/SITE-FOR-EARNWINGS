@@ -10,6 +10,20 @@ export function prefersReducedMotion(): boolean {
 // navigating home from a sub-page. Null when Lenis is off (reduced motion).
 let lenisInstance: Lenis | null = null;
 
+/** Height of the fixed nav — every hash landing clears it. */
+const NAV_OFFSET = 80;
+
+// The intro overlay locks the body and pins the page to the top while it plays,
+// so any scroll done underneath it is thrown away. HeroIntro reports its state
+// here and hash-scrolls wait it out instead of firing into a locked page.
+let introActive = false;
+export function setIntroActive(v: boolean) {
+  introActive = v;
+}
+export function isIntroActive(): boolean {
+  return introActive;
+}
+
 /**
  * Smooth-scroll to the element matching `hash` (e.g. "#features").
  * Uses Lenis when available, else native. Returns false if the element isn't
@@ -24,8 +38,22 @@ export function scrollToHash(hash: string): boolean {
     return false; // invalid selector — treat as "not found"
   }
   if (!el) return false;
-  if (lenisInstance) lenisInstance.scrollTo(el as HTMLElement, { offset: -80 });
-  else el.scrollIntoView({ behavior: "smooth", block: "start" });
+  if (lenisInstance) {
+    // Lenis clamps every scrollTo against a *cached* page height, refreshed by a
+    // ResizeObserver that hasn't fired yet right after a route change — the
+    // stale limit is 0, so the jump silently collapses to the top of the page.
+    // Re-measure first so the target survives the clamp.
+    lenisInstance.resize();
+    lenisInstance.scrollTo(el as HTMLElement, { offset: -NAV_OFFSET });
+  } else {
+    // No Lenis (reduced motion) — scroll natively, but keep the same nav offset
+    // so the section heading never lands underneath the fixed header.
+    const top = el.getBoundingClientRect().top + window.scrollY - NAV_OFFSET;
+    window.scrollTo({
+      top: Math.max(0, top),
+      behavior: prefersReducedMotion() ? "auto" : "smooth",
+    });
+  }
   return true;
 }
 
@@ -34,6 +62,29 @@ export function scrollToHash(hash: string): boolean {
  * the user prefers reduced motion, so the site degrades to native scrolling.
  */
 export function useLenis() {
+  // Same-page anchors (#waitlist, #play, #cockpit …) always route through
+  // scrollToHash — with or without Lenis — so they clear the fixed nav and leave
+  // a shareable URL behind. Registered independently of Lenis, because the
+  // reduced-motion path used to fall through to an offset-less native jump.
+  useEffect(() => {
+    function onClick(e: MouseEvent) {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      const a = (e.target as HTMLElement)?.closest?.('a[href^="#"]');
+      if (!a) return;
+      const hash = a.getAttribute("href");
+      if (!hash || hash === "#") return;
+      // Target isn't on this page — leave it to the browser rather than
+      // swallowing the click.
+      if (!scrollToHash(hash)) return;
+      e.preventDefault();
+      if (hash !== window.location.hash) {
+        window.history.pushState({}, "", window.location.pathname + hash);
+      }
+    }
+    document.addEventListener("click", onClick);
+    return () => document.removeEventListener("click", onClick);
+  }, []);
+
   useEffect(() => {
     if (prefersReducedMotion()) return;
 
@@ -52,23 +103,8 @@ export function useLenis() {
     }
     raf = requestAnimationFrame(loop);
 
-    // Anchor links → smooth scroll
-    function onClick(e: MouseEvent) {
-      const a = (e.target as HTMLElement)?.closest?.('a[href^="#"]');
-      if (!a) return;
-      const id = a.getAttribute("href");
-      if (!id || id === "#") return;
-      const el = document.querySelector(id);
-      if (el) {
-        e.preventDefault();
-        lenis.scrollTo(el as HTMLElement, { offset: -80 });
-      }
-    }
-    document.addEventListener("click", onClick);
-
     return () => {
       cancelAnimationFrame(raf);
-      document.removeEventListener("click", onClick);
       lenis.destroy();
       lenisInstance = null;
     };

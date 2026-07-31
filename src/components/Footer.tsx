@@ -56,7 +56,7 @@ export function Footer() {
             Product
           </h4>
           <ul className="space-y-2 text-sm">
-            <li><Link to="/#features" className="hover:text-white">Features</Link></li>
+            <li><Link to="/features" className="hover:text-white">Features</Link></li>
             <li><Link to="/#play" className="hover:text-white">Try it live</Link></li>
             <li><Link to="/#app" className="hover:text-white">The app</Link></li>
             <li><Link to="/#journey" className="hover:text-white">Your journey</Link></li>
