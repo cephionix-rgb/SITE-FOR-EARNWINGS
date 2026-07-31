@@ -1,5 +1,6 @@
 import { PageShell } from "../components/PageShell";
 import { H2, P, UL, Updated } from "../components/Prose";
+import { COMPANY_NAME, SUPPORT_EMAIL } from "../lib/siteConfig";
 
 export function PrivacyPage() {
   return (
@@ -8,12 +9,15 @@ export function PrivacyPage() {
       title="Privacy Policy"
       subtitle="How EARNWINGS collects, uses and protects your information — in plain English."
     >
-      <Updated date="24 July 2026" />
+      <Updated date="31 July 2026" />
 
       <P>
-        This policy explains what we collect when you join the EARNWINGS waitlist
-        or use the EARNWINGS training app, why we collect it, and the choices you
-        have. We keep data collection to the minimum needed to run the service.
+        EARNWINGS is built and operated by{" "}
+        <strong style={{ color: "#1B3A7A" }}>{COMPANY_NAME}</strong>, which is the
+        entity responsible for the personal data described here. This policy
+        explains what we collect when you join the EARNWINGS waitlist or use the
+        EARNWINGS training app, why we collect it, and the choices you have. We
+        keep data collection to the minimum needed to run the service.
       </P>
 
       <H2>1. Information we collect</H2>
@@ -113,11 +117,11 @@ export function PrivacyPage() {
       <P>
         Questions about privacy? Email us at{" "}
         <a
-          href="mailto:cephionix@gmail.com"
+          href={`mailto:${SUPPORT_EMAIL}`}
           className="font-semibold underline"
           style={{ color: "#2E6BE5" }}
         >
-          cephionix@gmail.com
+          {SUPPORT_EMAIL}
         </a>
         .
       </P>

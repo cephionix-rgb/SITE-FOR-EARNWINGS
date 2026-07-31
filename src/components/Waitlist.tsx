@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Plane, Check, Loader2 } from "lucide-react";
 import { track } from "../lib/track";
 import { Link } from "../lib/router";
+import { QUIZ_PASS_MARK } from "../lib/siteConfig";
 
 // Primary CTA label (Task 2). Alternatives, kept for easy swapping:
 //   "Get Early Boarding Access" | "Become a Founding Cadet" | "Secure My Founder Wings"
@@ -89,6 +90,19 @@ export function Waitlist() {
         // Remember who this cadet is so the "Cadet to Commander" quiz can upgrade their perks.
         try {
           localStorage.setItem("ew_waitlist", JSON.stringify({ code: d.code, email, position: d.position }));
+        } catch { /* ignore */ }
+        // They may have passed the quiz BEFORE joining — there was no row to write to
+        // then, so replay that one attempt's score now. The server ignores it if the
+        // row already has a score, so this can never hand out a second chance.
+        try {
+          const q = JSON.parse(localStorage.getItem("ew_quiz") || "null");
+          if (q && Number(q.score) >= QUIZ_PASS_MARK) {
+            fetch(ENDPOINT, {
+              method: "POST",
+              headers: { "Content-Type": "text/plain;charset=utf-8" },
+              body: JSON.stringify({ action: "upgrade", code: d.code, email, score: Number(q.score) }),
+            }).catch(() => {});
+          }
         } catch { /* ignore */ }
         setStatus("done");
       } else {

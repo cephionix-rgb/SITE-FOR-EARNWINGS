@@ -62,6 +62,14 @@ const ROUTES = {
     ogTitle: "Terms of Service | EARNWINGS",
     ogDescription: "The rules for using the EARNWINGS website and waitlist.",
   },
+  copyright: {
+    title: "Copyright & Intellectual Property | EARNWINGS",
+    description:
+      "EARNWINGS — the app, the notes, the logo, the screens and the way information is presented inside it — is the exclusive property of Cephionix. Our IP notice in plain language.",
+    ogTitle: "This is our work. All of it. | EARNWINGS",
+    ogDescription:
+      "The EARNWINGS app, notes, screens and presentation are the exclusive property of Cephionix.",
+  },
 };
 
 if (!existsSync(INDEX)) {
@@ -193,15 +201,26 @@ const jsonLd = [
     name: "EARNWINGS",
     url: `${ORIGIN}/`,
     logo: `${ORIGIN}/assets/logo-512.png`,
+    // EARNWINGS is the product; Cephionix is the company that owns it.
+    // Keep in sync with COMPANY_NAME in src/lib/siteConfig.ts.
+    parentOrganization: { "@type": "Organization", name: "Cephionix" },
     sameAs: [
       "https://www.instagram.com/flywithearnwings/",
       "https://www.youtube.com/@flywithearnwings",
     ],
-    contactPoint: {
-      "@type": "ContactPoint",
-      contactType: "customer support",
-      email: "cephionix@gmail.com",
-    },
+    // Keep in sync with CONTACT_EMAIL / SUPPORT_EMAIL in src/lib/siteConfig.ts.
+    contactPoint: [
+      {
+        "@type": "ContactPoint",
+        contactType: "customer support",
+        email: "support@earnwings.org",
+      },
+      {
+        "@type": "ContactPoint",
+        contactType: "general enquiries",
+        email: "hello@earnwings.org",
+      },
+    ],
   },
   {
     "@context": "https://schema.org",
@@ -213,6 +232,8 @@ const jsonLd = [
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
     name: "EARNWINGS",
+    author: { "@type": "Organization", name: "Cephionix" },
+    publisher: { "@type": "Organization", name: "Cephionix" },
     applicationCategory: "EducationalApplication",
     operatingSystem: "iOS, Android, Web, macOS, Windows",
     description:

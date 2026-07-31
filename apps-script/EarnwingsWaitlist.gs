@@ -48,7 +48,7 @@ var PERKS = {
   captainDoubts:         5    // 5 doubts to Ask Captain
 };
 
-// Commander tier — earned by scoring 5+/10 on the "Cadet to Commander" quiz.
+// Commander tier — earned by scoring PASS_MARK+/10 on the "Cadet to Commander" quiz.
 // Every 5 becomes 10, the week becomes 10 days; chapters/MCQs double to the
 // first 4 per subject; the 1 sample paper stays.
 var COMMANDER_PERKS = {
@@ -307,9 +307,9 @@ function _sendWelcomeEmail(email, name, position, code) {
             '<a href="' + SITE_URL + '" style="color:#1B3A7A;text-decoration:none;font-weight:700;">earnwings.org</a>' +
             '&nbsp;&nbsp;&#183;&nbsp;&nbsp;' +
             '<a href="' + INSTAGRAM_URL + '" style="color:#1B3A7A;text-decoration:none;font-weight:700;">@flywithearnwings</a>' +
-            '<div style="margin-top:8px;color:#8ea0c4;">&#169; EARNWINGS &#183; Elevate your aviation journey &#183; Made for DGCA aspirants in India</div>' +
+            '<div style="margin-top:8px;color:#8ea0c4;">&#169; Cephionix. All rights reserved. EARNWINGS is a product of Cephionix &#183; Made for DGCA aspirants in India</div>' +
             '<div style="margin-top:6px;color:#8ea0c4;">You&#8217;re getting this because you joined the EARNWINGS founder waitlist. ' +
-              '<a href="mailto:cephionix@gmail.com?subject=Unsubscribe%20EARNWINGS" style="color:#8ea0c4;text-decoration:underline;">Unsubscribe</a>.</div>' +
+              '<a href="mailto:support@earnwings.org?subject=Unsubscribe%20EARNWINGS" style="color:#8ea0c4;text-decoration:underline;">Unsubscribe</a>.</div>' +
           '</td></tr>' +
 
         '</table>' +
@@ -342,7 +342,7 @@ function _sendWelcomeEmail(email, name, position, code) {
     htmlBody: html,
     body: text,
     name: 'EARNWINGS',
-    replyTo: 'cephionix@gmail.com'
+    replyTo: 'hello@earnwings.org'
   });
 }
 
@@ -375,12 +375,21 @@ function _redeem(email, code) {
   return { ok: true, redeemedAt: redeemedAt, expiresAt: expiresAt, perks: perks, code: found.row[6], position: found.row[1] };
 }
 
-/** The "Cadet to Commander" quiz calls this on 5+/10 — doubles the perks on the cadet's row. */
+/**
+ * The "Cadet to Commander" quiz calls this on PASS_MARK+/10 — doubles the perks
+ * on the cadet's row. ONE ATTEMPT ONLY: if a Quiz Score is already recorded on
+ * the row the attempt is spent, so we refuse rather than let a cleared browser
+ * (or a replayed request) buy a second chance.
+ */
 function _upgrade(body) {
   if (Number(body.score || 0) < PASS_MARK) return { ok: false, error: 'score_too_low' };
   var f = _find(body.email, body.code);
   if (!f) return { ok: false, error: 'not_found' };
   var sheet = _sheet();
+  var priorScore = sheet.getRange(f.rowNumber, 12).getValue();                                  // Quiz Score
+  if (priorScore !== '' && priorScore !== null && !isNaN(Number(priorScore))) {
+    return { ok: false, error: 'already_attempted', score: Number(priorScore) };
+  }
   sheet.getRange(f.rowNumber, 10).setValue(JSON.stringify(COMMANDER_PERKS));                    // Perks (JSON)
   sheet.getRange(f.rowNumber, 11).setValue('Commander (10s) ✅').setBackground('#B7E1CD')        // Perk Tier — marked + highlighted green
     .setFontWeight('bold');

@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Menu, X } from "lucide-react";
 import { Link } from "../lib/router";
 import { track } from "../lib/track";
+import { COMPANY_NAME } from "../lib/siteConfig";
 
 // Section links point at "/#id" so they work from every page: on the landing
 // page they smooth-scroll, from a sub-page they navigate home then scroll.
@@ -47,17 +48,26 @@ export function Nav({ solid = false }: { solid?: boolean }) {
             <source type="image/webp" srcSet="/assets/logo-mark-96.webp" />
             <img src="/assets/logo-mark-96.png" alt="" className="h-9 w-auto sm:h-11" />
           </picture>
-          <span
-            className="leading-none uppercase"
-            style={{
-              fontFamily: "'Oswald', 'Sora', system-ui, sans-serif",
-              fontSize: "clamp(26px, 3vw, 34px)",
-              fontWeight: 700,
-              letterSpacing: "0.04em",
-            }}
-          >
-            <span style={{ color: "#C9981F" }}>EARN</span>
-            <span style={{ color: "#1B3A7A" }}>WINGS</span>
+          {/* Wordmark + owning company, matching neuralwings.org's header lockup. */}
+          <span className="flex flex-col">
+            <span
+              className="leading-none uppercase"
+              style={{
+                fontFamily: "'Oswald', 'Sora', system-ui, sans-serif",
+                fontSize: "clamp(26px, 3vw, 34px)",
+                fontWeight: 700,
+                letterSpacing: "0.04em",
+              }}
+            >
+              <span style={{ color: "#C9981F" }}>EARN</span>
+              <span style={{ color: "#1B3A7A" }}>WINGS</span>
+            </span>
+            <span
+              className="mt-0.5 text-[10px] font-light leading-tight"
+              style={{ color: "#C9981F" }}
+            >
+              by {COMPANY_NAME}
+            </span>
           </span>
         </Link>
 

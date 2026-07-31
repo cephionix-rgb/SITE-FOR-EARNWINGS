@@ -3,6 +3,7 @@ import { PageShell } from "../components/PageShell";
 import { Instructors } from "../components/Instructors";
 import { Link } from "../lib/router";
 import { FEATURES, STATS } from "../lib/data";
+import { COMPANY_NAME } from "../lib/siteConfig";
 
 export function AboutPage() {
   return (
@@ -29,6 +30,11 @@ export function AboutPage() {
           </strong>{" "}
           — grounded in real aviation data, guided by an AI captain that never
           bluffs, and turned into a climb you actually want to make.
+        </p>
+        <p className="mt-4 text-[17px] leading-8" style={{ color: "#41527A" }}>
+          EARNWINGS is built and owned by{" "}
+          <strong style={{ color: "#1B3A7A" }}>{COMPANY_NAME}</strong> — the
+          company behind the app, its content and its technology.
         </p>
       </section>
 

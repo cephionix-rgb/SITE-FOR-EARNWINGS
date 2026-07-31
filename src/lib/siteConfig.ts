@@ -5,13 +5,35 @@
 // ---------------------------------------------------------------------------
 
 /**
- * Public contact address. Kept as the founder's cephionix@gmail.com for now so
- * every touchpoint (footer, Privacy, Terms, Organization schema) matches.
- * TODO(founder): switch to a branded support@earnwings.org once the domain
- * mailbox is set up, then update Footer.tsx, PrivacyPage.tsx, TermsPage.tsx and
- * scripts/gen-routes.mjs (contactPoint.email) together.
+ * Public contact addresses — branded domain mailboxes. Import these; never
+ * hardcode an address in a component.
+ *   CONTACT_EMAIL — general enquiries (footer, Organization schema).
+ *   SUPPORT_EMAIL — help, privacy and terms queries, unsubscribe.
+ * Mirrored in scripts/gen-routes.mjs (contactPoint) and
+ * apps-script/EarnwingsWaitlist.gs (reply-to + unsubscribe) — keep in sync.
  */
-export const SUPPORT_EMAIL = "cephionix@gmail.com";
+export const CONTACT_EMAIL = "hello@earnwings.org";
+export const SUPPORT_EMAIL = "support@earnwings.org";
+
+/**
+ * The company that builds and owns EARNWINGS. EARNWINGS is the product;
+ * Cephionix is the legal entity that holds the IP, so this is the name that
+ * appears in the copyright line, the Terms and the Privacy Policy.
+ * TODO(founder): replace with the full registered name from the SPICE+ filing
+ * (e.g. "Cephionix Private Limited") and add the CIN — a named, registered
+ * entity is what makes the enforcement clauses in Terms §7 bite.
+ */
+export const COMPANY_NAME = "Cephionix";
+
+/** Cephionix's other product — the FTO management platform. */
+export const NEURALWINGS_URL = "https://neuralwings.org";
+
+/**
+ * "Cadet to Commander" quiz: correct answers (of 10) needed to double the
+ * founder perks. MUST match PASS_MARK in apps-script/EarnwingsWaitlist.gs.
+ * The quiz is ONE attempt only — see JourneySection.tsx.
+ */
+export const QUIZ_PASS_MARK = 8;
 
 /** Content-scale figures shown across the site (hero stats + proof band). */
 export const siteStats = {

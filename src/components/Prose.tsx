@@ -11,6 +11,30 @@ export function H2({ children }: { children: ReactNode }) {
   );
 }
 
+export function H3({ children }: { children: ReactNode }) {
+  return (
+    <h3 className="mb-2 mt-7 text-[15px] font-bold" style={{ color: "#1B3A7A" }}>
+      {children}
+    </h3>
+  );
+}
+
+/** Gold-edged callout for the clauses we want a reader to actually stop on. */
+export function Notice({ children }: { children: ReactNode }) {
+  return (
+    <div
+      className="mb-4 rounded-2xl border p-4 text-[15px] leading-7"
+      style={{
+        background: "rgba(201,152,31,0.07)",
+        borderColor: "rgba(201,152,31,0.35)",
+        color: "#41527A",
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
 export function P({ children }: { children: ReactNode }) {
   return (
     <p className="mb-4 text-[15px] leading-7" style={{ color: "#41527A" }}>

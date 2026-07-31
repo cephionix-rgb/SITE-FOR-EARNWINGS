@@ -11,6 +11,7 @@ const FeaturesPage = lazy(() => import("./pages/FeaturesPage").then((m) => ({ de
 const AboutPage = lazy(() => import("./pages/AboutPage").then((m) => ({ default: m.AboutPage })));
 const PrivacyPage = lazy(() => import("./pages/PrivacyPage").then((m) => ({ default: m.PrivacyPage })));
 const TermsPage = lazy(() => import("./pages/TermsPage").then((m) => ({ default: m.TermsPage })));
+const CopyrightPage = lazy(() => import("./pages/CopyrightPage").then((m) => ({ default: m.CopyrightPage })));
 
 export default function App() {
   // Lenis (smooth scroll) lives at the app root so it survives page changes.
@@ -27,6 +28,7 @@ export default function App() {
     case "/about": page = <AboutPage />; break;
     case "/privacy": page = <PrivacyPage />; break;
     case "/terms": page = <TermsPage />; break;
+    case "/copyright": page = <CopyrightPage />; break;
     default: page = <LandingPage />;
   }
   return <Suspense fallback={null}>{page}</Suspense>;
