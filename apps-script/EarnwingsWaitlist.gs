@@ -67,7 +67,7 @@ var COMMANDER_PERKS = {
 
 // NOTE: Phone + "Would Pay" are appended at the END on purpose — the code reads
 // rows by fixed index (email=3, code=6, perks=9, …), so new columns must not shift them.
-var HEADERS = ['Joined At','Position','Name','Email','Exam Target','Source','Code','Status','Redeemed At','Perks (JSON)','Perk Tier','Quiz Score','Phone','Would Pay (/mo)'];
+var HEADERS = ['Joined At','Position','Name','Email','Exam Target','Source','Code','Status','Redeemed At','Perks (JSON)','Perk Tier','Quiz Score','Phone','Would Pay (/subject)'];
 
 // Links used in the EARNWINGS welcome-email template.
 var INSTAGRAM_URL = 'https://www.instagram.com/flywithearnwings/';

@@ -57,7 +57,7 @@ export function Waitlist() {
     const subscription = String(data.get("subscription") || "").trim();
     if (!subscription || !Number.isFinite(Number(subscription)) || Number(subscription) <= 0) {
       setStatus("error");
-      setError("Please enter the monthly price you'd pay, in numbers (₹).");
+      setError("Please enter the price you'd pay per subject, in numbers (₹).");
       return;
     }
 
@@ -208,7 +208,7 @@ export function Waitlist() {
 
             {/* Willingness-to-pay + training goal */}
             <p className="mt-4 mb-1.5 text-[13px] font-bold" style={{ color: "#1B3A7A" }}>
-              If EARNWINGS were a paid app, what would you happily pay a month?
+              If EARNWINGS were a paid app, what would you happily pay per subject?
             </p>
             <div className="grid gap-3 sm:grid-cols-2">
               <div className="relative">
@@ -220,7 +220,7 @@ export function Waitlist() {
                   min="1"
                   step="1"
                   inputMode="numeric"
-                  placeholder="Amount / month"
+                  placeholder="Amount / subject"
                   className="w-full rounded-xl border py-3 pl-8 pr-4 outline-none focus:ring-2"
                   style={{ background: "#F0F5FF", borderColor: "rgba(27,58,122,0.12)", color: "#1B3A7A" }}
                 />
