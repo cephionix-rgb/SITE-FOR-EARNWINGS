@@ -72,7 +72,11 @@ var HEADERS = ['Joined At','Position','Name','Email','Exam Target','Source','Cod
 // Links used in the EARNWINGS welcome-email template.
 var INSTAGRAM_URL = 'https://www.instagram.com/flywithearnwings/';
 var SITE_URL      = 'https://earnwings.org';
-var LOGO_URL      = 'https://earnwings.org/assets/logo-full.png'; // header logo (alt text falls back to "EARNWINGS")
+// Header logo. MUST be a file that actually exists on the live site — /assets/logo-full.png
+// was a 404, which is why the logo showed as a broken image. The real asset is 160x110,
+// rendered at 50x34 so it stays sharp on retina. Gmail also blocks remote images by
+// default, so the <img> carries a styled alt that reads as the brand when it's blocked.
+var LOGO_URL      = 'https://earnwings.org/assets/logo-full-160.png';
 
 // ───────────────────────── ENTRY POINTS ─────────────────────────
 
@@ -233,7 +237,7 @@ function _sendWelcomeEmail(email, name, position, code) {
 
           // logo
           '<tr><td align="center" style="padding:4px 0 16px;">' +
-            '<img src="' + LOGO_URL + '" alt="EARNWINGS" height="34" style="height:34px;display:inline-block;border:0;outline:none;text-decoration:none;">' +
+            '<img src="' + LOGO_URL + '" alt="EARNWINGS" width="50" height="34" style="width:50px;height:34px;display:inline-block;border:0;outline:none;text-decoration:none;font-family:Arial,Helvetica,sans-serif;font-size:17px;font-weight:800;letter-spacing:1px;color:#1B3A7A;">' +
           '</td></tr>' +
 
           // ===== THE BOARDING PASS =====
