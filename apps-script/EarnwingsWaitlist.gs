@@ -353,7 +353,7 @@ function _sendWelcomeEmail(email, name, position, code) {
  * test email at TEST_TO — check inbox AND spam. After this, every signup emails.
  */
 function testEmail() {
-  var TEST_TO = 'cephionix@gmail.com'; // ← change to any address you can check
+  var TEST_TO = 'hello@earnwings.org'; // ← change to any address you can check
   _sendWelcomeEmail(TEST_TO, 'Arjun Mehta', 1, 'EW-TEST01');
   Logger.log('Test welcome email sent to ' + TEST_TO + ' — check inbox & spam.');
 }
