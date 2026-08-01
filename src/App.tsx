@@ -13,6 +13,7 @@ const WhyEarnwingsPage = lazy(() => import("./pages/WhyEarnwingsPage").then((m) 
 const GroundClassesPage = lazy(() => import("./pages/GroundClassesPage").then((m) => ({ default: m.GroundClassesPage })));
 const FaqPage = lazy(() => import("./pages/FaqPage").then((m) => ({ default: m.FaqPage })));
 const GlossaryPage = lazy(() => import("./pages/GlossaryPage").then((m) => ({ default: m.GlossaryPage })));
+const ResearchPage = lazy(() => import("./pages/ResearchPage").then((m) => ({ default: m.ResearchPage })));
 const PrivacyPage = lazy(() => import("./pages/PrivacyPage").then((m) => ({ default: m.PrivacyPage })));
 const TermsPage = lazy(() => import("./pages/TermsPage").then((m) => ({ default: m.TermsPage })));
 const CopyrightPage = lazy(() => import("./pages/CopyrightPage").then((m) => ({ default: m.CopyrightPage })));
@@ -34,6 +35,7 @@ export default function App() {
     case "/dgca-ground-classes": page = <GroundClassesPage />; break;
     case "/faq": page = <FaqPage />; break;
     case "/aviation-glossary": page = <GlossaryPage />; break;
+    case "/research": page = <ResearchPage />; break;
     case "/privacy": page = <PrivacyPage />; break;
     case "/terms": page = <TermsPage />; break;
     case "/copyright": page = <CopyrightPage />; break;

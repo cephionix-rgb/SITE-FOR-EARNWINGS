@@ -98,6 +98,7 @@ export function Footer() {
             <li><Ext href={`${NEURALWINGS_URL}/about#verios`}>VERIOS (Oncology)</Ext></li>
             <li><Ext href={`${NEURALWINGS_URL}/aire`}>AIRE Engine</Ext></li>
             <li><Link to="/why-earnwings" className="hover:text-white">Why EARNWINGS</Link></li>
+            <li><Link to="/research" className="hover:text-white">Research &amp; evidence</Link></li>
             <li><Ext href={`${NEURALWINGS_URL}/about#careers`}>Careers</Ext></li>
             <li><Link to="/privacy" className="hover:text-white">Privacy Policy</Link></li>
             <li><Link to="/terms" className="hover:text-white">Terms of Service</Link></li>

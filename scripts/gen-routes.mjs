@@ -27,6 +27,7 @@ import {
 import { FEATURES_H1, FEATURES_INTRO } from "../src/content/features.js";
 import { FAQ, FAQ_FEATURED } from "../src/content/faq.js";
 import { GLOSSARY, GLOSSARY_H1, GLOSSARY_INTRO } from "../src/content/glossary.js";
+import { RESEARCH, RESEARCH_DISCLAIMER, RESEARCH_H1, RESEARCH_INTRO } from "../src/content/research.js";
 import { PROBLEMS, WHY_H1, WHY_INTRO } from "../src/content/whyEarnwings.js";
 import {
   GC_FAQ,
@@ -74,6 +75,14 @@ const ROUTES = {
     ogTitle: "Why EARNWINGS — 24 Gaps in DGCA Ground School",
     ogDescription:
       "Every gap DGCA ground school leaves you to solve alone, and the part of EARNWINGS that closes it.",
+  },
+  research: {
+    title: "The Evidence Behind EARNWINGS — Research & Data",
+    description:
+      "Published research on pilot demand and how people actually learn — Boeing's 2044 outlook, Dunlosky et al. on study techniques, Roediger & Karpicke on retrieval practice — and what we built in response. None of it is ours; all of it is cited.",
+    ogTitle: "The Evidence Behind EARNWINGS",
+    ogDescription:
+      "Third-party research on pilot demand and effective learning, cited in full, and what we built in response.",
   },
   faq: {
     title: "FAQ — DGCA Ground Classes & Exam Prep | EARNWINGS",
@@ -262,6 +271,16 @@ const SHELLS = {
       (p) => `<h2>${esc(p.title)}</h2><p>${esc(p.body)}</p><p>${esc(p.fix)}</p>`,
     ).join(""),
 
+  research:
+    `<h1>${esc(RESEARCH_H1[0])}${esc(RESEARCH_H1[1])}</h1>` +
+    `<p>${esc(RESEARCH_INTRO)}</p>` +
+    `<p>${esc(RESEARCH_DISCLAIMER)}</p>` +
+    RESEARCH.map(
+      (r) =>
+        `<h2>${esc(r.headline)}</h2><p>${esc(r.finding)}</p>` +
+        `<p>Source: ${esc(r.authors)} (${esc(r.year)}). ${esc(r.source)}. ${esc(r.url)}</p>`,
+    ).join(""),
+
   faq:
     "<h1>Everything you want to know about EARNWINGS</h1>" +
     faqBlock(FAQ),
@@ -283,6 +302,7 @@ const CRUMB = {
   features: "Features",
   "dgca-ground-classes": "DGCA Ground Classes",
   "why-earnwings": "Why EARNWINGS",
+  research: "Research & Evidence",
   faq: "FAQ",
   "aviation-glossary": "Aviation Glossary",
   about: "About",
@@ -394,6 +414,27 @@ for (const [route, m] of Object.entries(ROUTES)) {
   // but duplicating the same Q&A markup on two URLs is exactly what Google's FAQ
   // guidance warns against.
   if (route === "faq") scripts.push(ld(faqLdFor(FAQ)));
+  if (route === "research") {
+    // citation[] makes the attribution machine-readable: these are works we
+    // reference, explicitly not works we authored.
+    scripts.push(
+      ld({
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": `${ORIGIN}/research#evidence`,
+        url: `${ORIGIN}/research`,
+        name: "The evidence behind EARNWINGS",
+        publisher: { "@id": ORG_ID },
+        citation: RESEARCH.map((r) => ({
+          "@type": "CreativeWork",
+          name: r.source,
+          author: { "@type": "Organization", name: r.authors },
+          datePublished: r.year,
+          url: r.url,
+        })),
+      }),
+    );
+  }
   if (route === "aviation-glossary") {
     scripts.push(
       ld({
@@ -480,6 +521,7 @@ const PRIORITY = {
   features: "0.8",
   "dgca-ground-classes": "0.8",
   "why-earnwings": "0.7",
+  research: "0.7",
   faq: "0.7",
   "aviation-glossary": "0.7",
   about: "0.5",
