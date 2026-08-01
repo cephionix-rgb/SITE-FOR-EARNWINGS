@@ -136,13 +136,25 @@ function _join(body) {
   var email = String(body.email || '').trim().toLowerCase();
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return { ok: false, error: 'invalid_email' };
 
+  // A phone is required, and enforced HERE rather than only in the form: it is
+  // the second identity the dedupe below relies on, so accepting a join without
+  // one would leave the "one seat per cadet" rule bypassable by anyone posting
+  // straight to this endpoint.
+  var phoneKey = _phoneKey(body.phone);
+  if (!phoneKey) return { ok: false, error: 'invalid_phone' };
+
   var sheet = _sheet();
   var rows  = sheet.getDataRange().getValues(); // [header, ...]
   var count = Math.max(0, rows.length - 1);
 
-  // Already on the list? (dedupe by email — column index 3)
+  // ONE SEAT PER CADET. Two identities are checked before a row is ever written:
+  //   email (col 3) — the same address always lands back on its own seat, and
+  //   phone (col 12) — so a second email from the same person cannot mint a
+  //                    second seat and a second set of founder perks.
   for (var i = 1; i < rows.length; i++) {
     if (String(rows[i][3]).trim().toLowerCase() === email) {
+      // Their own row: hand back the seat they already hold. No new row, no new
+      // perks, and no second welcome email.
       return {
         ok: true, alreadyJoined: true,
         position: rows[i][1],
@@ -151,6 +163,11 @@ function _join(body) {
         remaining: Math.max(0, CAPACITY - count),
         capacity: CAPACITY
       };
+    }
+    // Phone matches a DIFFERENT email — refuse, but reveal nothing about the
+    // existing cadet (a mistyped number must not expose someone else's ref).
+    if (phoneKey && _phoneKey(rows[i][12]) === phoneKey) {
+      return { ok: false, error: 'phone_already_joined' };
     }
   }
 
@@ -473,6 +490,18 @@ function _find(email, code) {
 }
 
 function _perks(v) { try { return JSON.parse(v); } catch (_) { return PERKS; } }
+
+/**
+ * Comparable form of a phone number: digits only, keeping the last 10 so the same
+ * Indian mobile matches however it was typed (+91 98765 43210 / 09876543210 /
+ * 9876543210). Returns '' for anything too short to identify a person — a blank
+ * or junk number must never collide with a real cadet's row.
+ */
+function _phoneKey(v) {
+  var d = String(v == null ? '' : v).replace(/\D/g, '');
+  if (d.length < 10) return '';
+  return d.slice(-10);
+}
 
 /** Minimal HTML-escape so a cadet's name can't break the email markup. */
 function _esc(s) {

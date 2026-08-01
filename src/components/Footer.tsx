@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { Instagram, Youtube, Mail, ExternalLink } from "lucide-react";
 import { Link } from "../lib/router";
 import { COMPANY_NAME, CONTACT_EMAIL, NEURALWINGS_URL, SUPPORT_EMAIL } from "../lib/siteConfig";
@@ -7,6 +8,20 @@ const SOCIALS = [
   { Icon: Youtube, href: "https://youtube.com/@flywithearnwings?si=MSMcdyVgpkih-Ygx", label: "YouTube" },
   { Icon: Mail, href: `mailto:${CONTACT_EMAIL}`, label: "Email" },
 ];
+
+/** External link in the footer list — new tab, with the outbound marker. */
+function Ext({ href, children }: { href: string; children: ReactNode }) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-flex items-center gap-1.5 hover:text-white"
+    >
+      {children} <ExternalLink size={12} />
+    </a>
+  );
+}
 
 export function Footer() {
   return (
@@ -60,26 +75,25 @@ export function Footer() {
             <li><Link to="/#play" className="hover:text-white">Try it live</Link></li>
             <li><Link to="/#app" className="hover:text-white">The app</Link></li>
             <li><Link to="/#journey" className="hover:text-white">Your journey</Link></li>
+            <li><Link to="/#waitlist" className="hover:text-white">Reserve seat</Link></li>
           </ul>
         </div>
 
+        {/* Cephionix column — mirrors the same column on neuralwings.org, so the
+            two products share one company footer. Sibling products live on the
+            Neural Wings site, so those entries point there. */}
         <div>
           <h4 className="mb-3 text-sm font-bold uppercase tracking-wider" style={{ color: "#F5D97A" }}>
             {COMPANY_NAME}
           </h4>
           <ul className="space-y-2 text-sm">
-            <li>
-              <a
-                href={NEURALWINGS_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 hover:text-white"
-              >
-                Neural Wings <ExternalLink size={12} />
-              </a>
-            </li>
-            <li><Link to="/about" className="hover:text-white">About</Link></li>
-            <li><Link to="/#waitlist" className="hover:text-white">Reserve seat</Link></li>
+            <li><Ext href={`${NEURALWINGS_URL}/about`}>About {COMPANY_NAME}</Ext></li>
+            <li><Ext href={NEURALWINGS_URL}>Neural Wings</Ext></li>
+            <li><Link to="/" className="hover:text-white">EARNWINGS (Cadet Prep)</Link></li>
+            <li><Ext href={`${NEURALWINGS_URL}/about#verios`}>VERIOS (Oncology)</Ext></li>
+            <li><Ext href={`${NEURALWINGS_URL}/aire`}>AIRE Engine</Ext></li>
+            <li><Link to="/why-earnwings" className="hover:text-white">Why EARNWINGS</Link></li>
+            <li><Ext href={`${NEURALWINGS_URL}/about#careers`}>Careers</Ext></li>
             <li><Link to="/privacy" className="hover:text-white">Privacy Policy</Link></li>
             <li><Link to="/terms" className="hover:text-white">Terms of Service</Link></li>
             <li><Link to="/copyright" className="hover:text-white">Copyright &amp; IP</Link></li>

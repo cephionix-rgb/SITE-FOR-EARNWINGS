@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Plane, Check, Loader2 } from "lucide-react";
 import { track } from "../lib/track";
 import { Link } from "../lib/router";
-import { QUIZ_PASS_MARK } from "../lib/siteConfig";
+import { QUIZ_PASS_MARK, SUPPORT_EMAIL } from "../lib/siteConfig";
 
 // Primary CTA label (Task 2). Alternatives, kept for easy swapping:
 //   "Get Early Boarding Access" | "Become a Founding Cadet" | "Secure My Founder Wings"
@@ -29,9 +29,32 @@ const PERKS = [
 
 type Status = "idle" | "submitting" | "done" | "error";
 
+/** What we keep about a cadet who has already joined, so the seat survives a reload. */
+type Joined = { code?: string; email?: string; position?: number };
+const JOINED_KEY = "ew_waitlist";
+
+/**
+ * The seat this browser already holds, if any. Written on a successful join and
+ * read back on mount, so refreshing the page shows the boarding pass again
+ * instead of an empty form — one cadet, one seat, one set of perks.
+ * (The Apps Script is the real authority: it dedupes by email, so even a cleared
+ * browser or a second device cannot mint a second seat for the same address.)
+ */
+function loadJoined(): Joined | null {
+  try {
+    const raw = localStorage.getItem(JOINED_KEY);
+    if (!raw) return null;
+    const saved = JSON.parse(raw) as Joined;
+    return saved && saved.email ? saved : null;
+  } catch {
+    return null; // storage blocked / corrupt value — fall back to showing the form
+  }
+}
+
 export function Waitlist() {
-  const [status, setStatus] = useState<Status>("idle");
-  const [alreadyJoined, setAlreadyJoined] = useState(false);
+  const [joined, setJoined] = useState<Joined | null>(loadJoined);
+  const [status, setStatus] = useState<Status>(joined ? "done" : "idle");
+  const [alreadyJoined, setAlreadyJoined] = useState(!!joined);
   const [error, setError] = useState<string>("");
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
@@ -47,10 +70,13 @@ export function Waitlist() {
       return;
     }
 
+    // Phone is required: it is the second identity the backend dedupes on, so
+    // one cadet cannot claim a second seat (and a second perk bundle) by
+    // signing up again with a different email address.
     const phone = String(data.get("phone") || "").trim();
-    if (phone && phone.replace(/\D/g, "").length < 7) {
+    if (phone.replace(/\D/g, "").length < 10) {
       setStatus("error");
-      setError("Please enter a valid phone number, or leave it blank.");
+      setError("Please enter your 10-digit phone number — we use it to keep one seat per cadet.");
       return;
     }
 
@@ -84,12 +110,23 @@ export function Waitlist() {
         });
         const d = await res.json();
         if (!d.ok) {
-          throw new Error(d.error === "invalid_email" ? "Please enter a valid email." : "Something went wrong.");
+          throw new Error(
+            d.error === "invalid_email"
+              ? "Please enter a valid email."
+              : d.error === "invalid_phone"
+                ? "Please enter your 10-digit phone number."
+                : d.error === "phone_already_joined"
+                ? "That phone number is already on the waitlist. Sign in with the email you used, or check your inbox for the boarding pass."
+                : "Something went wrong.",
+          );
         }
         setAlreadyJoined(!!d.alreadyJoined);
-        // Remember who this cadet is so the "Cadet to Commander" quiz can upgrade their perks.
+        // Remember who this cadet is — this is what the quiz reads to upgrade their
+        // perks, and what keeps the form from coming back after a refresh.
+        const record: Joined = { code: d.code, email, position: d.position };
+        setJoined(record);
         try {
-          localStorage.setItem("ew_waitlist", JSON.stringify({ code: d.code, email, position: d.position }));
+          localStorage.setItem(JOINED_KEY, JSON.stringify(record));
         } catch { /* ignore */ }
         // They may have passed the quiz BEFORE joining — there was no row to write to
         // then, so replay that one attempt's score now. The server ignores it if the
@@ -142,8 +179,22 @@ export function Waitlist() {
               {alreadyJoined ? "You're already on the list" : "You're cleared for takeoff!"}
             </h3>
             <p className="mt-2" style={{ color: "#4A5A78" }}>
-              You're cleared for boarding, founder cadet — we'll email you the moment we open the doors.
+              {alreadyJoined
+                ? "Your founder seat is reserved — one per cadet, so there's nothing left to fill in. We'll email you the moment we open the doors."
+                : "You're cleared for boarding, founder cadet — we'll email you the moment we open the doors."}
             </p>
+
+            {/* Their actual seat, so the reserved state is verifiable and not just a claim. */}
+            {(joined?.code || joined?.email) && (
+              <div
+                className="mx-auto mt-4 inline-flex flex-wrap items-center justify-center gap-x-3 gap-y-1 rounded-full px-4 py-2 text-xs font-bold"
+                style={{ background: "rgba(201,152,31,0.12)", color: "#886611" }}
+              >
+                {joined.code && <span>Boarding ref {joined.code}</span>}
+                {joined.code && joined.email && <span style={{ opacity: 0.45 }}>·</span>}
+                {joined.email && <span style={{ fontWeight: 600 }}>{joined.email}</span>}
+              </div>
+            )}
 
             {/* Founder perks unlocked */}
             <div className="mt-6 rounded-2xl p-5 text-left" style={{ background: "rgba(27,58,122,0.05)", border: "1px solid rgba(27,58,122,0.1)" }}>
@@ -161,6 +212,15 @@ export function Waitlist() {
                 ))}
               </ul>
             </div>
+
+            {/* The one honest way out of a locked form: a typo'd email needs a human,
+                not a second submission that would mint a second seat. */}
+            <p className="mt-4 text-xs" style={{ color: "#7186a8" }}>
+              Signed up with the wrong details?{" "}
+              <a href={`mailto:${SUPPORT_EMAIL}?subject=Fix%20my%20waitlist%20details`} className="font-semibold underline">
+                {SUPPORT_EMAIL}
+              </a>
+            </p>
           </motion.div>
         ) : (
           <motion.form
@@ -189,8 +249,9 @@ export function Waitlist() {
               <input
                 name="phone"
                 type="tel"
+                required
                 inputMode="tel"
-                placeholder="Phone number (optional)"
+                placeholder="Phone number"
                 autoComplete="tel"
                 className="rounded-xl border px-4 py-3 outline-none focus:ring-2"
                 style={{ background: "#F0F5FF", borderColor: "rgba(27,58,122,0.12)" }}

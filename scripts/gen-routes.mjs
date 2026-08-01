@@ -40,6 +40,14 @@ const ROUTES = {
     ogDescription:
       "Flight planning on real airways, a voice RT trainer, an AI Captain and full DGCA mock exams.",
   },
+  "why-earnwings": {
+    title: "Why EARNWINGS — 24 Gaps in DGCA Ground School",
+    description:
+      "The 24 gaps every DGCA CPL and ATPL cadet hits in ground school — scattered notes, unmarked question banks, paper flight planning, no RT practice — and how EARNWINGS closes each one.",
+    ogTitle: "Why EARNWINGS — 24 Gaps in DGCA Ground School",
+    ogDescription:
+      "Every gap DGCA ground school leaves you to solve alone, and the part of EARNWINGS that closes it.",
+  },
   about: {
     title: "About EARNWINGS — Built With DGCA Instructors",
     description:

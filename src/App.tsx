@@ -9,6 +9,7 @@ import { LandingPage } from "./pages/LandingPage";
 // (it is the default route and the one almost everyone lands on).
 const FeaturesPage = lazy(() => import("./pages/FeaturesPage").then((m) => ({ default: m.FeaturesPage })));
 const AboutPage = lazy(() => import("./pages/AboutPage").then((m) => ({ default: m.AboutPage })));
+const WhyEarnwingsPage = lazy(() => import("./pages/WhyEarnwingsPage").then((m) => ({ default: m.WhyEarnwingsPage })));
 const PrivacyPage = lazy(() => import("./pages/PrivacyPage").then((m) => ({ default: m.PrivacyPage })));
 const TermsPage = lazy(() => import("./pages/TermsPage").then((m) => ({ default: m.TermsPage })));
 const CopyrightPage = lazy(() => import("./pages/CopyrightPage").then((m) => ({ default: m.CopyrightPage })));
@@ -26,6 +27,7 @@ export default function App() {
   switch (path) {
     case "/features": page = <FeaturesPage />; break;
     case "/about": page = <AboutPage />; break;
+    case "/why-earnwings": page = <WhyEarnwingsPage />; break;
     case "/privacy": page = <PrivacyPage />; break;
     case "/terms": page = <TermsPage />; break;
     case "/copyright": page = <CopyrightPage />; break;
