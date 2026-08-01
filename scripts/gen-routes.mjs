@@ -25,7 +25,8 @@ import {
   HERO_CTA,
 } from "../src/content/hero.js";
 import { FEATURES_H1, FEATURES_INTRO } from "../src/content/features.js";
-import { FAQ } from "../src/content/faq.js";
+import { FAQ, FAQ_FEATURED } from "../src/content/faq.js";
+import { GLOSSARY, GLOSSARY_H1, GLOSSARY_INTRO } from "../src/content/glossary.js";
 import { PROBLEMS, WHY_H1, WHY_INTRO } from "../src/content/whyEarnwings.js";
 import {
   GC_FAQ,
@@ -73,6 +74,22 @@ const ROUTES = {
     ogTitle: "Why EARNWINGS — 24 Gaps in DGCA Ground School",
     ogDescription:
       "Every gap DGCA ground school leaves you to solve alone, and the part of EARNWINGS that closes it.",
+  },
+  faq: {
+    title: "FAQ — DGCA Ground Classes & Exam Prep | EARNWINGS",
+    description:
+      "27 straight answers about EARNWINGS: which DGCA subjects are covered, how the mock exams work, what the AI Captain does, flight planning and RT practice, and how to get early access.",
+    ogTitle: "EARNWINGS FAQ — Everything Student Pilots Ask",
+    ogDescription:
+      "Straight answers on the ground classes, mock exams, AI Captain, flight planning and early access.",
+  },
+  "aviation-glossary": {
+    title: "Aviation & DGCA Glossary — 66 Terms | EARNWINGS",
+    description:
+      "FTO, CPL, ATPL, METAR, TAF, NOTAM, QNH, VOR, RNAV, W&B — 66 aviation and DGCA terms every student pilot meets in ground school, explained in plain English.",
+    ogTitle: "Aviation & DGCA Glossary for Student Pilots",
+    ogDescription:
+      "66 terms from ground school — licences, navigation, weather, airspace and radio telephony — in plain English.",
   },
   about: {
     title: "About EARNWINGS — Built With DGCA Instructors",
@@ -224,7 +241,7 @@ const SHELLS = {
   features:
     `<h1>${FEATURES_H1[0]}<span>${FEATURES_H1[1]}</span>${FEATURES_H1[2]}</h1>` +
     `<p>${esc(FEATURES_INTRO)}</p>` +
-    faqBlock(FAQ),
+    faqBlock(FAQ_FEATURED),
 
   "dgca-ground-classes":
     `<h1>${esc(GC_H1[0])}${esc(GC_H1[1])}</h1>` +
@@ -245,6 +262,17 @@ const SHELLS = {
       (p) => `<h2>${esc(p.title)}</h2><p>${esc(p.body)}</p><p>${esc(p.fix)}</p>`,
     ).join(""),
 
+  faq:
+    "<h1>Everything you want to know about EARNWINGS</h1>" +
+    faqBlock(FAQ),
+
+  "aviation-glossary":
+    `<h1>${esc(GLOSSARY_H1[0])}${esc(GLOSSARY_H1[1])}</h1>` +
+    `<p>${esc(GLOSSARY_INTRO)}</p>` +
+    GLOSSARY.map(
+      (g) => `<h2>${esc(g.term)}${g.full ? ` (${esc(g.full)})` : ""}</h2><p>${esc(g.def)}</p>`,
+    ).join(""),
+
   about:
     "<h1>Built by pilots-in-training, for pilots-in-training</h1>" +
     "<p>EARNWINGS is the all-in-one training cockpit for the next generation of Indian aviators — where ground school, flight planning, radio telephony and DGCA exam prep finally live in one place. It is built and owned by Cephionix.</p>",
@@ -255,6 +283,8 @@ const CRUMB = {
   features: "Features",
   "dgca-ground-classes": "DGCA Ground Classes",
   "why-earnwings": "Why EARNWINGS",
+  faq: "FAQ",
+  "aviation-glossary": "Aviation Glossary",
   about: "About",
   privacy: "Privacy Policy",
   terms: "Terms of Service",
@@ -360,7 +390,29 @@ for (const [route, m] of Object.entries(ROUTES)) {
     // to have fetched the homepage first.
     ld(jsonLd),
   ];
-  if (route === "features") scripts.push(ld(faqLdFor(FAQ)));
+  // FAQPage schema lives on /faq only — /features shows a short subset visually
+  // but duplicating the same Q&A markup on two URLs is exactly what Google's FAQ
+  // guidance warns against.
+  if (route === "faq") scripts.push(ld(faqLdFor(FAQ)));
+  if (route === "aviation-glossary") {
+    scripts.push(
+      ld({
+        "@context": "https://schema.org",
+        "@type": "DefinedTermSet",
+        "@id": `${ORIGIN}/aviation-glossary#glossary`,
+        name: "Aviation & DGCA Glossary",
+        description: GLOSSARY_INTRO,
+        inLanguage: "en-IN",
+        publisher: { "@id": ORG_ID },
+        hasDefinedTerm: GLOSSARY.map((g) => ({
+          "@type": "DefinedTerm",
+          name: g.full ? `${g.term} (${g.full})` : g.term,
+          description: g.def,
+          inDefinedTermSet: `${ORIGIN}/aviation-glossary#glossary`,
+        })),
+      }),
+    );
+  }
   if (route === "dgca-ground-classes") {
     scripts.push(ld(faqLdFor(GC_FAQ)));
     // Course is the type that maps onto what a student searching "DGCA ground
@@ -428,6 +480,8 @@ const PRIORITY = {
   features: "0.8",
   "dgca-ground-classes": "0.8",
   "why-earnwings": "0.7",
+  faq: "0.7",
+  "aviation-glossary": "0.7",
   about: "0.5",
   privacy: "0.3",
   terms: "0.3",

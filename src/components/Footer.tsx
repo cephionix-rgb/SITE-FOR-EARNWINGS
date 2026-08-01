@@ -78,6 +78,8 @@ export function Footer() {
             <li><Link to="/#app" className="hover:text-white">The app</Link></li>
             <li><Link to="/#journey" className="hover:text-white">Your journey</Link></li>
             <li><Link to="/dgca-ground-classes" className="hover:text-white">DGCA ground classes</Link></li>
+            <li><Link to="/faq" className="hover:text-white">FAQ</Link></li>
+            <li><Link to="/aviation-glossary" className="hover:text-white">Aviation glossary</Link></li>
             <li><Link to="/#waitlist" className="hover:text-white">Reserve seat</Link></li>
           </ul>
         </div>
