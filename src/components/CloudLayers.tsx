@@ -48,6 +48,11 @@ export function CloudLayers() {
             srcSet="/assets/hero-clouds-1024.jpg 1024w, /assets/hero-clouds-1920.jpg 1920w"
             sizes="100vw"
             alt=""
+            // This is the measured LCP element — it must load eagerly and at high
+            // priority, and is preloaded from index.html so it is discoverable
+            // before React mounts.
+            fetchPriority="high"
+            decoding="async"
             className="h-full w-full object-cover opacity-90"
           />
         </picture>

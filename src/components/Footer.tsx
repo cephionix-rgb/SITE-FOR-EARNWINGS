@@ -67,9 +67,9 @@ export function Footer() {
         </div>
 
         <div>
-          <h4 className="mb-3 text-sm font-bold uppercase tracking-wider" style={{ color: "#F5D97A" }}>
+          <h2 className="mb-3 text-sm font-bold uppercase tracking-wider" style={{ color: "#F5D97A" }}>
             Product
-          </h4>
+          </h2>
           <ul className="space-y-2 text-sm">
             <li><Link to="/features" className="hover:text-white">Features</Link></li>
             <li><Link to="/#play" className="hover:text-white">Try it live</Link></li>
@@ -84,9 +84,9 @@ export function Footer() {
             two products share one company footer. Sibling products live on the
             Neural Wings site, so those entries point there. */}
         <div>
-          <h4 className="mb-3 text-sm font-bold uppercase tracking-wider" style={{ color: "#F5D97A" }}>
+          <h2 className="mb-3 text-sm font-bold uppercase tracking-wider" style={{ color: "#F5D97A" }}>
             {COMPANY_NAME}
-          </h4>
+          </h2>
           <ul className="space-y-2 text-sm">
             <li><Ext href={`${NEURALWINGS_URL}/about`}>About {COMPANY_NAME}</Ext></li>
             <li><Ext href={NEURALWINGS_URL}>Neural Wings</Ext></li>
@@ -102,9 +102,9 @@ export function Footer() {
         </div>
 
         <div>
-          <h4 className="mb-3 text-sm font-bold uppercase tracking-wider" style={{ color: "#F5D97A" }}>
+          <h2 className="mb-3 text-sm font-bold uppercase tracking-wider" style={{ color: "#F5D97A" }}>
             Follow
-          </h4>
+          </h2>
           <div className="flex gap-3">
             {SOCIALS.map(({ Icon, href, label }) => (
               <a
@@ -125,7 +125,9 @@ export function Footer() {
 
       {/* Standing IP notice — the short form of /copyright, on every page. */}
       <div className="mx-auto max-w-7xl px-6 pb-8">
-        <p className="text-xs leading-6" style={{ color: "#6A83B4" }}>
+        {/* #6A83B4 on this navy is 3.98:1 — below the 4.5:1 WCAG AA minimum and
+            flagged by Lighthouse. #93A9D6 measures 6.42:1. */}
+        <p className="text-xs leading-6" style={{ color: "#93A9D6" }}>
           EARNWINGS, {COMPANY_NAME}, the EARNWINGS logo and wings device are trade
           marks of {COMPANY_NAME}. The software, source code, designs, notes,
           question banks, screens, screenshots, chapter structure and the manner

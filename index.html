@@ -51,6 +51,13 @@
     <!-- Preload the LCP intro poster (only the variant matching the viewport). -->
     <link rel="preload" as="image" href="/assets/intro-poster-1920.jpg" media="(min-width: 768px)" />
     <link rel="preload" as="image" href="/assets/paper-airplane-mobile-poster.jpg" media="(max-width: 767px)" />
+
+    <!-- The cloud backdrop is the measured LCP element, but React renders it, so
+         the browser could not discover it until hydration — it was requested late
+         and at default priority. Preloading it here (8-17 KB) makes it
+         discoverable in the initial HTML. Types/sizes mirror CloudLayers.tsx. -->
+    <link rel="preload" as="image" href="/assets/hero-clouds-1024.avif" type="image/avif" fetchpriority="high" media="(max-width: 767px)" />
+    <link rel="preload" as="image" href="/assets/hero-clouds-1920.avif" type="image/avif" fetchpriority="high" media="(min-width: 768px)" />
   </head>
   <body>
     <div id="root"></div>

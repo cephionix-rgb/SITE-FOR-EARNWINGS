@@ -43,7 +43,12 @@ export function Nav({ solid = false }: { solid?: boolean }) {
       }}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
-        <Link to="/" className="flex items-center gap-2.5 sm:gap-3" aria-label="EARNWINGS — home">
+        {/* No aria-label: any label we invent has to contain the visible text
+            verbatim or voice-control users saying what they see cannot activate
+            the link. The wordmark renders as "EARNWINGS" and "by Cephionix" in
+            adjacent spans (no space between them), so letting the content itself
+            be the accessible name is the only version that always matches. */}
+        <Link to="/" className="flex items-center gap-2.5 sm:gap-3">
           <picture>
             <source type="image/webp" srcSet="/assets/logo-mark-96.webp" />
             <img src="/assets/logo-mark-96.png" alt="" className="h-9 w-auto sm:h-11" />
