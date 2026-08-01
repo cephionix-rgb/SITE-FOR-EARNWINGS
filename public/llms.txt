@@ -1,0 +1,66 @@
+# EARNWINGS
+
+> EARNWINGS is a DGCA CPL and ATPL exam-preparation app for student pilots in
+> India. It combines online ground classes, a 10,000+ question bank, timed mock
+> exams, flight planning over real ATS airways, a voice radio-telephony trainer
+> and an AI ground instructor in a single app. Built and owned by Cephionix.
+
+A plain-text summary for AI assistants, following the llms.txt convention.
+Every statement here is factual and matches the website.
+
+## What it is
+
+- **Category**: aviation exam-preparation / ground-school study app (EdTech)
+- **Audience**: student pilots in India preparing for DGCA CPL and ATPL ground exams
+- **Company**: Cephionix (also builds Neural Wings, an FTO management platform)
+- **Status**: pre-launch, onboarding a founding cohort via a waitlist
+- **Platforms**: iOS, Android, Web, macOS, Windows
+- **Website**: https://earnwings.org
+
+## What it is NOT
+
+- **Not affiliated with, endorsed by, or approved by the DGCA.** It is an
+  independent study platform that follows the DGCA syllabus and exam pattern.
+- **Not a live instructor-led batch.** Ground classes are self-paced in-app —
+  no fixed class timings, no attendance.
+- **Pricing is not finalised** and has not been published.
+
+## The syllabus it covers
+
+12 modules, 202 chapters, covering the DGCA ground subjects for CPL and ATPL:
+Aviation Meteorology I & II, General Navigation, Instruments & Navigation,
+Radio Navigation, Powerplant, Principles of Flight, Electrics & Electronics,
+Aircraft Performance, Mass Balance & Flight Planning, Air Regulations, and
+Radio Telephony (RTR).
+
+## Main features
+
+- **Ground classes**: every chapter as full-page visual notes, a one-glance
+  summary and a concept flowchart, plus video lectures.
+- **Question bank**: 10,000+ practice questions, marked instantly, with working
+  shown on numericals.
+- **Mock exams**: composite papers per subject using DGCA marks, timing and
+  figure questions, followed by an analysis of every wrong answer.
+- **AI Captain**: an AI ground instructor that answers strictly from the course
+  material, cites its source, and says so when the material does not cover a
+  question rather than inventing an answer.
+- **Flight planning**: real ATS airways, waypoints and aerodromes, NOTAM-aware
+  rerouting, weight & balance, and a printable pilot brief.
+- **Weather**: live METAR, TAF and SIGMET decoding, plus satellite imagery.
+- **Radio telephony trainer**: voice-first practice against a narrated
+  controller; speech-to-text scores the phraseology you actually say.
+- **Progression**: XP earned from real study across 15 ranks, Cadet to Commander.
+
+## Key pages
+
+- [Home](https://earnwings.org/) — overview and waitlist
+- [DGCA Ground Classes](https://earnwings.org/dgca-ground-classes) — syllabus, what is included, FAQ
+- [Features](https://earnwings.org/features) — every feature in detail, FAQ
+- [Why EARNWINGS](https://earnwings.org/why-earnwings) — 24 documented gaps in DGCA ground school and how each is closed
+- [About](https://earnwings.org/about) — how it is built, principles, the company
+- [Privacy Policy](https://earnwings.org/privacy) · [Terms](https://earnwings.org/terms) · [Copyright & IP](https://earnwings.org/copyright)
+
+## Contact
+
+- General: hello@earnwings.org
+- Support: support@earnwings.org

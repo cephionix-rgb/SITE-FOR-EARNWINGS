@@ -40,6 +40,15 @@ const DIST = "dist";
 const INDEX = join(DIST, "index.html");
 const ORIGIN = "https://earnwings.org";
 
+// Stable @ids so the blocks below form ONE connected entity graph instead of
+// three unrelated islands. Without these, nothing tells Google (or the models
+// grounded on its index) that the Organization, the WebSite and the app are the
+// same thing — which is what "knowing about EARNWINGS" actually means.
+const ORG_ID = `${ORIGIN}/#organization`;
+const SITE_ID = `${ORIGIN}/#website`;
+const APP_ID = `${ORIGIN}/#app`;
+
+
 const ROUTES = {
   features: {
     title: "Features — Flight Planning, RT & AI Captain | EARNWINGS",
@@ -252,53 +261,11 @@ const CRUMB = {
   copyright: "Copyright & IP",
 };
 
-for (const [route, m] of Object.entries(ROUTES)) {
-  let html = pageHtml(route, m);
-
-  const shell = SHELLS[route];
-  if (shell) {
-    html = html.replace(
-      /<div id="root">\s*<\/div>/,
-      `<div id="root">${hidden(shell)}</div>`,
-    );
-  }
-
-  const scripts = [ld(breadcrumbLd(route, CRUMB[route] || route))];
-  if (route === "features") scripts.push(ld(faqLdFor(FAQ)));
-  if (route === "dgca-ground-classes") scripts.push(ld(faqLdFor(GC_FAQ)));
-  html = html.replace("</head>", `    ${scripts.join("\n    ")}\n  </head>`);
-
-  writeFileSync(join(DIST, `${route}.html`), html); // /about   -> 200
-  mkdirSync(join(DIST, route), { recursive: true });
-  writeFileSync(join(DIST, route, "index.html"), html); // /about/ -> 200
-}
-
-// Home route only: inject a minimal, crawlable static shell of the hero (h1,
-// intro, CTA) into #root. It is byte-identical to what React renders (built from
-// the SAME src/content/hero.js the component uses) and React replaces it on
-// mount, so it is not cloaking. Visually hidden so there is no flash of unstyled
-// content before hydration.
-const HERO_SHELL =
-  '<div style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);border:0;padding:0;margin:-1px;">' +
-  `<h1>${HERO_H1[0]}<span>${HERO_H1[1]}</span><br/>${HERO_H1[2]}<span>${HERO_H1_BRAND}</span></h1>` +
-  `<p>${HERO_INTRO}</p>` +
-  `<a href="#waitlist">${HERO_CTA}</a>` +
-  "</div>";
-let home = inlineCss(base).replace(
-  /<div id="root">\s*<\/div>/,
-  `<div id="root">${HERO_SHELL}</div>`,
-);
-if (home === base) {
-  console.warn("gen-routes: hero shell not injected (root div did not match)");
-}
-
-// Phase 3: structured data on the home page. No SearchAction (there is no site
-// search) and no aggregateRating/review markup (there are no reviews) - both
-// would be false signals / a manual-action risk.
 const jsonLd = [
   {
     "@context": "https://schema.org",
     "@type": "Organization",
+    "@id": ORG_ID,
     name: "EARNWINGS",
     // The brand is one word, but people type it as two and an unrelated
     // "Earn Wings" seller already ranks for that. Declaring the variants tells
@@ -333,15 +300,20 @@ const jsonLd = [
   {
     "@context": "https://schema.org",
     "@type": "WebSite",
+    "@id": SITE_ID,
     name: "EARNWINGS",
     url: `${ORIGIN}/`,
+    inLanguage: "en-IN",
+    publisher: { "@id": ORG_ID },
+    about: { "@id": ORG_ID },
   },
   {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
+    "@id": APP_ID,
     name: "EARNWINGS",
-    author: { "@type": "Organization", name: "Cephionix" },
-    publisher: { "@type": "Organization", name: "Cephionix" },
+    author: { "@id": ORG_ID },
+    publisher: { "@id": ORG_ID },
     applicationCategory: "EducationalApplication",
     operatingSystem: "iOS, Android, Web, macOS, Windows",
     description:
@@ -354,6 +326,95 @@ const jsonLd = [
     },
   },
 ];
+
+for (const [route, m] of Object.entries(ROUTES)) {
+  let html = pageHtml(route, m);
+
+  const shell = SHELLS[route];
+  if (shell) {
+    html = html.replace(
+      /<div id="root">\s*<\/div>/,
+      `<div id="root">${hidden(shell)}</div>`,
+    );
+  }
+
+  // Every page states what it is and which site/organisation it belongs to, so
+  // a crawler landing on a sub-page can still resolve the entity behind it
+  // rather than seeing an orphaned document.
+  const scripts = [
+    ld({
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "@id": `${ORIGIN}/${route}#webpage`,
+      url: `${ORIGIN}/${route}`,
+      name: m.title,
+      description: m.description,
+      inLanguage: "en-IN",
+      isPartOf: { "@id": SITE_ID },
+      about: { "@id": ORG_ID },
+      publisher: { "@id": ORG_ID },
+    }),
+    ld(breadcrumbLd(route, CRUMB[route] || route)),
+    // The site-wide graph on EVERY page: a crawler (or a model) that lands
+    // directly on a sub-page can then resolve who publishes it without having
+    // to have fetched the homepage first.
+    ld(jsonLd),
+  ];
+  if (route === "features") scripts.push(ld(faqLdFor(FAQ)));
+  if (route === "dgca-ground-classes") {
+    scripts.push(ld(faqLdFor(GC_FAQ)));
+    // Course is the type that maps onto what a student searching "DGCA ground
+    // classes" is looking for. Everything here is factual: no price (not
+    // finalised), no rating (no reviews), no provider claim beyond Cephionix.
+    scripts.push(
+      ld({
+        "@context": "https://schema.org",
+        "@type": "Course",
+        "@id": `${ORIGIN}/dgca-ground-classes#course`,
+        name: "DGCA CPL & ATPL Ground School",
+        description: GC_INTRO,
+        url: `${ORIGIN}/dgca-ground-classes`,
+        inLanguage: "en-IN",
+        provider: { "@id": ORG_ID },
+        educationalLevel: "Commercial Pilot Licence (CPL) and Airline Transport Pilot Licence (ATPL) ground subjects",
+        teaches: SYLLABUS.map((x) => x.name),
+        hasCourseInstance: {
+          "@type": "CourseInstance",
+          courseMode: "online",
+          inLanguage: "en-IN",
+        },
+      }),
+    );
+  }
+  html = html.replace("</head>", `    ${scripts.join("\n    ")}\n  </head>`);
+
+  writeFileSync(join(DIST, `${route}.html`), html); // /about   -> 200
+  mkdirSync(join(DIST, route), { recursive: true });
+  writeFileSync(join(DIST, route, "index.html"), html); // /about/ -> 200
+}
+
+// Home route only: inject a minimal, crawlable static shell of the hero (h1,
+// intro, CTA) into #root. It is byte-identical to what React renders (built from
+// the SAME src/content/hero.js the component uses) and React replaces it on
+// mount, so it is not cloaking. Visually hidden so there is no flash of unstyled
+// content before hydration.
+const HERO_SHELL =
+  '<div style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);border:0;padding:0;margin:-1px;">' +
+  `<h1>${HERO_H1[0]}<span>${HERO_H1[1]}</span><br/>${HERO_H1[2]}<span>${HERO_H1_BRAND}</span></h1>` +
+  `<p>${HERO_INTRO}</p>` +
+  `<a href="#waitlist">${HERO_CTA}</a>` +
+  "</div>";
+let home = inlineCss(base).replace(
+  /<div id="root">\s*<\/div>/,
+  `<div id="root">${HERO_SHELL}</div>`,
+);
+if (home === base) {
+  console.warn("gen-routes: hero shell not injected (root div did not match)");
+}
+
+// Phase 3: structured data on the home page. No SearchAction (there is no site
+// search) and no aggregateRating/review markup (there are no reviews) - both
+// would be false signals / a manual-action risk.
 const ldScript = `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>`;
 home = home.replace("</head>", `    ${ldScript}\n  </head>`);
 
