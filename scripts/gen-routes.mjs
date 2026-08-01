@@ -28,6 +28,7 @@ import { FEATURES_H1, FEATURES_INTRO } from "../src/content/features.js";
 import { FAQ, FAQ_FEATURED } from "../src/content/faq.js";
 import { GLOSSARY, GLOSSARY_H1, GLOSSARY_INTRO } from "../src/content/glossary.js";
 import { RESEARCH, RESEARCH_DISCLAIMER, RESEARCH_H1, RESEARCH_INTRO } from "../src/content/research.js";
+import { REGIONS, REGIONS_FOOTNOTE, REGIONS_H2, REGIONS_INTRO } from "../src/content/regions.js";
 import { PROBLEMS, WHY_H1, WHY_INTRO } from "../src/content/whyEarnwings.js";
 import {
   GC_FAQ,
@@ -294,7 +295,10 @@ const SHELLS = {
 
   about:
     "<h1>Built by pilots-in-training, for pilots-in-training</h1>" +
-    "<p>EARNWINGS is the all-in-one training cockpit for the next generation of Indian aviators — where ground school, flight planning, radio telephony and DGCA exam prep finally live in one place. It is built and owned by Cephionix.</p>",
+    "<p>EARNWINGS is the all-in-one training cockpit for the next generation of Indian aviators — where ground school, flight planning, radio telephony and DGCA exam prep finally live in one place. It is built and owned by Cephionix.</p>" +
+    `<h2>${esc(REGIONS_H2)}</h2><p>${esc(REGIONS_INTRO)}</p>` +
+    REGIONS.map((r) => `<h3>${esc(r.code)} — ${esc(r.region)}</h3><p>${esc(r.note)}</p>`).join("") +
+    `<p>${esc(REGIONS_FOOTNOTE)}</p>`,
 };
 
 /** Human-readable crumb label per route. */

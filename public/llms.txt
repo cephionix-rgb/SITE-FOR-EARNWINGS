@@ -14,6 +14,8 @@ Every statement here is factual and matches the website.
 - **Audience**: student pilots in India preparing for DGCA CPL and ATPL ground exams
 - **Company**: Cephionix (also builds Neural Wings, an FTO management platform)
 - **Status**: pre-launch, onboarding a founding cohort via a waitlist
+- **Regulator coverage**: DGCA (India) TODAY. Transport Canada, then EASA, then
+  the FAA are on the roadmap — planned, not shipped, and no dates announced.
 - **Platforms**: iOS, Android, Web, macOS, Windows
 - **Website**: https://earnwings.org
 
@@ -24,6 +26,7 @@ Every statement here is factual and matches the website.
 - **Not a live instructor-led batch.** Ground classes are self-paced in-app —
   no fixed class timings, no attendance.
 - **Pricing is not finalised** and has not been published.
+- **Not a Canadian, European or US course today.** Only the DGCA syllabus ships.
 
 ## The syllabus it covers
 

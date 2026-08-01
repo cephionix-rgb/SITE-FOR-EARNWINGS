@@ -41,6 +41,12 @@ export const FAQ = [
   },
   {
     category: "About EARNWINGS",
+    featured: true,
+    q: "Is EARNWINGS only for DGCA and India?",
+    a: "Today, yes — every chapter, question bank and mock paper is built for the DGCA syllabus and the Indian exam pattern, because a course written for every regulator fits none of them properly. The same engine is being taken to other syllabuses next: Transport Canada first, then EASA in Europe, then the FAA in the United States. Those are on the roadmap rather than in the app, and we have not announced dates for them.",
+  },
+  {
+    category: "About EARNWINGS",
     q: "Which devices can I use it on?",
     a: "EARNWINGS is built for iOS, Android, Web, Mac and Windows from a single codebase, and your progress, plans and perks follow you across every device you sign in on. Study on a laptop at home, revise on your phone at the airfield, and pick up exactly where you stopped.",
   },

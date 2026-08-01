@@ -21,6 +21,7 @@ import { Footer } from "../components/Footer";
 import { CloudBackground } from "../components/CloudBackground";
 import { PhoneFrame } from "../components/DeviceFrame";
 import { Instructors } from "../components/Instructors";
+import { Roadmap } from "../components/Roadmap";
 import { Link } from "../lib/router";
 import { FEATURES } from "../lib/data";
 import { FAQ } from "../content/faq";
@@ -676,6 +677,10 @@ export function AboutPage() {
             </Link>
             .
           </p>
+        </section>
+
+        <section className="mt-16">
+          <Roadmap compact />
         </section>
 
         {/* Credibility */}

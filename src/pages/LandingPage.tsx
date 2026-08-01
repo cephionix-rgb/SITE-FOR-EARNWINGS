@@ -11,6 +11,7 @@ import { ProofBand } from "../sections/ProofBand";
 import { FounderBenefits } from "../sections/FounderBenefits";
 import { AppShowcase } from "../sections/AppShowcase";
 import { JourneySection } from "../sections/JourneySection";
+import { Roadmap } from "../components/Roadmap";
 import { AspirationalMoment } from "../sections/AspirationalMoment";
 import { WaitlistSection } from "../sections/WaitlistSection";
 import { SectionCTA } from "../components/SectionCTA";
@@ -41,6 +42,7 @@ export function LandingPage() {
           <FounderBenefits />
           <AppShowcase />
           <SectionCTA variant="app" />
+          <Roadmap />
           <JourneySection />
           <SectionCTA variant="journey" />
           <AspirationalMoment />

@@ -37,6 +37,24 @@ export const GLOSSARY = [
     def: "India's civil aviation regulator. It sets the syllabus, conducts the ground examinations and issues pilot licences. EARNWINGS follows its syllabus and exam pattern but is an independent study platform, not affiliated with or approved by the DGCA.",
   },
   {
+    term: "EASA",
+    full: "European Union Aviation Safety Agency",
+    category: "Licences & exams",
+    def: "The civil aviation regulator for the European Union, which sets the ATPL theory subjects and licensing standards across member states. EARNWINGS covers the DGCA syllabus today; EASA is on the roadmap.",
+  },
+  {
+    term: "FAA",
+    full: "Federal Aviation Administration",
+    category: "Licences & exams",
+    def: "The civil aviation regulator of the United States, which sets US pilot certification and the written knowledge tests. On the EARNWINGS roadmap, not in the app today.",
+  },
+  {
+    term: "Transport Canada",
+    full: "Transport Canada Civil Aviation (TCCA)",
+    category: "Licences & exams",
+    def: "The Canadian civil aviation authority, responsible for pilot licensing and written examinations in Canada. The next syllabus EARNWINGS is being taken to after the DGCA.",
+  },
+  {
     term: "CPL",
     full: "Commercial Pilot Licence",
     category: "Licences & exams",
