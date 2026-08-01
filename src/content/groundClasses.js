@@ -81,10 +81,6 @@ export const GC_FAQ = [
     a: "That is what it is built for. Ground classes in the app have no fixed timing, so you can study between flying slots, on standby, or after the day's sorties, and your progress follows you across phone, web and desktop.",
   },
   {
-    q: "Is EARNWINGS approved by the DGCA?",
-    a: "No. EARNWINGS is an independent study platform and is not affiliated with, endorsed by or approved by the DGCA. The notes, question banks and mock papers follow the DGCA syllabus and exam pattern so your practice matches the real exam.",
-  },
-  {
     q: "How much do the ground classes cost?",
     a: "Pricing is not finalised yet and will be published before launch. Founding cadets who join the waitlist get early access and founder perks, including the full app free for a week.",
   },

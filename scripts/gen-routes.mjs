@@ -87,7 +87,7 @@ const ROUTES = {
   faq: {
     title: "FAQ — DGCA Ground Classes & Exam Prep | EARNWINGS",
     description:
-      "27 straight answers about EARNWINGS: which DGCA subjects are covered, how the mock exams work, what the AI Captain does, flight planning and RT practice, and how to get early access.",
+      "26 straight answers about EARNWINGS: which DGCA subjects are covered, how the mock exams work, what the AI Captain does, flight planning and RT practice, and how to get early access.",
     ogTitle: "EARNWINGS FAQ — Everything Student Pilots Ask",
     ogDescription:
       "Straight answers on the ground classes, mock exams, AI Captain, flight planning and early access.",

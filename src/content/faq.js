@@ -36,12 +36,6 @@ export const FAQ = [
   },
   {
     category: "About EARNWINGS",
-    featured: true,
-    q: "Is EARNWINGS affiliated with or approved by the DGCA?",
-    a: "No. EARNWINGS is an independent study platform and is not affiliated with, endorsed by or approved by the DGCA. Our notes, questions and mock papers are built to follow the DGCA syllabus and exam pattern so your practice matches the real thing.",
-  },
-  {
-    category: "About EARNWINGS",
     q: "Who builds EARNWINGS?",
     a: "EARNWINGS is built and owned by Cephionix, which also builds Neural Wings, a management platform for flying training organisations. The course material was shaped with a DGCA Chief Ground Instructor, a flight instructor and student pilots preparing right now.",
   },

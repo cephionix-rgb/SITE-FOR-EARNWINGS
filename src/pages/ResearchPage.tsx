@@ -202,19 +202,26 @@ export function ResearchPage() {
             className="rounded-3xl p-6 sm:p-8"
             style={{ background: "linear-gradient(160deg,#ffffff,#F3F8FF)", border: "1px solid rgba(201,152,31,0.35)" }}
           >
-            <span className="eyebrow">Built by us</span>
+            <span className="eyebrow">Built by us · coming to the app</span>
             <h2 className="mt-3 text-[clamp(1.4rem,3vw,1.9rem)] font-black leading-tight" style={{ color: INK }}>
-              Navigation calculators, from the same engine
+              13 navigation calculators, already built
             </h2>
             <p className="mt-3 text-[15px] leading-7" style={{ color: BODY }}>
               Wind triangle and groundspeed, runway wind components, compass-to-true (CDMVT), climb and
               descent, nav log, critical point and point of no return, V-speeds, mass and balance, time
-              and turns — worked live, with the vector diagram drawn as you change the numbers. They run
-              the same computations as the flight-planning engine, exposed so a cadet can practise and
-              cross-check by hand.
+              and turns, radio nav, route geometry, converters — worked live, with the vector diagram
+              redrawn as you change the numbers, and a printable worksheet at the end. Not a formula
+              sheet: you watch the drift angle move as the wind changes.
             </p>
-            <p className="mt-3 text-[14px] leading-7" style={{ color: MUTED }}>
-              They currently sit inside{" "}
+            <p className="mt-3 text-[15px] leading-7" style={{ color: BODY }}>
+              We built them in-house, on the same computations the flight-planning engine runs, so a
+              cadet can practise by hand and cross-check against the engine that files the plan. They
+              are <strong style={{ color: NAVY }}>coming to the EARNWINGS app</strong> — the weight
+              &amp; balance and centre-of-gravity calculator, with its envelope chart, is in the app
+              already.
+            </p>
+            <p className="mt-4 text-[13px] leading-6" style={{ color: MUTED }}>
+              Built by Cephionix, which also builds{" "}
               <a
                 href={NEURALWINGS_URL}
                 target="_blank"
@@ -223,11 +230,37 @@ export function ResearchPage() {
                 style={{ color: "#2E6BE5" }}
               >
                 Neural Wings
-              </a>
-              , the platform Cephionix builds for flying training organisations. EARNWINGS ships the
-              weight &amp; balance and centre-of-gravity calculator with its envelope chart today, on the
-              same engine.
+              </a>{" "}
+              for flying training organisations.
             </p>
+
+            {/* The calculators themselves, named — concrete beats adjectives, and
+                each name is a term a student pilot actually searches for. */}
+            <div className="mt-6 flex flex-wrap gap-2">
+              {[
+                "Wind & heading",
+                "Altitude & speed",
+                "Climb & descent",
+                "Route & geometry",
+                "Nav log",
+                "CP / PNR",
+                "Weather · fuel · hold",
+                "Radio nav",
+                "Mass & balance",
+                "Time & turns",
+                "V-speeds",
+                "Converter",
+                "CDMVT",
+              ].map((c) => (
+                <span
+                  key={c}
+                  className="pill"
+                  style={{ background: "rgba(27,58,122,0.06)", color: NAVY, border: "1px solid rgba(27,58,122,0.1)" }}
+                >
+                  {c}
+                </span>
+              ))}
+            </div>
           </div>
         </section>
 
