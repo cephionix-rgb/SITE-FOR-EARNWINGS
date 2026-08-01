@@ -110,6 +110,25 @@ const esc = (s) =>
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
 
+// ── Inline the stylesheet ───────────────────────────────────────────────────
+// Vite links one ~10 KB (gzipped) stylesheet in <head>. It is render-blocking:
+// nothing paints until that extra round trip completes, which PageSpeed measured
+// at ~190 ms on Slow 4G and flagged as ~300 ms of savings. At this size it is
+// cheaper to ship the CSS inside the HTML than to fetch it, so the page can
+// paint from the very first response.
+function inlineCss(html) {
+  const link = html.match(/<link rel="stylesheet"[^>]*href="([^"]+)"[^>]*>/);
+  if (!link) return html;
+  const cssPath = join(DIST, link[1].replace(/^\//, ""));
+  if (!existsSync(cssPath)) {
+    console.warn(`gen-routes: stylesheet not found for inlining: ${cssPath}`);
+    return html;
+  }
+  const css = readFileSync(cssPath, "utf8");
+  // `</style>` inside the CSS would close the tag early — escape defensively.
+  return html.replace(link[0], `<style>${css.replace(/<\/style>/gi, "<\\/style>")}</style>`);
+}
+
 function pageHtml(route, m) {
   const url = `${ORIGIN}/${route}`;
   const swap = (html, re, value) => {
@@ -119,7 +138,7 @@ function pageHtml(route, m) {
     }
     return html.replace(re, value);
   };
-  let html = base;
+  let html = inlineCss(base);
   html = swap(html, /<title>[\s\S]*?<\/title>/, `<title>${esc(m.title)}</title>`);
   html = swap(
     html,
@@ -265,7 +284,7 @@ const HERO_SHELL =
   `<p>${HERO_INTRO}</p>` +
   `<a href="#waitlist">${HERO_CTA}</a>` +
   "</div>";
-let home = base.replace(
+let home = inlineCss(base).replace(
   /<div id="root">\s*<\/div>/,
   `<div id="root">${HERO_SHELL}</div>`,
 );

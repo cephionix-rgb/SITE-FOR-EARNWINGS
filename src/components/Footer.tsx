@@ -37,6 +37,8 @@ export function Footer() {
               <img
                 src="/assets/logo-full-160.png"
                 alt="EARNWINGS"
+                width={160}
+                height={110}
                 className="h-9 w-auto"
                 loading="lazy"
                 decoding="async"

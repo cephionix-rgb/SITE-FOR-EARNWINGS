@@ -51,7 +51,7 @@ export function Nav({ solid = false }: { solid?: boolean }) {
         <Link to="/" className="flex items-center gap-2.5 sm:gap-3">
           <picture>
             <source type="image/webp" srcSet="/assets/logo-mark-96.webp" />
-            <img src="/assets/logo-mark-96.png" alt="" className="h-9 w-auto sm:h-11" />
+            <img src="/assets/logo-mark-96.png" alt="" width={96} height={96} className="h-9 w-auto sm:h-11" />
           </picture>
           {/* Wordmark + owning company, matching neuralwings.org's header lockup. */}
           <span className="flex flex-col">

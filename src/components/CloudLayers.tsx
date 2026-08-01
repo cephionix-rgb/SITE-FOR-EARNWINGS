@@ -45,6 +45,8 @@ export function CloudLayers() {
           />
           <img
             src="/assets/hero-clouds-1920.jpg"
+            width={1920}
+            height={1072}
             srcSet="/assets/hero-clouds-1024.jpg 1024w, /assets/hero-clouds-1920.jpg 1920w"
             sizes="100vw"
             alt=""
@@ -75,6 +77,8 @@ export function CloudLayers() {
           />
           <img
             src="/assets/hero-clouds-1920.jpg"
+            width={1920}
+            height={1072}
             srcSet="/assets/hero-clouds-1024.jpg 1024w, /assets/hero-clouds-1920.jpg 1920w"
             sizes="100vw"
             alt=""
