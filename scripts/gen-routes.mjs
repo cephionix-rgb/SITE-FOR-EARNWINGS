@@ -26,6 +26,15 @@ import {
 } from "../src/content/hero.js";
 import { FEATURES_H1, FEATURES_INTRO } from "../src/content/features.js";
 import { FAQ } from "../src/content/faq.js";
+import { PROBLEMS, WHY_H1, WHY_INTRO } from "../src/content/whyEarnwings.js";
+import {
+  GC_FAQ,
+  GC_H1,
+  GC_HONESTY,
+  GC_INTRO,
+  INCLUDED,
+  SYLLABUS,
+} from "../src/content/groundClasses.js";
 
 const DIST = "dist";
 const INDEX = join(DIST, "index.html");
@@ -39,6 +48,14 @@ const ROUTES = {
     ogTitle: "EARNWINGS Features — Flight Planning, RT & AI Captain",
     ogDescription:
       "Flight planning on real airways, a voice RT trainer, an AI Captain and full DGCA mock exams.",
+  },
+  "dgca-ground-classes": {
+    title: "DGCA Ground Classes Online — CPL & ATPL | EARNWINGS",
+    description:
+      "Self-paced DGCA ground classes for CPL and ATPL in one app: 12 modules and 202 chapters as visual notes, video lectures, 10,000+ MCQs, timed mock papers and an AI instructor.",
+    ogTitle: "DGCA Ground Classes Online — CPL & ATPL Ground School App",
+    ogDescription:
+      "The full DGCA ground syllabus as notes, video lectures, question banks and timed mock papers — study between flying slots.",
   },
   "why-earnwings": {
     title: "Why EARNWINGS — 24 Gaps in DGCA Ground School",
@@ -137,44 +154,101 @@ function pageHtml(route, m) {
 // SPA fallback for unmatched paths (empty root, like the original shell).
 copyFileSync(INDEX, join(DIST, "404.html"));
 
-// /features gets its real (byte-identical) hero shell too - it is the sub-route
-// that will carry FAQPage schema and target non-brand queries. /about, /privacy
-// and /terms keep an empty root (their meta is enough).
-// The FAQ text is baked into the shell too (visually hidden) so the served HTML
-// carries the exact Q&A that the FAQPage JSON-LD references — keeping the
-// structured data matched to on-page content, which Google requires.
-const FAQ_SHELL = FAQ.map(
-  (f) => `<h2>${esc(f.q)}</h2><p>${esc(f.a)}</p>`,
-).join("");
-const FEATURES_SHELL =
+// ── Crawlable content shells ────────────────────────────────────────────────
+// EVERY route ships the real text of its page inside #root, built from the SAME
+// content modules the React components render, so it is not cloaking — React
+// replaces it on mount. Previously only / and /features had a shell and the rest
+// served an empty div: a crawler that did not execute the JS saw a blank page,
+// which is the difference between being indexed for this content and not.
+const hidden = (inner) =>
   '<div style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);border:0;padding:0;margin:-1px;">' +
-  `<h1>${FEATURES_H1[0]}<span>${FEATURES_H1[1]}</span>${FEATURES_H1[2]}</h1>` +
-  `<p>${esc(FEATURES_INTRO)}</p>` +
-  FAQ_SHELL +
+  inner +
   "</div>";
 
-// FAQPage structured data for /features — built from the SAME faq.js the page
-// renders, so schema text is byte-identical to the visible answers.
-const faqLd = {
+const faqBlock = (items) =>
+  items.map((f) => `<h2>${esc(f.q)}</h2><p>${esc(f.a)}</p>`).join("");
+
+/** FAQPage schema built from the SAME items rendered on the page. */
+const faqLdFor = (items) => ({
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  mainEntity: FAQ.map((f) => ({
+  mainEntity: items.map((f) => ({
     "@type": "Question",
     name: f.q,
     acceptedAnswer: { "@type": "Answer", text: f.a },
   })),
+});
+
+const ld = (obj) =>
+  `<script type="application/ld+json">${JSON.stringify(obj)}</script>`;
+
+/** Breadcrumbs: Home › <page>, so search results show the site structure. */
+const breadcrumbLd = (route, name) => ({
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: `${ORIGIN}/` },
+    { "@type": "ListItem", position: 2, name, item: `${ORIGIN}/${route}` },
+  ],
+});
+
+const SHELLS = {
+  features:
+    `<h1>${FEATURES_H1[0]}<span>${FEATURES_H1[1]}</span>${FEATURES_H1[2]}</h1>` +
+    `<p>${esc(FEATURES_INTRO)}</p>` +
+    faqBlock(FAQ),
+
+  "dgca-ground-classes":
+    `<h1>${esc(GC_H1[0])}${esc(GC_H1[1])}</h1>` +
+    `<p>${esc(GC_INTRO)}</p>` +
+    `<p>${esc(GC_HONESTY)}</p>` +
+    `<h2>${SYLLABUS.length} modules, ${SYLLABUS.reduce((n, s) => n + s.chapters, 0)} chapters, in exam order</h2>` +
+    "<ul>" +
+    SYLLABUS.map((s) => `<li>${esc(s.name)} — ${s.chapters} chapters</li>`).join("") +
+    "</ul>" +
+    "<h2>Everything a student pilot needs for the ground exams</h2>" +
+    INCLUDED.map((c) => `<h3>${esc(c.title)}</h3><p>${esc(c.body)}</p>`).join("") +
+    faqBlock(GC_FAQ),
+
+  "why-earnwings":
+    `<h1>${esc(WHY_H1[0])}${esc(WHY_H1[1])}</h1>` +
+    `<p>${esc(WHY_INTRO)}</p>` +
+    PROBLEMS.map(
+      (p) => `<h2>${esc(p.title)}</h2><p>${esc(p.body)}</p><p>${esc(p.fix)}</p>`,
+    ).join(""),
+
+  about:
+    "<h1>Built by pilots-in-training, for pilots-in-training</h1>" +
+    "<p>EARNWINGS is the all-in-one training cockpit for the next generation of Indian aviators — where ground school, flight planning, radio telephony and DGCA exam prep finally live in one place. It is built and owned by Cephionix.</p>",
 };
-const faqScript = `<script type="application/ld+json">${JSON.stringify(faqLd)}</script>`;
+
+/** Human-readable crumb label per route. */
+const CRUMB = {
+  features: "Features",
+  "dgca-ground-classes": "DGCA Ground Classes",
+  "why-earnwings": "Why EARNWINGS",
+  about: "About",
+  privacy: "Privacy Policy",
+  terms: "Terms of Service",
+  copyright: "Copyright & IP",
+};
 
 for (const [route, m] of Object.entries(ROUTES)) {
   let html = pageHtml(route, m);
-  if (route === "features") {
+
+  const shell = SHELLS[route];
+  if (shell) {
     html = html.replace(
       /<div id="root">\s*<\/div>/,
-      `<div id="root">${FEATURES_SHELL}</div>`,
+      `<div id="root">${hidden(shell)}</div>`,
     );
-    html = html.replace("</head>", `    ${faqScript}\n  </head>`);
   }
+
+  const scripts = [ld(breadcrumbLd(route, CRUMB[route] || route))];
+  if (route === "features") scripts.push(ld(faqLdFor(FAQ)));
+  if (route === "dgca-ground-classes") scripts.push(ld(faqLdFor(GC_FAQ)));
+  html = html.replace("</head>", `    ${scripts.join("\n    ")}\n  </head>`);
+
   writeFileSync(join(DIST, `${route}.html`), html); // /about   -> 200
   mkdirSync(join(DIST, route), { recursive: true });
   writeFileSync(join(DIST, route, "index.html"), html); // /about/ -> 200
@@ -207,8 +281,15 @@ const jsonLd = [
     "@context": "https://schema.org",
     "@type": "Organization",
     name: "EARNWINGS",
+    // The brand is one word, but people type it as two and an unrelated
+    // "Earn Wings" seller already ranks for that. Declaring the variants tells
+    // Google they are the same entity.
+    alternateName: ["Earn Wings", "EarnWings", "EARNWINGS by Cephionix"],
     url: `${ORIGIN}/`,
     logo: `${ORIGIN}/assets/logo-512.png`,
+    description:
+      "EARNWINGS is a DGCA CPL and ATPL study app for student pilots in India — online ground classes, question banks, mock exams, flight planning and radio-telephony practice.",
+    areaServed: { "@type": "Country", name: "India" },
     // EARNWINGS is the product; Cephionix is the company that owns it.
     // Keep in sync with COMPANY_NAME in src/lib/siteConfig.ts.
     parentOrganization: { "@type": "Organization", name: "Cephionix" },
@@ -245,7 +326,7 @@ const jsonLd = [
     applicationCategory: "EducationalApplication",
     operatingSystem: "iOS, Android, Web, macOS, Windows",
     description:
-      "DGCA CPL and ATPL ground-school app: real-airway flight planning, an RT trainer, an AI Captain and full mock exams.",
+      "Student pilot app for DGCA CPL and ATPL: online ground classes, 10,000+ practice questions, timed mock exams, real-airway flight planning, an RT trainer and an AI Captain.",
     offers: {
       "@type": "Offer",
       price: "0",
@@ -259,6 +340,43 @@ home = home.replace("</head>", `    ${ldScript}\n  </head>`);
 
 writeFileSync(INDEX, home);
 
+// ── sitemap.xml ─────────────────────────────────────────────────────────────
+// Generated from ROUTES rather than hand-maintained, so a new route can never
+// be added to the site and silently left out of the sitemap (which is what had
+// happened before — the file was last touched by hand).
+const PRIORITY = {
+  features: "0.8",
+  "dgca-ground-classes": "0.8",
+  "why-earnwings": "0.7",
+  about: "0.5",
+  privacy: "0.3",
+  terms: "0.3",
+  copyright: "0.3",
+};
+const today = new Date().toISOString().slice(0, 10);
+const urls = [
+  { loc: `${ORIGIN}/`, priority: "1.0", changefreq: "weekly" },
+  ...Object.keys(ROUTES).map((route) => ({
+    loc: `${ORIGIN}/${route}`,
+    priority: PRIORITY[route] || "0.5",
+    changefreq: route === "privacy" || route === "terms" || route === "copyright" ? "yearly" : "monthly",
+  })),
+];
+writeFileSync(
+  join(DIST, "sitemap.xml"),
+  '<?xml version="1.0" encoding="UTF-8"?>\n' +
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
+    urls
+      .map(
+        (u) =>
+          `  <url>\n    <loc>${u.loc}</loc>\n    <lastmod>${today}</lastmod>\n` +
+          `    <changefreq>${u.changefreq}</changefreq>\n    <priority>${u.priority}</priority>\n  </url>`,
+      )
+      .join("\n") +
+    "\n</urlset>\n",
+);
+
 console.log(
-  `gen-routes: baked meta for ${Object.keys(ROUTES).length} routes + 404.html + home hero shell + JSON-LD`,
+  `gen-routes: baked meta for ${Object.keys(ROUTES).length} routes + 404.html + ` +
+    `${Object.keys(SHELLS).length + 1} content shells + JSON-LD + sitemap (${urls.length} urls)`,
 );

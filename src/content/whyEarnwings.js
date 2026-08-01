@@ -1,3 +1,4 @@
+// (Plain .js so scripts/gen-routes.mjs can import it for the crawlable shell.)
 // ---------------------------------------------------------------------------
 // "Why EARNWINGS" — the student-pilot counterpart to neuralwings.org's
 // /why-neural-wings damage report. Neural Wings documents what breaks inside an
@@ -10,24 +11,11 @@
 // experience, never dressed up as survey statistics.
 // ---------------------------------------------------------------------------
 
-export type Severity = "CRITICAL" | "HIGH" | "MEDIUM";
-
-export type Category = "Ground school" | "Exams" | "Flying" | "Radio" | "Momentum";
-
-export type Problem = {
-  n: number;
-  title: string;
-  body: string;
-  fix: string;
-  severity: Severity;
-  category: Category;
-};
-
 export const WHY_H1 = ["24 Reasons Every DGCA Cadet ", "Needs EARNWINGS."];
 export const WHY_INTRO =
   "Ground school runs on photocopied notes, WhatsApp forwards and a question bank nobody marks. Here is the honest list of what that costs you — and exactly which part of EARNWINGS closes each gap.";
 
-export const PROBLEMS: Problem[] = [
+export const PROBLEMS = [
   // ── Ground school ────────────────────────────────────────────────────────
   {
     n: 1,
@@ -231,7 +219,7 @@ export const PROBLEMS: Problem[] = [
   },
 ];
 
-export const CATEGORIES: Category[] = [
+export const CATEGORIES = [
   "Ground school",
   "Exams",
   "Flying",
