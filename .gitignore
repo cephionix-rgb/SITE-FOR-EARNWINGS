@@ -11,3 +11,6 @@ dist-ssr
 *.bak
 public/assets/product-film-16x9.mp4
 public/assets/product-film-poster.jpg
+
+# Build artifact — rewritten by every tsc run, and it blocked branch switches.
+tsconfig.tsbuildinfo
