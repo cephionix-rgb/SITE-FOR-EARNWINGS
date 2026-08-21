@@ -42,7 +42,7 @@ export const FEATURES: Feature[] = [
     tagline: "Grab the mic. ATC is waiting — and it's grading you.",
     highlights: [
       "Animated airport scene with a live narrated controller",
-      "Whisper speech-to-text scores your phraseology",
+      "Speech-to-text scores your phraseology",
       "Local, flight-plan, emergency & enroute scenarios",
     ],
   },

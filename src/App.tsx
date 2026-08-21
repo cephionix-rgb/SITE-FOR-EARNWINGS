@@ -11,6 +11,9 @@ const FeaturesPage = lazy(() => import("./pages/FeaturesPage").then((m) => ({ de
 const AboutPage = lazy(() => import("./pages/AboutPage").then((m) => ({ default: m.AboutPage })));
 const PrivacyPage = lazy(() => import("./pages/PrivacyPage").then((m) => ({ default: m.PrivacyPage })));
 const TermsPage = lazy(() => import("./pages/TermsPage").then((m) => ({ default: m.TermsPage })));
+// The account + purchase page. Code-split like the rest: it pulls in the API client
+// and is irrelevant to a first-time visitor reading the landing page.
+const AccountPage = lazy(() => import("./pages/AccountPage").then((m) => ({ default: m.AccountPage })));
 
 export default function App() {
   // Lenis (smooth scroll) lives at the app root so it survives page changes.
@@ -27,6 +30,9 @@ export default function App() {
     case "/about": page = <AboutPage />; break;
     case "/privacy": page = <PrivacyPage />; break;
     case "/terms": page = <TermsPage />; break;
+    // Both spellings: the app links to /account, humans type /login.
+    case "/account":
+    case "/login": page = <AccountPage />; break;
     default: page = <LandingPage />;
   }
   return <Suspense fallback={null}>{page}</Suspense>;

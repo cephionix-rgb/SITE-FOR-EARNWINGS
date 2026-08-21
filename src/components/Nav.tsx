@@ -72,6 +72,17 @@ export function Nav({ solid = false }: { solid?: boolean }) {
               {l.label}
             </Link>
           ))}
+          {/* SIGN IN. Nothing on this site linked to /account, so a student who had
+              already bought had no way in — and the app sends them here to purchase,
+              because payment cannot happen in-app. A shop with no door. */}
+          <Link
+            to="/account"
+            onClick={() => track("nav_signin_click")}
+            className="text-sm font-semibold transition-colors"
+            style={{ color: "rgba(27,58,122,0.82)" }}
+          >
+            Sign in
+          </Link>
           <Link
             to="/#waitlist"
             onClick={() => track("nav_cta_click")}
@@ -114,6 +125,17 @@ export function Nav({ solid = false }: { solid?: boolean }) {
                   {l.label}
                 </Link>
               ))}
+              <Link
+                to="/account"
+                onClick={() => {
+                  track("nav_signin_click", { menu: "mobile" });
+                  setOpen(false);
+                }}
+                className="text-base font-semibold"
+                style={{ color: "#1B3A7A" }}
+              >
+                Sign in
+              </Link>
               <Link
                 to="/#waitlist"
                 onClick={() => {

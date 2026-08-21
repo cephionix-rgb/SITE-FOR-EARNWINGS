@@ -32,6 +32,18 @@ const INDEX = join(DIST, "index.html");
 const ORIGIN = "https://earnwings.org";
 
 const ROUTES = {
+  account: {
+    title: "Your account & plans | EARNWINGS",
+    description:
+      "Sign in to EARNWINGS to see your plan, your Fuel balance and everything you can add to it — Subject Pass, Trio Pass, Cadet Pro and Refuel packs.",
+    ogTitle: "Your account & plans | EARNWINGS",
+    ogDescription: "Sign in to manage your EARNWINGS plan and buy Fuel.",
+    // Deliberately not indexed. It is a signed-in surface: there is nothing on it for
+    // a search engine, and a pricing page ranking above the landing page would send
+    // first-time visitors to a sign-in form instead of to the product.
+    noindex: true,
+  },
+
   features: {
     title: "Features — Flight Planning, RT & AI Captain | EARNWINGS",
     description:
@@ -152,6 +164,13 @@ const faqScript = `<script type="application/ld+json">${JSON.stringify(faqLd)}</
 
 for (const [route, m] of Object.entries(ROUTES)) {
   let html = pageHtml(route, m);
+  // A route flagged noindex gets a real robots meta tag. Without this the flag would
+  // have been a comment that looked like configuration — /account would still have
+  // been crawled, and a sign-in form outranking the landing page is the worst possible
+  // first result for someone searching the product.
+  if (m.noindex) {
+    html = html.replace("</head>", '    <meta name="robots" content="noindex,nofollow" />\n  </head>');
+  }
   if (route === "features") {
     html = html.replace(
       /<div id="root">\s*<\/div>/,

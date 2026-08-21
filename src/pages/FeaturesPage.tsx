@@ -29,7 +29,7 @@ const FEATURES: Feat[] = [
     screen: "/screens/app-flightplan.webp",
     callouts: ["ATS airways", "5-algo solver", "Brief PDF"],
     points: [
-      "Real ARINC-424 airways, waypoints & aerodromes (Lido-grade)",
+      "Real ARINC-424 airways, waypoints & aerodromes",
       "Compare 5 routing algorithms side-by-side",
       "Automatic weight & balance, fuel burn and ETE",
       "One-tap ICAO flight-plan / pilot-brief PDF",
@@ -57,8 +57,8 @@ const FEATURES: Feat[] = [
     points: [
       "METAR / TAF / SIGMET decode with VFR·MVFR·IFR·LIFR tagging",
       "NOTAM decode → corridor auto-reroute, with provenance",
-      "Self-updating eAIP so procedures are always current",
-      "Live INSAT-3DS satellite imagery — stills + animated loop",
+      "Self-updating official charts so procedures are always current",
+      "Live satellite imagery — stills + animated loop",
     ],
   },
   {
@@ -69,7 +69,7 @@ const FEATURES: Feat[] = [
     callouts: ["Speak the call", "Auto-scored", "Scenarios"],
     points: [
       "Voice-first practice with a real Cessna 172 in 3D",
-      "Whisper speech-to-text scores your phraseology instantly",
+      "Speech-to-text scores your phraseology instantly",
       "Local, flight-plan, emergency & enroute scenarios",
       "Bridges straight from your own flight plan",
     ],
@@ -145,7 +145,7 @@ type Mini = { icon: LucideIcon; title: string; body: string };
 const MORE: Mini[] = [
   { icon: Sparkles, title: "First-join wizard", body: "Add your documents and the exams you’ve cleared for an exam-aware plan on day one." },
   { icon: Coins, title: "Free tier & AI credits", body: "Start free with Chapter 1 + sample RT; transparent credits power the smart stuff." },
-  { icon: Satellite, title: "Satellite imagery", body: "Live INSAT-3DS stills plus a self-building animated cloud loop." },
+  { icon: Satellite, title: "Satellite imagery", body: "Live satellite stills plus a self-building animated cloud loop." },
   { icon: GitBranch, title: "Route-solver lab", body: "Compare Dijkstra, A* and 3 more pathfinders on the same route, visually." },
   { icon: Users, title: "Peer RT matches", body: "Practise your radio calls head-to-head against other cadets." },
   { icon: Flame, title: "Streaks & leaderboards", body: "Keep your streak alive and climb the founder leaderboard." },

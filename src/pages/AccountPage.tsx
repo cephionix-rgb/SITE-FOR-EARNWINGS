@@ -1,0 +1,618 @@
+// Sign in · your profile · the plans · buy.
+//
+// DELIBERATELY SMALL. This is a till, not a second app. A signed-in student sees who
+// they are, what plan they hold, how much Fuel is left, and every plan they could buy.
+// Nothing else — no notes, no chapters, no RT, no community. Those live in the app,
+// behind a login, on a device where the content can be protected. Putting any of them
+// on a web page would hand the course to anyone with a browser and a screenshot key.
+//
+// WHY BUYING HAPPENS HERE
+// An in-app purchase on iOS costs 30%. On a ₹34,999 Cadet Pro that is ₹10,500 — about
+// eighteen times that student's entire annual AI cost. The app carries no purchase UI
+// at all; it points here. The server-side flow (checkout token → hosted Razorpay page →
+// signed webhook) is the same one the app used to drive, unchanged.
+import { useCallback, useEffect, useState } from "react";
+import { motion } from "motion/react";
+import { BookOpen, Check, Crown, Download, FileText, Loader2, LogOut, Radio, Rocket, Zap } from "lucide-react";
+
+import { PageShell } from "../components/PageShell";
+import {
+  ApiError, api, Boost, Invoice, Me, MyPlan, Offer, Plan, SubjectOption,
+  downloadInvoice, getToken, rupees, setToken,
+} from "../lib/api";
+
+const NAVY = "#1B3A7A";
+const MUTED = "#41527A";
+const GOLD = "#C9981F";
+
+function Card({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) {
+  return (
+    <div className="rounded-2xl p-5"
+      style={{ background: "#fff", boxShadow: "0 2px 14px rgba(27,58,122,0.10)", ...style }}>
+      {children}
+    </div>
+  );
+}
+
+// ─────────────────────────── sign in ───────────────────────────
+
+function SignIn({ onDone }: { onDone: (u: Me) => void }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [sent, setSent] = useState(false);
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    setBusy(true); setError(null);
+    try {
+      const r = await api.login(email.trim(), password);
+      setToken(r.token);
+      onDone(r.user);
+    } catch (err) {
+      // The server's own words. "this account signs in with Google" is the single
+      // most useful thing it can say, and a generic message would send them to the
+      // reset flow to set a password for an account they can already reach.
+      setError(err instanceof ApiError ? err.message : "Could not sign in.");
+    } finally { setBusy(false); }
+  }
+
+  async function forgot() {
+    if (!email.trim()) { setError("Enter your email first."); return; }
+    setBusy(true); setError(null);
+    try { await api.forgot(email.trim()); setSent(true); }
+    catch { setSent(true); }   // the endpoint never says whether an account exists
+    finally { setBusy(false); }
+  }
+
+  return (
+    <Card style={{ maxWidth: 420, margin: "0 auto" }}>
+      <h2 className="text-xl font-bold" style={{ color: NAVY }}>Sign in</h2>
+      <p className="mt-1 text-sm" style={{ color: MUTED }}>
+        Use the same account as the EARNWINGS app.
+      </p>
+
+      {sent ? (
+        <div className="mt-5 rounded-xl p-4 text-sm" style={{ background: "#EBF3FF", color: NAVY }}>
+          If that email has an EARNWINGS account, a reset link is on its way.
+          <div className="mt-2 text-xs" style={{ color: MUTED }}>
+            A password can be reset once every 3 days.
+          </div>
+        </div>
+      ) : (
+        <form onSubmit={submit} className="mt-5 space-y-3">
+          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)}
+            placeholder="you@example.com" autoComplete="email" required
+            className="w-full rounded-xl px-3 py-2.5 text-sm"
+            style={{ border: "1px solid #D9E2F5", color: NAVY }} />
+          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password" autoComplete="current-password" required
+            className="w-full rounded-xl px-3 py-2.5 text-sm"
+            style={{ border: "1px solid #D9E2F5", color: NAVY }} />
+          {error && (
+            <div className="rounded-xl px-3 py-2 text-sm" style={{ background: "#FDF3E7", color: GOLD }}>
+              {error}
+            </div>
+          )}
+          <button type="submit" disabled={busy}
+            className="w-full rounded-xl py-3 text-sm font-bold text-white disabled:opacity-60"
+            style={{ background: NAVY, border: "none" }}>
+            {busy ? "Signing in…" : "Sign in"}
+          </button>
+          <button type="button" onClick={forgot} className="text-xs underline"
+            style={{ color: MUTED }}>
+            Forgot your password?
+          </button>
+        </form>
+      )}
+    </Card>
+  );
+}
+
+// ─────────────────────────── profile ───────────────────────────
+//
+// THE HERO IS DARK, EVERYTHING ELSE IS LIGHT.
+// A signed-in student lands on four white cards on a pale background, and with no
+// contrast anywhere the eye has nowhere to start. The identity card is therefore navy:
+// it separates "who you are and what you hold" from "what you could buy", which is the
+// only real hierarchy on this page.
+
+function Stat({ k, v, gold }: { k: string; v: React.ReactNode; gold?: boolean }) {
+  return (
+    <div className="rounded-xl px-3.5 py-3" style={{ background: "rgba(255,255,255,0.08)" }}>
+      <div className="text-[10px] uppercase" style={{ color: "#9DB4E0", letterSpacing: "0.09em", fontWeight: 700 }}>{k}</div>
+      <div className="mt-1 text-lg" style={{ color: gold ? "#F5D97A" : "#fff", fontWeight: 800 }}>{v}</div>
+    </div>
+  );
+}
+
+function Profile({ me, plan, onSignOut }: { me: Me; plan: MyPlan | null; onSignOut: () => void }) {
+  const expires = plan?.expires_at ? new Date(plan.expires_at) : null;
+  const planName = plan?.plan?.name ?? (me.is_premium ? "Premium" : "Explorer");
+  return (
+    <div className="rounded-3xl p-6 md:p-7"
+      style={{ background: "linear-gradient(135deg,#0D2450 0%,#1B3A7A 62%,#24509E 100%)",
+               boxShadow: "0 18px 46px -22px rgba(13,36,80,0.75)" }}>
+      <div className="flex items-start gap-4">
+        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl text-lg"
+          style={{ background: "rgba(245,217,122,0.14)", color: "#F5D97A", fontWeight: 800,
+                   border: "1.5px solid rgba(245,217,122,0.45)" }}>
+          {me.avatar_initials}
+        </div>
+        <div className="min-w-0 flex-1">
+          <div className="truncate text-xl text-white" style={{ fontWeight: 800 }}>{me.name}</div>
+          <div className="truncate text-xs" style={{ color: "#9DB4E0" }}>{me.email}</div>
+          <span className="mt-2 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px]"
+            style={{ background: me.is_premium ? "rgba(245,217,122,0.16)" : "rgba(255,255,255,0.10)",
+                     color: me.is_premium ? "#F5D97A" : "#C9D6EC", fontWeight: 800 }}>
+            {me.is_premium && <Crown size={11} />} {planName}
+          </span>
+        </div>
+        <button onClick={onSignOut}
+          className="flex shrink-0 items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[11px]"
+          style={{ background: "rgba(255,255,255,0.08)", color: "#C9D6EC", fontWeight: 700 }}>
+          <LogOut size={12} /> Sign out
+        </button>
+      </div>
+
+      <div className="mt-5 grid grid-cols-2 gap-2.5 md:grid-cols-3">
+        <Stat k="Fuel left" v={(plan?.credits ?? me.credits).toLocaleString("en-IN")} gold />
+        <Stat k="Rank" v={me.level_name || `Level ${me.level}`} />
+        <Stat k="Valid until" v={plan?.plan?.lifetime ? "Lifetime"
+          : expires ? expires.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })
+            : "—"} />
+      </div>
+
+      <p className="mt-4 text-[11px]" style={{ color: "#8AA3D4", lineHeight: 1.6 }}>
+        Your notes, question bank, RT trainer and flight planning live in the EARNWINGS
+        app. This page is your account and your plan.
+      </p>
+    </div>
+  );
+}
+
+// ───────────────────── subjects, Fuel, invoices ─────────────────────
+//
+// The three questions a paying student actually has — what did I buy, what is Fuel,
+// where is my receipt — answered on the page they land on rather than only inside an
+// app they may not have installed yet.
+
+function SectionCard({ icon, title, right, children }: {
+  icon: React.ReactNode; title: string; right?: React.ReactNode; children: React.ReactNode;
+}) {
+  return (
+    <Card>
+      <div className="flex items-center gap-2">
+        <span className="flex h-7 w-7 items-center justify-center rounded-lg"
+          style={{ background: "#FDF3E7", color: GOLD }}>{icon}</span>
+        <h3 className="text-base" style={{ color: NAVY, fontWeight: 800 }}>{title}</h3>
+        {right && <div className="ml-auto">{right}</div>}
+      </div>
+      {children}
+    </Card>
+  );
+}
+
+function SubjectsCard({ plan, onChanged }: { plan: MyPlan; onChanged: () => void }) {
+  const ent = plan.entitlement;
+  const [all, setAll] = useState<SubjectOption[]>([]);
+  const [picked, setPicked] = useState<string[]>([]);
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+
+  const choosing = !!ent && !ent.all_access && ent.remaining > 0;
+
+  useEffect(() => {
+    if (!choosing) return;
+    api.subjects().then((r) => setAll(r.items)).catch(() => {});
+  }, [choosing, ent?.remaining]);
+
+  if (!plan.user.is_premium || !ent) return null;
+  const held = ent.unlocked_subjects ?? [];
+
+  async function save() {
+    setBusy(true); setErr(null);
+    try { await api.chooseSubjects(picked); setPicked([]); onChanged(); }
+    catch (e) { setErr(e instanceof ApiError ? e.message : "Could not save your choice."); }
+    finally { setBusy(false); }
+  }
+
+  function toggle(code: string) {
+    setPicked((p) => p.includes(code) ? p.filter((c) => c !== code)
+      : p.length >= ent.remaining ? p : [...p, code]);
+  }
+
+  return (
+    <SectionCard icon={<BookOpen size={15} />} title="Your subjects"
+      right={
+        <span className="rounded-full px-2.5 py-1 text-[11px]"
+          style={{ background: ent.all_access ? "#EAF7EF" : "#EBF3FF",
+                   color: ent.all_access ? "#0E8A4F" : NAVY, fontWeight: 800 }}>
+          {ent.all_access ? "All subjects" : `${held.length} of ${ent.quota}`}
+        </span>
+      }>
+      <p className="mt-2.5 text-sm" style={{ color: MUTED }}>
+        {ent.all_access
+          ? <>Your plan includes <b style={{ color: NAVY }}>every DGCA subject</b> — nothing to choose.</>
+          : <>Your plan covers <b style={{ color: NAVY }}>{ent.quota}</b> subject{ent.quota === 1 ? "" : "s"}.
+              {ent.remaining > 0 && <> <b style={{ color: GOLD }}>{ent.remaining}</b> still to choose.</>}</>}
+      </p>
+
+      {held.length > 0 && (
+        <div className="mt-3 flex flex-wrap gap-2">
+          {held.map((s) => (
+            <span key={s.code} className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs"
+              style={{ background: "#EBF3FF", color: NAVY, fontWeight: 700 }}>
+              <Check size={12} style={{ color: "#0E8A4F" }} /> {s.title}
+            </span>
+          ))}
+        </div>
+      )}
+
+      {choosing && (
+        <div className="mt-4">
+          <div className="text-[11px] uppercase" style={{ color: MUTED, fontWeight: 800, letterSpacing: "0.07em" }}>
+            Pick the paper{ent.remaining === 1 ? "" : "s"} you are sitting
+          </div>
+          <div className="mt-2.5 grid gap-2 sm:grid-cols-2">
+            {all.filter((s) => !s.unlocked).map((s) => {
+              const on = picked.includes(s.code);
+              const full = !on && picked.length >= ent.remaining;
+              return (
+                <button key={s.code} onClick={() => toggle(s.code)} disabled={full}
+                  className="flex items-center gap-2.5 rounded-xl border p-3 text-left text-sm transition disabled:opacity-45"
+                  style={{ borderColor: on ? NAVY : "#D9E2F5", background: on ? "#EBF3FF" : "#fff",
+                           color: NAVY, fontWeight: on ? 700 : 500 }}>
+                  <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full"
+                    style={{ border: `1.5px solid ${on ? NAVY : "#C3D2EC"}`, background: on ? NAVY : "#fff" }}>
+                    {on && <Check size={10} style={{ color: "#fff" }} />}
+                  </span>
+                  {s.title}
+                </button>
+              );
+            })}
+          </div>
+          {err && <div className="mt-3 text-sm" style={{ color: "#B3261E" }}>{err}</div>}
+          <button onClick={save} disabled={busy || picked.length === 0}
+            className="mt-3.5 w-full rounded-xl py-3 text-sm text-white transition disabled:opacity-45 sm:w-auto sm:px-6"
+            style={{ background: NAVY, fontWeight: 800 }}>
+            {busy ? "Saving…" : picked.length ? `Unlock ${picked.length} subject${picked.length === 1 ? "" : "s"}` : "Select to continue"}
+          </button>
+          <p className="mt-2 text-[11px]" style={{ color: MUTED }}>
+            This spends your plan's allowance. Upgrading later keeps everything you have already opened.
+          </p>
+        </div>
+      )}
+    </SectionCard>
+  );
+}
+
+function FuelCard({ plan }: { plan: MyPlan }) {
+  const monthly = plan.plan.credits_per_month || 0;
+  // Against the MONTHLY allowance, not an all-time total — that is the number the bar
+  // is actually about, and it is what refills. Clamped so a rollover balance above the
+  // allowance cannot overflow the track.
+  const pct = monthly ? Math.max(3, Math.min(100, Math.round((plan.credits / monthly) * 100))) : 0;
+  return (
+    <SectionCard icon={<Zap size={15} />} title="How Fuel works">
+      <div className="mt-3 flex items-end gap-2">
+        <div className="text-4xl leading-none" style={{ color: NAVY, fontWeight: 800 }}>
+          {plan.credits.toLocaleString("en-IN")}
+        </div>
+        <div className="pb-1 text-sm" style={{ color: MUTED }}>
+          Fuel {monthly > 0 && <>of {monthly.toLocaleString("en-IN")} / month</>}
+        </div>
+      </div>
+      {monthly > 0 && (
+        <div className="mt-3 h-2 w-full overflow-hidden rounded-full" style={{ background: "#E4ECFB" }}>
+          <div className="h-full rounded-full"
+            style={{ width: `${pct}%`, background: "linear-gradient(90deg,#C9981F,#F5D97A)" }} />
+        </div>
+      )}
+      <p className="mt-3.5 text-sm" style={{ color: MUTED }}>
+        Fuel powers the AI. One unit asks Captain Aezon a question or builds a quiz; a
+        full research brief costs more, because it costs more to produce.
+      </p>
+      <div className="mt-3 grid gap-2 sm:grid-cols-2">
+        {[
+          [`${monthly.toLocaleString("en-IN")}`, "tops up every month"],
+          [`${plan.plan.daily_ai_cap}`, "daily AI ceiling"],
+          ["2 months", "maximum rollover"],
+          ["Fuel packs", "top up any time"],
+        ].map(([a, b]) => (
+          <div key={b} className="rounded-xl px-3 py-2.5" style={{ background: "#F6F9FF" }}>
+            <div className="text-sm" style={{ color: NAVY, fontWeight: 800 }}>{a}</div>
+            <div className="text-[11px]" style={{ color: MUTED }}>{b}</div>
+          </div>
+        ))}
+      </div>
+    </SectionCard>
+  );
+}
+
+function InvoicesCard() {
+  const [items, setItems] = useState<Invoice[]>([]);
+  const [busy, setBusy] = useState<string | null>(null);
+  const [err, setErr] = useState<string | null>(null);
+
+  useEffect(() => { api.invoices().then((r) => setItems(r.items)).catch(() => {}); }, []);
+
+  // Nothing bought yet is the normal state for most accounts, and an empty "Invoices"
+  // heading with nothing under it looks like a fault. Render nothing instead.
+  if (items.length === 0) return null;
+
+  async function get(inv: Invoice) {
+    setBusy(inv.number); setErr(null);
+    try { await downloadInvoice(inv); }
+    catch (e) { setErr(e instanceof ApiError ? e.message : "Could not download that invoice."); }
+    finally { setBusy(null); }
+  }
+
+  return (
+    <SectionCard icon={<FileText size={15} />} title="Invoices">
+      <p className="mt-2.5 text-sm" style={{ color: MUTED }}>
+        Every payment you have made. Each is also attached to the confirmation email we
+        sent at the time.
+      </p>
+      <div className="mt-3 space-y-2">
+        {items.map((inv) => (
+          <div key={inv.number} className="flex items-center gap-3 rounded-xl px-3.5 py-3"
+            style={{ background: "#F6F9FF" }}>
+            <div className="min-w-0 flex-1">
+              <div className="truncate text-sm" style={{ color: NAVY, fontWeight: 700 }}>{inv.item}</div>
+              <div className="text-[11px]" style={{ color: MUTED }}>
+                {inv.number} · {new Date(inv.issued_at).toLocaleDateString("en-IN",
+                  { day: "numeric", month: "short", year: "numeric" })}
+              </div>
+            </div>
+            <div className="text-sm" style={{ color: NAVY, fontWeight: 800 }}>{rupees(inv.total_inr)}</div>
+            <button onClick={() => get(inv)} disabled={busy === inv.number}
+              className="flex items-center gap-1.5 rounded-lg px-3 py-2 text-[11px] text-white disabled:opacity-50"
+              style={{ background: NAVY, fontWeight: 800 }}>
+              <Download size={11} /> {busy === inv.number ? "…" : "PDF"}
+            </button>
+          </div>
+        ))}
+      </div>
+      {err && <div className="mt-3 text-sm" style={{ color: "#B3261E" }}>{err}</div>}
+    </SectionCard>
+  );
+}
+
+
+// ─────────────────────────── plans ───────────────────────────
+
+function PlanCard({ p, onBuy, busy }: { p: Plan; onBuy: () => void; busy: boolean }) {
+  const term = p.lifetime ? "Lifetime" : `${p.days} days`;
+  // "All subjects", not "All 6". Six is the number of DGCA papers, but the library is
+  // split into twelve finer-grained subjects — a count here would misstate what the
+  // student actually receives. The server treats 6 as the all-access threshold.
+  const scope = p.subjects >= 6 ? "All subjects" : p.subjects === 1 ? "1 subject" : `${p.subjects} subjects`;
+  const free = p.price_inr === 0;
+  const soon = !p.available;
+  const a = p.accent || NAVY;
+
+  return (
+    <div className="relative flex h-full flex-col overflow-hidden rounded-2xl"
+      style={{ background: "#fff", border: `1px solid ${a}22`,
+               boxShadow: "0 6px 22px -14px rgba(27,58,122,0.45)", opacity: soon ? 0.82 : 1 }}>
+      {/* The accent is a top rule, not a filled header block: eight saturated blocks
+          down one page compete with the prices, which are the thing being compared. */}
+      <div style={{ height: 4, background: a }} />
+
+      <div className="flex flex-1 flex-col p-5">
+        {/* INLINE, not an absolutely-positioned corner ribbon. "GREAT FOR MULTIPLE
+            PAPERS" is wide enough that a floating ribbon sat straight on top of the
+            plan name — the one thing on the card that must always be readable. */}
+        {p.badge && (
+          <div className="mb-2 inline-block self-start rounded-full px-2.5 py-1 text-[9px] text-white"
+            style={{ background: a, fontWeight: 800, letterSpacing: "0.05em" }}>
+            {p.badge}
+          </div>
+        )}
+        <div className="text-[15px]" style={{ color: a, fontWeight: 800 }}>{p.name}</div>
+        <div className="mt-0.5 text-[11px]" style={{ color: MUTED, fontWeight: 600 }}>
+          {term} · {scope}
+        </div>
+
+        <div className="mt-3 flex items-baseline gap-2">
+          <span className="text-[26px] leading-none" style={{ color: NAVY, fontWeight: 800 }}>
+            {free ? "FREE" : rupees(p.price_inr)}
+          </span>
+          {p.standard_price_inr > p.price_inr && (
+            <span className="text-xs line-through" style={{ color: "#9AA9C4" }}>
+              {rupees(p.standard_price_inr)}
+            </span>
+          )}
+        </div>
+
+        {p.saving_inr > 0 && (
+          <div className="mt-1.5 inline-block self-start rounded px-1.5 py-0.5 text-[10px]"
+            style={{ background: `${a}14`, color: a, fontWeight: 800 }}>
+            Save {rupees(p.saving_inr)} · {p.saving_pct}% off
+          </div>
+        )}
+
+        {/* EMI is a FLOOR, never a quote — principal ÷ tenure with no interest assumed,
+            so whatever the student's bank offers can only meet or exceed it. */}
+        {p.emi_available && (
+          <div className="mt-2 text-[11px]" style={{ color: MUTED }}>
+            or from <b style={{ color: NAVY }}>{rupees(p.emi_from_inr)}/mo</b> on EMI
+          </div>
+        )}
+
+        <div className="my-3.5 h-px" style={{ background: "#EDF2FB" }} />
+
+        <div className="flex items-center gap-1.5 text-[11px]" style={{ color: MUTED }}>
+          <Zap size={11} style={{ color: GOLD }} />
+          <b style={{ color: NAVY }}>{p.credits_per_month.toLocaleString("en-IN")}</b>&nbsp;Fuel/month
+          {p.ai_rtr && <span className="ml-auto rounded px-1.5 py-0.5 text-[9px]"
+            style={{ background: "#EBF3FF", color: NAVY, fontWeight: 800 }}>AI RTR</span>}
+        </div>
+
+        <ul className="mt-3 space-y-1.5">
+          {p.perks.slice(0, 5).map((x) => (
+            <li key={x} className="flex gap-1.5 text-[11.5px]" style={{ color: MUTED }}>
+              <Check size={12} className="mt-0.5 shrink-0" style={{ color: a }} />
+              <span>{x}</span>
+            </li>
+          ))}
+        </ul>
+
+        <button onClick={onBuy} disabled={busy || soon}
+          className="mt-auto w-full rounded-xl py-2.5 text-[13px] text-white transition disabled:opacity-55"
+          style={{ background: soon ? "#9AA9C4" : a, fontWeight: 800, marginTop: "1.25rem" }}>
+          {soon ? "Coming soon" : busy ? "Opening checkout…" : free ? "Start free" : `Buy ${p.name}`}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+
+// ─────────────────────────── page ───────────────────────────
+
+export function AccountPage() {
+  const [me, setMe] = useState<Me | null>(null);
+  const [plan, setPlan] = useState<MyPlan | null>(null);
+  const [plans, setPlans] = useState<Plan[]>([]);
+  const [boosts, setBoosts] = useState<Boost[]>([]);
+  const [offer, setOffer] = useState<Offer | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [buying, setBuying] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const loadAccount = useCallback(async () => {
+    try {
+      const p = await api.myPlan();
+      setMe(p.user); setPlan(p);
+    } catch {
+      // A stale token is cleared by the client; fall back to the sign-in form.
+      setMe(null); setPlan(null);
+    }
+  }, []);
+
+  useEffect(() => {
+    // The catalogue is public — it renders for a signed-out visitor too, which is the
+    // point of a pricing page.
+    api.plans().then((r) => { setPlans(r.plans); setBoosts(r.boosts); setOffer(r.offer ?? null); }).catch(() => {});
+    (getToken() ? loadAccount() : Promise.resolve()).finally(() => setLoading(false));
+  }, [loadAccount]);
+
+  async function buy(kind: "plan" | "boost", id: string) {
+    if (!me) { setError("Sign in first — a plan is attached to your account."); return; }
+    setBuying(id); setError(null);
+    try {
+      const r = await api.checkout(kind, id);
+      // Same tab, not a popup: a blocked popup is invisible and reads as a dead button.
+      window.location.href = r.url;
+    } catch (e) {
+      setError(e instanceof ApiError ? e.message : "Could not start checkout.");
+      setBuying(null);
+    }
+  }
+
+  return (
+    <PageShell
+      eyebrow="Your account"
+      title={me ? `Welcome back, ${me.name.split(" ")[0]}` : "Sign in to EARNWINGS"}
+      subtitle={me
+        ? "Your plan, your Fuel, and everything you can add to it."
+        : "Sign in to see your plan, or browse what's available below."}
+    >
+      <div className="space-y-8">
+        {loading ? (
+          <div className="flex justify-center py-10"><Loader2 className="animate-spin" style={{ color: NAVY }} /></div>
+        ) : me ? (
+          <Profile me={me} plan={plan} onSignOut={() => { setToken(null); setMe(null); setPlan(null); }} />
+        ) : (
+          <SignIn onDone={(u) => { setMe(u); loadAccount(); }} />
+        )}
+
+        {/* What they bought and what powers it. Only for a paying account — there is
+            nothing honest to say about subjects or Fuel to someone on the free tier
+            beyond the plan cards further down, which already say it. */}
+        {me && plan?.user?.is_premium && (
+          <>
+            <SubjectsCard plan={plan} onChanged={loadAccount} />
+            <FuelCard plan={plan} />
+            <InvoicesCard />
+          </>
+        )}
+
+        {error && (
+          <div className="rounded-xl px-4 py-3 text-sm" style={{ background: "#FDF3E7", color: GOLD }}>{error}</div>
+        )}
+
+        <section>
+          <h2 className="flex items-center gap-2 text-2xl font-bold" style={{ color: NAVY }}>
+            <Rocket size={20} style={{ color: GOLD }} /> Plans
+            {offer?.active && (
+              <span className="rounded-full px-2 py-0.5 text-[10px]"
+                style={{ background: GOLD, color: "#fff", fontWeight: 800 }}>{offer.badge}</span>
+            )}
+          </h2>
+          {offer?.active && (
+            <div className="mt-3 rounded-xl p-4" style={{ background: "#FDF3E7" }}>
+              <div className="text-sm font-extrabold" style={{ color: NAVY }}>{offer.label}</div>
+              <p className="mt-1 text-sm" style={{ color: MUTED }}>{offer.note}</p>
+              <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
+                {offer.gifts.map((g) => (
+                  <span key={g} className="flex items-center gap-1 text-xs" style={{ color: MUTED }}>
+                    <Check size={11} style={{ color: GOLD }} /> {g}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+          <div className="mt-5 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {plans.map((p, i) => (
+              <motion.div key={p.id} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }} transition={{ delay: i * 0.04 }}>
+                <PlanCard p={p} busy={buying === p.id} onBuy={() => buy("plan", p.id)} />
+              </motion.div>
+            ))}
+          </div>
+        </section>
+
+        <section>
+          <h2 className="flex items-center gap-2 text-2xl font-bold" style={{ color: NAVY }}>
+            <Zap size={20} style={{ color: GOLD }} /> Refuel
+          </h2>
+          <p className="mt-2 text-sm" style={{ color: MUTED }}>
+            Fuel powers Captain Aezon, flight plans, the planner and RT sessions. Quizzes,
+            mock tests and your notes never cost Fuel. Refuel packs never expire — and you
+            can buy them on any plan, including the free one.
+          </p>
+          <div className="mt-5 grid gap-4 md:grid-cols-3">
+            {boosts.map((b) => (
+              <div key={b.id} className="rounded-2xl p-5"
+                style={{ background: "#fff", boxShadow: "0 2px 14px rgba(27,58,122,0.10)" }}>
+                <div className="flex items-baseline">
+                  <span className="text-base font-extrabold" style={{ color: NAVY }}>{b.name}</span>
+                  <span className="ml-auto text-xl font-extrabold" style={{ color: NAVY }}>{rupees(b.price_inr)}</span>
+                </div>
+                <div className="mt-1 text-xs" style={{ color: MUTED }}>
+                  {b.credits.toLocaleString("en-IN")} Fuel · never expires
+                </div>
+                <button onClick={() => buy("boost", b.id)} disabled={buying === b.id}
+                  className="mt-4 w-full rounded-xl py-2.5 text-sm font-bold text-white disabled:opacity-60"
+                  style={{ background: GOLD, border: "none" }}>
+                  {buying === b.id ? "Opening checkout…" : "Buy Fuel"}
+                </button>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <div className="flex items-center gap-2 text-xs" style={{ color: MUTED }}>
+          <Crown size={13} style={{ color: GOLD }} />
+          Payments are handled by Razorpay. Your plan activates automatically — you do
+          not need to keep this page open.
+          <Radio size={13} className="ml-auto" />
+        </div>
+      </div>
+    </PageShell>
+  );
+}

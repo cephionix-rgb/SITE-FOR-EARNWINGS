@@ -27,7 +27,25 @@ jobs:
       # `npm run build` runs a postbuild step (scripts/gen-routes.mjs) that emits a
       # real 200 HTML page per route (/features, /about, …) plus a 404.html SPA
       # fallback, so deep links are crawlable (not served with a 404 status).
+      # WITHOUT THIS, SIGN-IN SHIPS BROKEN AND SILENT.
+      # `.env` is gitignored, so CI has no VITE_CORE_URL unless it is given one here.
+      # Unset, `BASE` becomes "" and every API call resolves against the marketing
+      # origin — /auth/login on GitHub Pages is a 404, so the account page loads
+      # perfectly and simply never works. Nothing in the browser says why.
+      #
+      # Set it once at: repo -> Settings -> Secrets and variables -> Actions ->
+      # Variables -> New repository variable -> VITE_CORE_URL = https://api.earnwings.org
+      - name: Warn if the API URL is not configured
+        run: |
+          if [ -z "${{ vars.VITE_CORE_URL }}" ]; then
+            echo "::warning title=Sign-in will not work::VITE_CORE_URL is unset. The marketing pages deploy fine, but /account cannot reach the API."
+          else
+            echo "Building against ${{ vars.VITE_CORE_URL }}"
+          fi
       - run: npm run build
+        env:
+          VITE_CORE_URL: ${{ vars.VITE_CORE_URL }}
+          VITE_SITE_URL: https://earnwings.org
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
