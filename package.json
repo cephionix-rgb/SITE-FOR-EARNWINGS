@@ -9,6 +9,7 @@
     "postbuild": "node scripts/gen-routes.mjs",
     "og": "node scripts/make-og.mjs",
     "images": "node scripts/make-images.mjs",
+    "favicons": "node scripts/make-favicons.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

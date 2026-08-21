@@ -10,7 +10,7 @@ import { Nav } from "../components/Nav";
 import { Footer } from "../components/Footer";
 import { CloudBackground } from "../components/CloudBackground";
 import { FEATURES_H1, FEATURES_INTRO } from "../content/features";
-import { FAQ } from "../content/faq";
+import { FAQ_FEATURED } from "../content/faq";
 import { PhoneFrame } from "../components/DeviceFrame";
 import { Link } from "../lib/router";
 import { STATS } from "../lib/data";
@@ -511,7 +511,7 @@ export function FeaturesPage() {
             <h2 className="mt-3 text-2xl font-black sm:text-3xl" style={{ color: "#0D1629" }}>Frequently asked questions</h2>
           </div>
           <div className="mx-auto mt-8 max-w-2xl divide-y" style={{ borderColor: "rgba(27,58,122,0.1)" }}>
-            {FAQ.map((item) => (
+            {FAQ_FEATURED.map((item) => (
               <details key={item.q} className="group py-4">
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-left text-[16.5px] font-bold" style={{ color: "#1B3A7A" }}>
                   {item.q}

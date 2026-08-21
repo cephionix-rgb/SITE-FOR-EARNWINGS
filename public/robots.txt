@@ -1,4 +1,35 @@
+# EARNWINGS — everything here is public marketing content. Nothing is blocked.
 User-agent: *
+Allow: /
+
+# AI crawlers, named explicitly. The wildcard above already permits them, but
+# several of these are opt-OUT by name — a future "Disallow" added carelessly to
+# the wildcard rule would silently cut us out of AI answers, so the intent is
+# recorded here. Google-Extended in particular controls whether our pages may be
+# used to ground Gemini and AI Overviews; blocking it would keep us out of the
+# AI answer box while still allowing normal Search.
+User-agent: Google-Extended
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Applebot-Extended
 Allow: /
 
 Sitemap: https://earnwings.org/sitemap.xml

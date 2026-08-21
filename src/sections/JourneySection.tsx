@@ -1,10 +1,31 @@
 import { useMemo, useRef, useState, type ReactNode } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Plane, Trophy, Gift, Check, X, RotateCcw, Zap, ChevronRight, Sparkles, Lock } from "lucide-react";
+import { Plane, Trophy, Gift, Check, X, Zap, ChevronRight, Sparkles, Lock } from "lucide-react";
 import { inView, rise } from "../lib/motion";
+import { QUIZ_PASS_MARK as PASS } from "../lib/siteConfig";
 
 const ENDPOINT = import.meta.env.VITE_WAITLIST_ENDPOINT as string | undefined;
-const PASS = 8; // answer 8 of 10 correctly to earn Commander Wings
+
+/**
+ * ONE ATTEMPT ONLY. Commander Wings double a cadet's founder perks, so the quiz
+ * has to mean something — a retry loop would let anyone brute-force their way to
+ * 8/10. The finished attempt is stored here so a reload, a re-visit or a second
+ * scroll past the section shows the same final score instead of a fresh quiz.
+ * Enforced again server-side in apps-script/EarnwingsWaitlist.gs (_upgrade
+ * refuses a row that already has a Quiz Score).
+ */
+const ATTEMPT_KEY = "ew_quiz";
+
+type Attempt = { score: number; at: string };
+
+function loadAttempt(): Attempt | null {
+  try {
+    const a = JSON.parse(localStorage.getItem(ATTEMPT_KEY) || "null");
+    return a && Number.isFinite(Number(a.score)) ? { score: Number(a.score), at: String(a.at || "") } : null;
+  } catch {
+    return null;
+  }
+}
 
 /** 10 basics-of-aviation questions. answer = index of the correct option. */
 const QUIZ: { q: string; opts: string[]; a: number }[] = [
@@ -73,7 +94,7 @@ function Climb({ correct }: { correct: number }) {
       {/* sunrise glow */}
       <div className="pointer-events-none absolute -bottom-16 left-1/2 h-56 w-[130%] -translate-x-1/2 rounded-[50%]" style={{ background: "radial-gradient(circle,rgba(245,217,122,0.5),transparent 62%)" }} />
 
-      {/* Commander Wings line (the 5/10 reward threshold) */}
+      {/* Commander Wings line (the PASS/10 reward threshold) */}
       <div className="absolute inset-x-0 flex items-center gap-2 px-3" style={{ bottom: `${8 + (PASS / QUIZ.length) * 74}%` }}>
         <div className="h-px flex-1" style={{ background: "repeating-linear-gradient(90deg,#F5D97A,#F5D97A 7px,transparent 7px,transparent 13px)" }} />
         <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[9px] font-black uppercase tracking-wider" style={{ background: unlocked ? "#F5D97A" : "rgba(245,217,122,0.2)", color: unlocked ? "#3d2c00" : "#F5D97A" }}>
@@ -105,20 +126,24 @@ function Climb({ correct }: { correct: number }) {
 }
 
 export function JourneySection() {
+  // A stored attempt means the cadet has already used their one shot.
+  const [attempt, setAttempt] = useState<Attempt | null>(() => loadAttempt());
   const [qi, setQi] = useState(0);
   const [picked, setPicked] = useState<number | null>(null);
   const [correct, setCorrect] = useState(0);
-  const [done, setDone] = useState(false);
   const [burst, setBurst] = useState(0);
   const recorded = useRef(false);
 
   const joined = useMemo(() => {
     try { return !!localStorage.getItem("ew_waitlist"); } catch { return false; }
   }, []);
-  const passed = correct >= PASS;
+
+  const done = attempt !== null;
+  const score = attempt ? attempt.score : correct; // final score once locked, live count while flying
+  const passed = score >= PASS;
 
   function choose(i: number) {
-    if (picked !== null) return; // already answered this one
+    if (done || picked !== null) return; // attempt spent, or this one is already answered
     setPicked(i);
     if (i === QUIZ[qi].a) {
       const c = correct + 1;
@@ -131,21 +156,25 @@ export function JourneySection() {
     if (qi < QUIZ.length - 1) {
       setQi((n) => n + 1);
       setPicked(null);
-    } else {
-      setDone(true);
-      // If they're on the waitlist and passed, record the Commander upgrade on their row.
-      if (passed && joined && ENDPOINT && !recorded.current) {
-        recorded.current = true;
-        try {
-          const { code, email } = JSON.parse(localStorage.getItem("ew_waitlist") || "{}");
-          fetch(ENDPOINT, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action: "upgrade", code, email, score: correct }) }).catch(() => {});
-        } catch { /* ignore */ }
-      }
+      return;
     }
-  }
 
-  function reset() {
-    setQi(0); setPicked(null); setCorrect(0); setDone(false); recorded.current = false;
+    // Last question — the attempt is over. Lock the score in; there is no retry.
+    const finalScore = correct;
+    try {
+      localStorage.setItem(ATTEMPT_KEY, JSON.stringify({ score: finalScore, at: new Date().toISOString() }));
+    } catch { /* ignore — the in-memory lock below still holds for this session */ }
+    setAttempt({ score: finalScore, at: new Date().toISOString() });
+
+    // Already on the waitlist and passed? Record the Commander upgrade on their row.
+    // If they join *after* the quiz, Waitlist.tsx replays this from the stored attempt.
+    if (finalScore >= PASS && joined && ENDPOINT && !recorded.current) {
+      recorded.current = true;
+      try {
+        const { code, email } = JSON.parse(localStorage.getItem("ew_waitlist") || "{}");
+        fetch(ENDPOINT, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action: "upgrade", code, email, score: finalScore }) }).catch(() => {});
+      } catch { /* ignore */ }
+    }
   }
 
   const q = QUIZ[qi];
@@ -162,6 +191,10 @@ export function JourneySection() {
           Prove your basics: answer <b>{PASS} of {QUIZ.length}</b> aviation questions correctly to earn your{" "}
           <b style={{ color: "#C9981F" }}>Commander Wings</b> — and every founder perk <b>doubles</b>.
         </p>
+        <p className="mt-3 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[13px] font-bold"
+          style={{ background: "rgba(27,58,122,0.07)", color: "#1B3A7A" }}>
+          <Lock size={13} /> One attempt only — like the real checkride, there is no retake.
+        </p>
       </motion.div>
 
       <motion.div variants={rise} initial="hidden" whileInView="show" viewport={inView}
@@ -169,7 +202,7 @@ export function JourneySection() {
         style={{ background: "linear-gradient(180deg,#EBF3FF,#DCEBFB)", border: "1px solid rgba(27,58,122,0.08)", boxShadow: "0 40px 90px -40px rgba(27,58,122,0.35)" }}>
         <Burst trigger={burst} />
 
-        <Climb correct={correct} />
+        <Climb correct={score} />
 
         {/* Right: quiz or result */}
         <div className="flex min-h-[480px] flex-col rounded-2xl bg-white p-5 sm:p-6" style={{ boxShadow: "0 10px 30px -18px rgba(27,58,122,0.3)" }}>
@@ -232,8 +265,10 @@ export function JourneySection() {
                   {passed ? "Commander Wings earned!" : "So close, Cadet"}
                 </h3>
                 <p className="mt-1 text-sm" style={{ color: "#4A5A78" }}>
-                  You scored <b style={{ color: "#C9981F" }}>{correct} / {QUIZ.length}</b>.{" "}
-                  {passed ? "Your founder perks just doubled." : `Get ${PASS - correct} more right to double your perks.`}
+                  You scored <b style={{ color: "#C9981F" }}>{score} / {QUIZ.length}</b>.{" "}
+                  {passed
+                    ? "Your founder perks just doubled."
+                    : `You needed ${PASS} to earn your wings — your Cadet perks are still yours.`}
                 </p>
               </div>
 
@@ -271,9 +306,11 @@ export function JourneySection() {
                 {!joined && (
                   <a href="#waitlist" className="btn-gold w-full text-base"><Zap size={18} /> {passed ? "Claim these perks — Reserve My Captain Seat" : "Reserve My Captain Seat"}</a>
                 )}
-                <button onClick={reset} className="flex items-center justify-center gap-2 rounded-full py-2.5 text-sm font-semibold" style={{ background: "rgba(27,58,122,0.06)", color: "#1B3A7A" }}>
-                  <RotateCcw size={15} /> {passed ? "Fly again" : "Try again"}
-                </button>
+                {/* No retry — the attempt is spent. See ATTEMPT_KEY above. */}
+                <p className="flex items-center justify-center gap-1.5 rounded-full py-2.5 text-center text-xs font-semibold"
+                  style={{ background: "rgba(27,58,122,0.06)", color: "#4A5A78" }}>
+                  <Lock size={13} /> One attempt only — this score is final.
+                </p>
               </div>
             </motion.div>
           )}

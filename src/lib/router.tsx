@@ -12,7 +12,7 @@ import {
   type AnchorHTMLAttributes,
   type MouseEvent,
 } from "react";
-import { scrollToHash } from "./scroll";
+import { isIntroActive, scrollToHash } from "./scroll";
 
 type Listener = () => void;
 const listeners = new Set<Listener>();
@@ -20,10 +20,27 @@ function emit() {
   listeners.forEach((l) => l());
 }
 
-/** Keep retrying a hash-scroll until the target page has mounted (or we give up). */
-function scrollWhenReady(hash: string, tries = 0) {
-  if (scrollToHash(hash) || tries > 30) return;
-  requestAnimationFrame(() => scrollWhenReady(hash, tries + 1));
+/** How long to keep trying a hash-scroll before giving up. Generous, because it
+ *  has to outlast the intro overlay and a code-split page's dynamic import. */
+const HASH_SCROLL_TIMEOUT_MS = 15000;
+
+/**
+ * Keep retrying a hash-scroll until the target section is actually on screen.
+ * Two things can make the target unavailable for a while:
+ *   - the page owning it is still mounting (sub-pages are lazy-loaded), and
+ *   - the intro overlay pins the page to the top while it plays, so scrolling
+ *     underneath it would just be undone when it finishes.
+ */
+function scrollWhenReady(hash: string) {
+  const deadline = Date.now() + HASH_SCROLL_TIMEOUT_MS;
+  const tick = () => {
+    if (!isIntroActive() && scrollToHash(hash)) return;
+    if (Date.now() > deadline) return;
+    setTimeout(tick, 80);
+  };
+  // Defer the first attempt one frame so every mount effect (the intro's lock in
+  // particular) has run before we decide whether it is safe to scroll.
+  requestAnimationFrame(tick);
 }
 
 /**
@@ -39,7 +56,10 @@ export function navigate(to: string) {
 
   if (samePath) {
     // Same page — never a full route change, just move to the hash (or top).
-    window.history.replaceState({}, "", target);
+    // Push (not replace) when the hash actually changes so Back walks the
+    // sections the visitor jumped through instead of leaving the site.
+    if (url.hash !== window.location.hash) window.history.pushState({}, "", target);
+    else window.history.replaceState({}, "", target);
     if (url.hash) scrollWhenReady(url.hash);
     else window.scrollTo({ top: 0, behavior: "smooth" });
     return;
@@ -62,6 +82,11 @@ function normalizePath(p: string): string {
 export function useRoute(): string {
   const [path, setPath] = useState(() => normalizePath(window.location.pathname));
   useEffect(() => {
+    // Deep link (/#play, /features#study, a shared or bookmarked URL): the
+    // browser's own fragment jump happens before React has rendered the section,
+    // so it silently does nothing. Do the landing ourselves on first paint.
+    if (window.location.hash) scrollWhenReady(window.location.hash);
+
     const update = () => {
       setPath(normalizePath(window.location.pathname));
       if (window.location.hash) scrollWhenReady(window.location.hash);

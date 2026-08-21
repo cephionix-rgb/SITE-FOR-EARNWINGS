@@ -22,7 +22,16 @@ export function initAnalytics(): void {
   document.head.appendChild(s);
 
   const dataLayer = (window.dataLayer = window.dataLayer || []);
-  window.gtag = (...args: unknown[]) => { dataLayer.push(args); };
+  // MUST push the `arguments` object, exactly as Google's own snippet does
+  // (`function gtag(){dataLayer.push(arguments);}`). gtag.js only executes
+  // dataLayer entries that are arguments objects — a rest-parameter array is
+  // pushed and then silently ignored, so `config` never applies and not a single
+  // hit is sent. That is what made GA report "Data collection isn't active"
+  // while the tag itself loaded perfectly.
+  window.gtag = function () {
+    // eslint-disable-next-line prefer-rest-params
+    dataLayer.push(arguments);
+  } as (...args: unknown[]) => void;
   window.gtag("js", new Date());
   window.gtag("config", GA_ID, { anonymize_ip: true, send_page_view: false });
 }

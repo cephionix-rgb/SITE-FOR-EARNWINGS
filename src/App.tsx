@@ -9,8 +9,14 @@ import { LandingPage } from "./pages/LandingPage";
 // (it is the default route and the one almost everyone lands on).
 const FeaturesPage = lazy(() => import("./pages/FeaturesPage").then((m) => ({ default: m.FeaturesPage })));
 const AboutPage = lazy(() => import("./pages/AboutPage").then((m) => ({ default: m.AboutPage })));
+const WhyEarnwingsPage = lazy(() => import("./pages/WhyEarnwingsPage").then((m) => ({ default: m.WhyEarnwingsPage })));
+const GroundClassesPage = lazy(() => import("./pages/GroundClassesPage").then((m) => ({ default: m.GroundClassesPage })));
+const FaqPage = lazy(() => import("./pages/FaqPage").then((m) => ({ default: m.FaqPage })));
+const GlossaryPage = lazy(() => import("./pages/GlossaryPage").then((m) => ({ default: m.GlossaryPage })));
+const ResearchPage = lazy(() => import("./pages/ResearchPage").then((m) => ({ default: m.ResearchPage })));
 const PrivacyPage = lazy(() => import("./pages/PrivacyPage").then((m) => ({ default: m.PrivacyPage })));
 const TermsPage = lazy(() => import("./pages/TermsPage").then((m) => ({ default: m.TermsPage })));
+const CopyrightPage = lazy(() => import("./pages/CopyrightPage").then((m) => ({ default: m.CopyrightPage })));
 // The account + purchase page. Code-split like the rest: it pulls in the API client
 // and is irrelevant to a first-time visitor reading the landing page.
 const AccountPage = lazy(() => import("./pages/AccountPage").then((m) => ({ default: m.AccountPage })));
@@ -28,8 +34,14 @@ export default function App() {
   switch (path) {
     case "/features": page = <FeaturesPage />; break;
     case "/about": page = <AboutPage />; break;
+    case "/why-earnwings": page = <WhyEarnwingsPage />; break;
+    case "/dgca-ground-classes": page = <GroundClassesPage />; break;
+    case "/faq": page = <FaqPage />; break;
+    case "/aviation-glossary": page = <GlossaryPage />; break;
+    case "/research": page = <ResearchPage />; break;
     case "/privacy": page = <PrivacyPage />; break;
     case "/terms": page = <TermsPage />; break;
+    case "/copyright": page = <CopyrightPage />; break;
     // Both spellings: the app links to /account, humans type /login.
     case "/account":
     case "/login": page = <AccountPage />; break;

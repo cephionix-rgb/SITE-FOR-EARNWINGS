@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { Volume2 } from "lucide-react";
+import { setIntroActive } from "../lib/scroll";
 
 /** Bump the version to force the intro to show again for returning visitors. */
 const SEEN_KEY = "ew_intro_seen_v1";
@@ -53,14 +54,18 @@ export function HeroIntro() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Lock scroll + pin to top while the overlay covers the page.
+  // Lock scroll + pin to top while the overlay covers the page. Deep links
+  // (/#play …) wait on this flag, so they land on their section once the intro
+  // has slid away instead of being pinned back to the top by it.
   useEffect(() => {
+    setIntroActive(active);
     if (!active) return;
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     window.scrollTo(0, 0);
     return () => {
       document.body.style.overflow = prev;
+      setIntroActive(false);
     };
   }, [active]);
 

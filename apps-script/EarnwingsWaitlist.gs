@@ -48,7 +48,7 @@ var PERKS = {
   captainDoubts:         5    // 5 doubts to Ask Captain
 };
 
-// Commander tier — earned by scoring 5+/10 on the "Cadet to Commander" quiz.
+// Commander tier — earned by scoring PASS_MARK+/10 on the "Cadet to Commander" quiz.
 // Every 5 becomes 10, the week becomes 10 days; chapters/MCQs double to the
 // first 4 per subject; the 1 sample paper stays.
 var COMMANDER_PERKS = {
@@ -67,12 +67,16 @@ var COMMANDER_PERKS = {
 
 // NOTE: Phone + "Would Pay" are appended at the END on purpose — the code reads
 // rows by fixed index (email=3, code=6, perks=9, …), so new columns must not shift them.
-var HEADERS = ['Joined At','Position','Name','Email','Exam Target','Source','Code','Status','Redeemed At','Perks (JSON)','Perk Tier','Quiz Score','Phone','Would Pay (/mo)'];
+var HEADERS = ['Joined At','Position','Name','Email','Exam Target','Source','Code','Status','Redeemed At','Perks (JSON)','Perk Tier','Quiz Score','Phone','Would Pay (/subject)'];
 
 // Links used in the EARNWINGS welcome-email template.
 var INSTAGRAM_URL = 'https://www.instagram.com/flywithearnwings/';
 var SITE_URL      = 'https://earnwings.org';
-var LOGO_URL      = 'https://earnwings.org/assets/logo-full.png'; // header logo (alt text falls back to "EARNWINGS")
+// Header logo. MUST be a file that actually exists on the live site — /assets/logo-full.png
+// was a 404, which is why the logo showed as a broken image. The real asset is 160x110,
+// rendered at 50x34 so it stays sharp on retina. Gmail also blocks remote images by
+// default, so the <img> carries a styled alt that reads as the brand when it's blocked.
+var LOGO_URL      = 'https://earnwings.org/assets/logo-full-160.png';
 
 // ───────────────────────── ENTRY POINTS ─────────────────────────
 
@@ -132,13 +136,25 @@ function _join(body) {
   var email = String(body.email || '').trim().toLowerCase();
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return { ok: false, error: 'invalid_email' };
 
+  // A phone is required, and enforced HERE rather than only in the form: it is
+  // the second identity the dedupe below relies on, so accepting a join without
+  // one would leave the "one seat per cadet" rule bypassable by anyone posting
+  // straight to this endpoint.
+  var phoneKey = _phoneKey(body.phone);
+  if (!phoneKey) return { ok: false, error: 'invalid_phone' };
+
   var sheet = _sheet();
   var rows  = sheet.getDataRange().getValues(); // [header, ...]
   var count = Math.max(0, rows.length - 1);
 
-  // Already on the list? (dedupe by email — column index 3)
+  // ONE SEAT PER CADET. Two identities are checked before a row is ever written:
+  //   email (col 3) — the same address always lands back on its own seat, and
+  //   phone (col 12) — so a second email from the same person cannot mint a
+  //                    second seat and a second set of founder perks.
   for (var i = 1; i < rows.length; i++) {
     if (String(rows[i][3]).trim().toLowerCase() === email) {
+      // Their own row: hand back the seat they already hold. No new row, no new
+      // perks, and no second welcome email.
       return {
         ok: true, alreadyJoined: true,
         position: rows[i][1],
@@ -147,6 +163,11 @@ function _join(body) {
         remaining: Math.max(0, CAPACITY - count),
         capacity: CAPACITY
       };
+    }
+    // Phone matches a DIFFERENT email — refuse, but reveal nothing about the
+    // existing cadet (a mistyped number must not expose someone else's ref).
+    if (phoneKey && _phoneKey(rows[i][12]) === phoneKey) {
+      return { ok: false, error: 'phone_already_joined' };
     }
   }
 
@@ -233,7 +254,7 @@ function _sendWelcomeEmail(email, name, position, code) {
 
           // logo
           '<tr><td align="center" style="padding:4px 0 16px;">' +
-            '<img src="' + LOGO_URL + '" alt="EARNWINGS" height="34" style="height:34px;display:inline-block;border:0;outline:none;text-decoration:none;">' +
+            '<img src="' + LOGO_URL + '" alt="EARNWINGS" width="50" height="34" style="width:50px;height:34px;display:inline-block;border:0;outline:none;text-decoration:none;font-family:Arial,Helvetica,sans-serif;font-size:17px;font-weight:800;letter-spacing:1px;color:#1B3A7A;">' +
           '</td></tr>' +
 
           // ===== THE BOARDING PASS =====
@@ -307,9 +328,9 @@ function _sendWelcomeEmail(email, name, position, code) {
             '<a href="' + SITE_URL + '" style="color:#1B3A7A;text-decoration:none;font-weight:700;">earnwings.org</a>' +
             '&nbsp;&nbsp;&#183;&nbsp;&nbsp;' +
             '<a href="' + INSTAGRAM_URL + '" style="color:#1B3A7A;text-decoration:none;font-weight:700;">@flywithearnwings</a>' +
-            '<div style="margin-top:8px;color:#8ea0c4;">&#169; EARNWINGS &#183; Elevate your aviation journey &#183; Made for DGCA aspirants in India</div>' +
+            '<div style="margin-top:8px;color:#8ea0c4;">&#169; Cephionix. All rights reserved. EARNWINGS is a product of Cephionix &#183; Made for DGCA aspirants in India</div>' +
             '<div style="margin-top:6px;color:#8ea0c4;">You&#8217;re getting this because you joined the EARNWINGS founder waitlist. ' +
-              '<a href="mailto:cephionix@gmail.com?subject=Unsubscribe%20EARNWINGS" style="color:#8ea0c4;text-decoration:underline;">Unsubscribe</a>.</div>' +
+              '<a href="mailto:support@earnwings.org?subject=Unsubscribe%20EARNWINGS" style="color:#8ea0c4;text-decoration:underline;">Unsubscribe</a>.</div>' +
           '</td></tr>' +
 
         '</table>' +
@@ -342,7 +363,7 @@ function _sendWelcomeEmail(email, name, position, code) {
     htmlBody: html,
     body: text,
     name: 'EARNWINGS',
-    replyTo: 'cephionix@gmail.com'
+    replyTo: 'hello@earnwings.org'
   });
 }
 
@@ -353,7 +374,7 @@ function _sendWelcomeEmail(email, name, position, code) {
  * test email at TEST_TO — check inbox AND spam. After this, every signup emails.
  */
 function testEmail() {
-  var TEST_TO = 'cephionix@gmail.com'; // ← change to any address you can check
+  var TEST_TO = 'hello@earnwings.org'; // ← change to any address you can check
   _sendWelcomeEmail(TEST_TO, 'Arjun Mehta', 1, 'EW-TEST01');
   Logger.log('Test welcome email sent to ' + TEST_TO + ' — check inbox & spam.');
 }
@@ -375,12 +396,21 @@ function _redeem(email, code) {
   return { ok: true, redeemedAt: redeemedAt, expiresAt: expiresAt, perks: perks, code: found.row[6], position: found.row[1] };
 }
 
-/** The "Cadet to Commander" quiz calls this on 5+/10 — doubles the perks on the cadet's row. */
+/**
+ * The "Cadet to Commander" quiz calls this on PASS_MARK+/10 — doubles the perks
+ * on the cadet's row. ONE ATTEMPT ONLY: if a Quiz Score is already recorded on
+ * the row the attempt is spent, so we refuse rather than let a cleared browser
+ * (or a replayed request) buy a second chance.
+ */
 function _upgrade(body) {
   if (Number(body.score || 0) < PASS_MARK) return { ok: false, error: 'score_too_low' };
   var f = _find(body.email, body.code);
   if (!f) return { ok: false, error: 'not_found' };
   var sheet = _sheet();
+  var priorScore = sheet.getRange(f.rowNumber, 12).getValue();                                  // Quiz Score
+  if (priorScore !== '' && priorScore !== null && !isNaN(Number(priorScore))) {
+    return { ok: false, error: 'already_attempted', score: Number(priorScore) };
+  }
   sheet.getRange(f.rowNumber, 10).setValue(JSON.stringify(COMMANDER_PERKS));                    // Perks (JSON)
   sheet.getRange(f.rowNumber, 11).setValue('Commander (10s) ✅').setBackground('#B7E1CD')        // Perk Tier — marked + highlighted green
     .setFontWeight('bold');
@@ -460,6 +490,18 @@ function _find(email, code) {
 }
 
 function _perks(v) { try { return JSON.parse(v); } catch (_) { return PERKS; } }
+
+/**
+ * Comparable form of a phone number: digits only, keeping the last 10 so the same
+ * Indian mobile matches however it was typed (+91 98765 43210 / 09876543210 /
+ * 9876543210). Returns '' for anything too short to identify a person — a blank
+ * or junk number must never collide with a real cadet's row.
+ */
+function _phoneKey(v) {
+  var d = String(v == null ? '' : v).replace(/\D/g, '');
+  if (d.length < 10) return '';
+  return d.slice(-10);
+}
 
 /** Minimal HTML-escape so a cadet's name can't break the email markup. */
 function _esc(s) {
