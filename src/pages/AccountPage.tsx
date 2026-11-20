@@ -426,20 +426,35 @@ function InvoicesCard() {
 
 // ─────────────────────────── plans ───────────────────────────
 
-function PlanCard({ p, onBuy, busy }: { p: Plan; onBuy: () => void; busy: boolean }) {
-  const term = p.lifetime ? "Lifetime" : `${p.days} days`;
-  // "All subjects", not "All 6". Six is the number of DGCA papers, but the library is
-  // split into twelve finer-grained subjects — a count here would misstate what the
-  // student actually receives. The server treats 6 as the all-access threshold.
-  const scope = p.subjects >= 6 ? "All subjects" : p.subjects === 1 ? "1 subject" : `${p.subjects} subjects`;
+/** "3 months", "1 year": the term said the way people say it, from the catalogue's days. */
+function termLabel(days: number | null, lifetime: boolean): string {
+  if (lifetime || days == null) return "Lifetime";
+  if (days >= 360 && days <= 366) return "1 year";
+  if (days % 30 === 0) return days === 30 ? "1 month" : `${days / 30} months`;
+  return `${days} days`;
+}
+
+/** The price over the term, rounded up: "about ₹3,000 a month". */
+function perMonth(p: Plan): number {
+  if (p.lifetime || p.days == null || p.price_inr <= 0) return 0;
+  const months = p.days >= 360 && p.days <= 366 ? 12 : Math.max(1, Math.round(p.days / 30));
+  return Math.ceil(p.price_inr / months);
+}
+
+function PlanCard({ p, onBuy, busy, featured = false }: { p: Plan; onBuy: () => void; busy: boolean; featured?: boolean }) {
+  const term = termLabel(p.days, p.lifetime);
+  // The unit a student buys is a DGCA PAPER (five in the library). `all_papers` is the
+  // server's flag for "everything"; never print a count of library subjects.
+  const scope = (p as Plan & { all_papers?: boolean }).all_papers || p.subjects >= 5
+    ? "All CPL papers" : p.subjects === 1 ? "1 DGCA paper" : `${p.subjects} DGCA papers`;
   const free = p.price_inr === 0;
   const soon = !p.available;
   const a = p.accent || NAVY;
 
   return (
     <div className="relative flex h-full flex-col overflow-hidden rounded-2xl"
-      style={{ background: "#fff", border: `1px solid ${a}22`,
-               boxShadow: "0 6px 22px -14px rgba(27,58,122,0.45)", opacity: soon ? 0.82 : 1 }}>
+      style={{ background: "#fff", border: featured ? `2px solid ${GOLD}` : `1px solid ${a}22`,
+               boxShadow: featured ? "0 14px 34px -16px rgba(27,58,122,0.55)" : "0 6px 22px -14px rgba(27,58,122,0.45)", opacity: soon ? 0.82 : 1 }}>
       {/* The accent is a top rule, not a filled header block: eight saturated blocks
           down one page compete with the prices, which are the thing being compared. */}
       <div style={{ height: 4, background: a }} />
@@ -469,6 +484,12 @@ function PlanCard({ p, onBuy, busy }: { p: Plan; onBuy: () => void; busy: boolea
             </span>
           )}
         </div>
+
+        {perMonth(p) > 0 && (
+          <div className="mt-1 text-[11px]" style={{ color: MUTED }}>
+            for {term.toLowerCase()} · about {rupees(perMonth(p))} a month
+          </div>
+        )}
 
         {p.saving_inr > 0 && (
           <div className="mt-1.5 inline-block self-start rounded px-1.5 py-0.5 text-[10px]"
@@ -745,15 +766,38 @@ export function AccountPage() {
               </div>
             </div>
           )}
-          <div className="mt-5 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {plans.map((p, i) => (
+          {/* Line-up v3 (2026-11-20): the three plans side by side, All Papers (the
+              server's MOST POPULAR badge) highlighted; the free plan and the Classroom
+              batch (live classes, enquiry only) sit apart as quieter rows. */}
+          <div className="mt-5 grid gap-4 md:grid-cols-3">
+            {plans.filter((p) => p.price_inr > 0 && !p.enquiry_only).map((p, i) => (
               <motion.div key={p.id} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }} transition={{ delay: i * 0.04 }}>
-                <PlanCard p={p} busy={buying === p.id}
-                  onBuy={() => (p.enquiry_only ? setJoinPlan(p) : buy("plan", p.id))} />
+                <PlanCard p={p} busy={buying === p.id} featured={/popular/i.test(p.badge || "")}
+                  onBuy={() => buy("plan", p.id)} />
               </motion.div>
             ))}
           </div>
+          {plans.filter((p) => p.enquiry_only).map((p) => (
+            <button key={p.id} onClick={() => setJoinPlan(p)}
+              className="mt-4 flex w-full items-center gap-3 rounded-2xl px-5 py-4 text-left"
+              style={{ background: "#F4F7FC", border: "1px solid #E3EAF6" }}>
+              <Users size={18} style={{ color: GOLD }} />
+              <span className="flex-1">
+                <span className="block text-[14px]" style={{ color: NAVY, fontWeight: 800 }}>Classroom batch (live classes)</span>
+                <span className="block text-[12px]" style={{ color: MUTED }}>
+                  Live classes for every paper with instructors, plus everything in Pilot Pro · {rupees(p.price_inr)}
+                </span>
+              </span>
+              <span className="text-[13px]" style={{ color: NAVY, fontWeight: 800 }}>Join the next batch →</span>
+            </button>
+          ))}
+          {plans.some((p) => p.price_inr === 0) && (
+            <p className="mt-3 text-[12px]" style={{ color: MUTED }}>
+              Not ready to buy? The free plan has sample chapters of every subject, one mock per
+              paper, two RT scenarios, Live Airports and the first two lessons of each cockpit trainer.
+            </p>
+          )}
         </section>
 
         <section>

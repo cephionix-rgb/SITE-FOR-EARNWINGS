@@ -8,7 +8,7 @@ import { useReveal } from "../lib/reveal";
  *  served live on /account) beside the most-asked questions. */
 const STEPS = [
   { t: "Start free", b: "Founding cadets get the full app for a week, plus a starter set of chapters, questions and practice in every subject." },
-  { t: "Pick a plan", b: "One subject, a bundle, or everything, with Fuel for the AI extras." },
+  { t: "Pick a plan", b: "One Paper or All Papers for 3 months, or Pilot Pro for a year with the RT and cockpit trainers. Fuel for Captain Aezon is included." },
   { t: "Pay on the website", b: "Not through an app store, so the price you see is the price you pay." },
 ];
 

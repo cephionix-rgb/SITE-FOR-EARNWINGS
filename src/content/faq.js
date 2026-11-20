@@ -168,7 +168,7 @@ export const FAQ = [
     category: "Access & launch",
     featured: true,
     q: "How much will it cost?",
-    a: "Pricing will be unveiled before launch. We would rather publish it properly than quote a number we might change. Founding cadets get founder perks and early access regardless, and the waitlist form asks what you would happily pay so we can price it fairly for student pilots.",
+    a: "Starting is free. Then there are three plans: One Paper, ₹2,499 for 3 months (one DGCA paper with its notes, visual notes, flowcharts, question bank, every mock and Captain Aezon); All Papers, ₹8,999 for 3 months (every paper, everything, plus the RT trainer); and Pilot Pro, ₹24,999 for a year (every paper, the RT trainer with 3D airports and the A320 and Cessna 172 cockpit trainers). Plans never renew by themselves. Live classes are in the Classroom batch, by enquiry. Current prices are always on the Plans page of your account.",
   },
   {
     category: "Access & launch",
