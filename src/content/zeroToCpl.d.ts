@@ -1,0 +1,27 @@
+export type RouteChip = { t: string; kind: "official" | "typical" | "note" };
+export type Waypoint = {
+  id: string;
+  n: number;
+  short: string;
+  title: string;
+  stage: string;
+  time: string;
+  cost: RouteChip;
+  extra?: RouteChip;
+  body: string;
+  first: string;
+  more: { label: string; href: string };
+  ew?: { t: string; href: string };
+  branch?: boolean;
+};
+export const ROUTE_UPDATED: string;
+export const ROUTE_PDF: string;
+export const ROUTE_PAGE: string;
+export const WAYPOINTS: Waypoint[];
+export const MAIN: Waypoint[];
+export const BRANCH: Waypoint;
+export const SUMMARY: { k: string; v: string; d: string }[];
+export const COST_NOTE: string;
+export const ROUTE_DISCLAIMER: string;
+export const OFFICIAL_FEES: [string, string, string][];
+export const TYPICAL_RANGES: { l: string; lo: number; hi: number }[];

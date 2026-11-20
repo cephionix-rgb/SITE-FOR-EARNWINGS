@@ -18,6 +18,7 @@ import { lazy, Suspense } from "react";
 const FeatureOrbit = lazy(() => import("../sections/FeatureOrbit").then((m) => ({ default: m.FeatureOrbit })));
 const LiveSection = lazy(() => import("../sections/LiveSection").then((m) => ({ default: m.LiveSection })));
 const GuideTeaser = lazy(() => import("../sections/GuideTeaser").then((m) => ({ default: m.GuideTeaser })));
+const RouteTeaser = lazy(() => import("../sections/RouteTeaser").then((m) => ({ default: m.RouteTeaser })));
 const FilmSection = lazy(() => import("../sections/FilmSection").then((m) => ({ default: m.FilmSection })));
 const PlansFaq = lazy(() => import("../sections/PlansFaq").then((m) => ({ default: m.PlansFaq })));
 const Later = ({ children, h }: { children: React.ReactNode; h: number }) => (
@@ -29,7 +30,7 @@ const Later = ({ children, h }: { children: React.ReactNode; h: number }) => (
  * sky and navy bands so the page has rhythm on a phone.
  *   hero (with the EARN YOUR WINGS flip-board) -> what's inside (the phone with
  *   the features orbiting it, lazy) -> the study app -> interactive notes -> the syllabus board
- *   (navy) -> radio -> A320 deck -> Captain Aezon -> everyday help -> film -> live airports -> Pilot Guide (navy) -> plans/FAQ
+ *   (navy) -> radio -> A320 deck -> Captain Aezon -> everyday help -> film -> live airports -> Zero to CPL route map teaser -> Pilot Guide (navy) -> plans/FAQ
  *   -> join -> quiz.
  * Retired from the homepage (files kept): StatsMarquee,
  * PlaygroundSection (route planner: flight planning is switched off in the app),
@@ -56,6 +57,7 @@ export function LandingPage() {
           <ToolkitSection />
           <Later h={700}><FilmSection /></Later>
           <Later h={800}><LiveSection /></Later>
+          <Later h={700}><RouteTeaser /></Later>
           <Later h={700}><GuideTeaser /></Later>
           <Later h={800}><PlansFaq /></Later>
           <WaitlistSection />

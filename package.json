@@ -11,7 +11,8 @@
     "images": "node scripts/make-images.mjs",
     "favicons": "node scripts/make-favicons.mjs",
     "preview": "vite preview",
-    "guides:pdf": "node scripts/make-guide-pdfs.mjs"
+    "guides:pdf": "node scripts/make-guide-pdfs.mjs",
+    "route:pdf": "node scripts/make-route-pdf.mjs"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",

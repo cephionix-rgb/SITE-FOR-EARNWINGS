@@ -7,6 +7,7 @@ import { Link, navigate } from "../../lib/router";
 import { GUIDE_HUB, GUIDES, LAST_CHECKED, SCREENS_NOTE, guidePath, type Guide } from "../../content/guides";
 import { BODY, GOLD, GUIDE_CSS, INK, Inline, MUTED, NAVY, SectionBody } from "../../components/guide/GuideBlocks";
 import { track } from "../../lib/track";
+import { RouteMap } from "../../components/guide/RouteMap";
 
 /** Rough reading time from the guide's text. */
 function minutes(g: Guide): number {
@@ -248,6 +249,9 @@ export function GuidePage({ slug }: { slug: string }) {
                 <Link to="/how-we-check" className="font-semibold underline" style={{ color: NAVY }}>How we check</Link>
               </p>
             </header>
+
+            {/* The pathway guide opens with its route map (Zero to CPL). */}
+            {guide.slug === "pilot-pathway" && <RouteMap />}
 
             <CompactNav guide={guide} />
 
