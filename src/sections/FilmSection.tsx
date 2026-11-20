@@ -44,14 +44,17 @@ export function FilmSection() {
           {on ? (
             <video
               ref={ref}
-              src="/media/film/launch-film-1920x1080.mp4"
               poster="/media/film/launch-film-poster.webp"
               controls
               autoPlay
               playsInline
               preload="none"
               className="absolute inset-0 h-full w-full"
-            />
+            >
+              {/* 4K HEVC where the browser can play it (Safari, most Chrome/Edge); 1080p H.264 otherwise. */}
+              <source src="/media/film/launch-film-2160p-hevc.mp4" type={'video/mp4; codecs="hvc1"'} />
+              <source src="/media/film/launch-film-1920x1080.mp4" type="video/mp4" />
+            </video>
           ) : (
             <button type="button" onClick={start} className="group absolute inset-0 h-full w-full" aria-label="Play film, sound on">
               <picture>
