@@ -561,6 +561,12 @@ function JoinBatch({ plan, me, onClose }: { plan: Plan; me: Me | null; onClose: 
   const [phone, setPhone] = useState("");
   const [month, setMonth] = useState("");
   const [note, setNote] = useState("");
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
+  const [stage, setStage] = useState("");
+  const [mode, setMode] = useState("");
+  const [callTime, setCallTime] = useState("");
+  const [consent, setConsent] = useState(false);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [done, setDone] = useState<string | null>(null);
@@ -574,7 +580,7 @@ function JoinBatch({ plan, me, onClose }: { plan: Plan; me: Me | null; onClose: 
     }).catch(() => {});
   }, [me]);
 
-  const ready = name.trim().length >= 2 && (phone.match(/\d/g) || []).length >= 8;
+  const ready = name.trim().length >= 2 && (phone.match(/\d/g) || []).length >= 8 && consent;
 
   async function send(e: React.FormEvent) {
     e.preventDefault();
@@ -582,7 +588,10 @@ function JoinBatch({ plan, me, onClose }: { plan: Plan; me: Me | null; onClose: 
     setBusy(true); setErr(null);
     try {
       const r = await api.createEnquiry({ plan_id: plan.id, name: name.trim(), phone: phone.trim(),
-                                          start_month: month || null, note: note.trim() || null });
+                                          start_month: month || null, note: note.trim() || null, consent,
+                                          city: city.trim() || null, state: state.trim() || null,
+                                          stage: stage || null, mode: mode || null, call_time: callTime || null,
+                                          source_platform: "web", source_page: location.pathname.slice(0, 160) });
       setDone(r.message);
     } catch (x) {
       setErr(x instanceof ApiError ? x.message : "Could not send that. Try again.");
@@ -603,7 +612,7 @@ function JoinBatch({ plan, me, onClose }: { plan: Plan; me: Me | null; onClose: 
           <div className="flex-1">
             <div className="text-lg font-extrabold" style={{ color: NAVY }}>Join the next batch</div>
             <div className="mt-0.5 text-xs" style={{ color: MUTED }}>
-              {plan.name} · {rupees(plan.price_inr)}. Tell us how to reach you and we'll call you about the next batch.
+              Classroom batch (live classes). Tell us how to reach you and we'll call you about the next batch.
             </div>
           </div>
           <button onClick={onClose} aria-label="Close" className="rounded-full p-1.5" style={{ background: "#EDF2FB" }}>
@@ -635,9 +644,53 @@ function JoinBatch({ plan, me, onClose }: { plan: Plan; me: Me | null; onClose: 
                 {months.map((m) => <option key={m.value} value={m.value}>{m.label}</option>)}
               </select>
             </label>
+            <div className="grid grid-cols-2 gap-2">
+              <label className="block text-xs font-bold" style={{ color: MUTED }}>City (optional)
+                <input className={input} style={inputStyle} value={city} maxLength={80} autoComplete="address-level2"
+                  onChange={(e) => setCity(e.target.value)} />
+              </label>
+              <label className="block text-xs font-bold" style={{ color: MUTED }}>State (optional)
+                <input className={input} style={inputStyle} value={state} maxLength={80} autoComplete="address-level1"
+                  onChange={(e) => setState(e.target.value)} />
+              </label>
+            </div>
+            <label className="block text-xs font-bold" style={{ color: MUTED }}>Where are you now? (optional)
+              <select className={input} style={inputStyle} value={stage} onChange={(e) => setStage(e.target.value)}>
+                <option value="">Choose</option>
+                <option value="class_11">In Class 11</option>
+                <option value="class_12">In Class 12</option>
+                <option value="class_12_pcm">Class 12 done (with Physics and Maths)</option>
+                <option value="class_12_other">Class 12 done (without Physics and Maths)</option>
+                <option value="graduate">Graduate</option>
+                <option value="working">Working</option>
+                <option value="flying">Already flying (SPL or PPL)</option>
+              </select>
+            </label>
+            <div className="grid grid-cols-2 gap-2">
+              <label className="block text-xs font-bold" style={{ color: MUTED }}>How would you like to study?
+                <select className={input} style={inputStyle} value={mode} onChange={(e) => setMode(e.target.value)}>
+                  <option value="">No preference</option>
+                  <option value="classroom">In a classroom</option>
+                  <option value="online">Online</option>
+                  <option value="either">Either</option>
+                </select>
+              </label>
+              <label className="block text-xs font-bold" style={{ color: MUTED }}>Best time to call
+                <select className={input} style={inputStyle} value={callTime} onChange={(e) => setCallTime(e.target.value)}>
+                  <option value="">Any time</option>
+                  <option value="morning">Morning (9 am to 12)</option>
+                  <option value="afternoon">Afternoon (12 to 5 pm)</option>
+                  <option value="evening">Evening (5 to 8 pm)</option>
+                </select>
+              </label>
+            </div>
             <label className="block text-xs font-bold" style={{ color: MUTED }}>Anything we should know? (optional)
               <textarea className={input} style={{ ...inputStyle, minHeight: 70 }} value={note} maxLength={500}
                 onChange={(e) => setNote(e.target.value)} />
+            </label>
+            <label className="flex items-start gap-2 text-xs" style={{ color: NAVY }}>
+              <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} className="mt-0.5" />
+              <span>EarnWings may call, message or email me about the classroom batch. (required)</span>
             </label>
             {err && <div className="text-xs" style={{ color: GOLD }}>{err}</div>}
             <button type="submit" disabled={!ready || busy}
@@ -786,7 +839,7 @@ export function AccountPage() {
               <span className="flex-1">
                 <span className="block text-[14px]" style={{ color: NAVY, fontWeight: 800 }}>Classroom batch (live classes)</span>
                 <span className="block text-[12px]" style={{ color: MUTED }}>
-                  Live classes for every paper with instructors, plus everything in Pilot Pro · {rupees(p.price_inr)}
+                  Live classes for every paper with instructors, plus everything in Pilot Pro
                 </span>
               </span>
               <span className="text-[13px]" style={{ color: NAVY, fontWeight: 800 }}>Join the next batch →</span>

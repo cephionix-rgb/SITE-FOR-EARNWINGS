@@ -63,8 +63,11 @@ export function PrivacyPage() {
           <InfoCard icon={ClipboardList} title="Waitlist details" accent="gold">
             The name, email address, phone number and target exam you submit when joining
             the waitlist, the price you told us you would pay, and your quiz score if you
-            took the quiz. If you ask to join a batch for a classroom plan, the phone number
-            you give so our team can call you back.
+            took the quiz. If you ask to join a classroom batch, the phone number you give and
+            any details you choose to add (city and state, age or date of birth, your stage of
+            study, medical status, DGCA papers passed and needed, preferred mode, batch city,
+            best time to call and how you heard of us), used only so our team can call you
+            back about the batch, with your consent.
           </InfoCard>
           <InfoCard icon={UserRound} title="Account & profile" accent="sky">
             Your name, email and password (stored only as a secure hash), or your Google or

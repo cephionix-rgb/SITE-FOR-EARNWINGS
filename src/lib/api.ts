@@ -333,7 +333,10 @@ export const api = {
     req<Entitlement>("/billing/subjects", { method: "POST", body: JSON.stringify({ codes }) }),
   /** "Join the next batch" on an enquiry-only plan: what to prefill, and send one. */
   myEnquiries: () => req<{ prefill: { name: string; phone: string; email: string } }>("/enquiries/me"),
-  createEnquiry: (b: { plan_id: string; name: string; phone: string; start_month?: string | null; note?: string | null }) =>
+  createEnquiry: (b: { plan_id: string; name: string; phone: string; start_month?: string | null; note?: string | null;
+                       consent: boolean; city?: string | null; state?: string | null; stage?: string | null;
+                       mode?: string | null; batch_city?: string | null; call_time?: string | null;
+                       source_platform?: string; source_page?: string }) =>
     req<{ ok: boolean; id: number; message: string }>("/enquiries", { method: "POST", body: JSON.stringify(b) }),
   /** This student's own invoices, newest first. */
   invoices: () => req<{ items: Invoice[] }>("/billing/invoices"),
