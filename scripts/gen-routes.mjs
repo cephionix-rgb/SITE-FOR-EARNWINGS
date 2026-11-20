@@ -172,7 +172,7 @@ const ROUTES = {
   refunds: {
     title: "Refund and Cancellation Policy | EARNWINGS",
     description:
-      "EARNWINGS refunds: website and Mac plans refunded in full within 7 days, unused boost Fuel pro rata. App Store and Play buys are refunded by Apple or Google.",
+      "EARNWINGS refunds: website and Windows plans refunded in full within 7 days, unused boost Fuel pro rata. App Store and Play buys are refunded by Apple or Google.",
     ogTitle: "Refund and Cancellation Policy | EARNWINGS",
     ogDescription: "Ask within 7 days of paying. How much comes back, and how to ask.",
   },
@@ -198,6 +198,19 @@ const ROUTES = {
       "Get help with EARNWINGS: email support@earnwings.org. We confirm within 24 hours and resolve within 15 days. FAQ links, purchases, account deletion and our Grievance Officer.",
     ogTitle: "EARNWINGS Support",
     ogDescription: "Email support, response times, common questions and our Grievance Officer.",
+  },
+  contact: {
+    title: "Contact us | EARNWINGS",
+    description:
+      "Get help with EARNWINGS: email support@earnwings.org. We confirm within 24 hours and resolve within 15 days. FAQ links, purchases, account deletion and our Grievance Officer.",
+    ogTitle: "EARNWINGS Support",
+    ogDescription: "Email support, response times, common questions and our Grievance Officer.",
+  },
+  delivery: {
+    title: "Shipping and delivery policy | EARNWINGS",
+    description: "EarnWings sells only digital access. Plans, add-ons and Fuel are added to your account straight away after payment. Nothing is shipped.",
+    ogTitle: "Shipping and delivery policy | EARNWINGS",
+    ogDescription: "Instant digital delivery to your EarnWings account. Nothing is shipped.",
   },
 };
 
@@ -507,18 +520,22 @@ SHELLS["delete-account"] =
 // Same text as src/pages/RefundsPage.tsx, for crawlers and Razorpay's site review.
 SHELLS.refunds =
   "<h1>Refund and cancellation policy</h1><p>Last updated 19 November 2026.</p>" +
-  "<p>Plans, add-ons and Fuel boosts bought on this website or in the EARNWINGS Mac app (paid through Razorpay) can be refunded if you ask within 7 days of paying. Purchases made in the iPhone or Android app are refunded by Apple or Google under their own rules.</p>" +
+  "<p>Plans, add-ons and Fuel boosts bought on this website or in the EARNWINGS Windows app (paid through Razorpay) can be refunded if you ask within 7 days of paying. Purchases made in the iPhone, iPad, Mac or Android app are refunded by Apple or Google under their own rules.</p>" +
   "<h2>1. Plans and add-ons</h2><p>Ask within 7 days of paying and we refund the full amount. The plan (or add-on) ends when the refund is approved, and the Fuel that came with the plan is taken back.</p>" +
   "<h2>2. Fuel boosts</h2><p>Ask within 7 days of paying and we refund the part you have not used. Fuel you spend after buying a boost counts as spent from that boost first. Refund = price paid × (Fuel left from the boost ÷ Fuel in the boost), rounded down to the whole rupee, and the unused Fuel is removed. Example: a ₹799 boost of 1,000 Fuel; 400 Fuel spent since buying it; 600 left; refund ₹479 and the 600 Fuel is removed. If all of the boost's Fuel is spent, nothing is refundable.</p>" +
   '<h2>3. iPhone and Android purchases</h2><p>Apple and Google refund these under their own rules; our 7-day rule does not apply. Apple: <a href="https://reportaproblem.apple.com">reportaproblem.apple.com</a>. Google Play: <a href="https://play.google.com/store/account/orderhistory">order history</a>.</p>' +
-  '<h2>4. How to ask</h2><p>Tap "Request a refund" next to the purchase: on the <a href="/account">account</a> page on this website, or in Settings in the Mac app or the app in a browser. Saying why is optional. We check it and reply by email.</p>' +
+  '<h2>4. How to ask</h2><p>Tap "Request a refund" next to the purchase: on the <a href="/account">account</a> page on this website, or in Settings in the Windows app or the app in a browser. Saying why is optional. We check it and reply by email.</p>' +
   "<h2>5. When the money reaches you</h2><p>Approved refunds go back to the original payment method through Razorpay. Banks usually take 5 to 7 working days to show it.</p>" +
   `<h2>6. If you bought another plan after this one</h2><p>A person handles these requests, because we cannot end one plan without touching the newer one. Write to <a href="mailto:${SUPPORT}">${SUPPORT}</a>.</p>` +
   "<h2>7. After 7 days</h2><p>After 7 days, except where the law requires otherwise, payments are not refundable.</p>";
+SHELLS.delivery =
+  "<h1>Shipping and delivery policy</h1><p>Everything EarnWings sells is digital. Nothing is shipped by post and there is no shipping charge.</p><p>When your payment succeeds, the plan, add-on or Fuel you bought is added to your EarnWings account straight away, usually within a minute. Sign in to the app or website with the same account to use it. Study plans run for the number of days shown at purchase, from the moment of payment. A receipt is emailed to you.</p><p>If a purchase is not showing within 30 minutes of a successful payment, email support@earnwings.org with your receipt; we fix it within 24 hours. See also the <a href=\"/refunds\">refund and cancellation policy</a>.</p>";
 SHELLS.support =
   `<h1>Support</h1><p>Email <a href="mailto:${SUPPORT}">${SUPPORT}</a>. We confirm within 24 hours and resolve within 15 days.</p>` +
   '<h2>Common questions</h2><ul><li><a href="/faq">FAQ</a></li><li><a href="/delete-account">Delete your account</a></li><li><a href="/privacy">Privacy Policy</a></li><li><a href="/terms">Terms of Service</a></li><li><a href="/refunds">Refund policy</a></li></ul>' +
-  "<h2>Grievance Officer</h2><p>Complaints under the IT Rules 2021 and the DPDP Act 2023 go to our Grievance Officer at the same address.</p>";
+  "<h2>Contact details</h2><p>Cephionix Software Developer OPC Private Limited (EarnWings), CIN U62013PB2026OPC068054. Registered office: 49 Gulmohar Complex, Kharar, Punjab 140301, India. Email: support@earnwings.org.</p>" +
+  "<h2>Grievance Officer</h2><p>Shubhdeep Singh, Director. Complaints under the IT Rules 2021 and the DPDP Act 2023: support@earnwings.org.</p>";
+SHELLS.contact = SHELLS.support;
 for (const [route, m] of Object.entries(DGCA.routes)) SHELLS[route] = m.shell;
 const legalBlockHtml = (b) => {
   const il = (t) => inlineToHtml(t, ORIGIN);
@@ -557,6 +574,8 @@ const CRUMB = {
   "report-exam-questions": "Report your exam questions",
   "delete-account": "Delete your account",
   support: "Support",
+  contact: "Contact us",
+  delivery: "Shipping and delivery",
 };
 for (const [route, m] of Object.entries(DGCA.routes)) CRUMB[route] = m.crumbLabel;
 for (const g of GUIDES) {
@@ -876,6 +895,8 @@ const PRIORITY = {
   "report-exam-questions": "0.5",
   "delete-account": "0.3",
   support: "0.4",
+  contact: "0.4",
+  delivery: "0.3",
 };
 for (const g of GUIDES) PRIORITY[guideHref(g.slug).slice(1)] = g.slug === "pilot-pathway" ? "0.9" : "0.7";
 const today = new Date().toISOString().slice(0, 10);

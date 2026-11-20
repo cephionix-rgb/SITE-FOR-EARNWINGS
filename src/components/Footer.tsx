@@ -129,8 +129,10 @@ export function Footer() {
             <li><Link to="/privacy" className="hover:text-white">Privacy Policy</Link></li>
             <li><Link to="/terms" className="hover:text-white">Terms of Service</Link></li>
             <li><Link to="/refunds" className="hover:text-white">Refund policy</Link></li>
-            <li><Link to="/terms#credits" className="hover:text-white">Data &amp; credits</Link></li>
+            <li><Link to="/delivery" className="hover:text-white">Shipping &amp; delivery</Link></li>
+            <li><Link to="/terms#credits" className="hover:text-white">Licence notices</Link></li>
             <li><Link to="/copyright" className="hover:text-white">Copyright &amp; IP</Link></li>
+            <li><Link to="/contact" className="hover:text-white">Contact us</Link></li>
             <li><Link to="/support" className="hover:text-white">Support</Link></li>
             <li><Link to="/delete-account" className="hover:text-white">Delete your account</Link></li>
           </ul>
@@ -192,8 +194,10 @@ export function Footer() {
           <Link to="/privacy" className="hover:text-white">Privacy</Link>
           <Link to="/terms" className="hover:text-white">Terms</Link>
           <Link to="/refunds" className="hover:text-white">Refunds</Link>
+          <Link to="/delivery" className="hover:text-white">Delivery</Link>
           <Link to="/terms#credits" className="hover:text-white">Credits</Link>
           <Link to="/copyright" className="hover:text-white">Copyright &amp; IP</Link>
+          <Link to="/contact" className="hover:text-white">Contact</Link>
           <Link to="/support" className="hover:text-white">Support</Link>
           <Link to="/delete-account" className="hover:text-white">Delete account</Link>
         </span>

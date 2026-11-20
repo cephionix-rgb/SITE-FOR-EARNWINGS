@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { LifeBuoy, Clock, Scale, HelpCircle, ShieldCheck, Trash2, CreditCard, KeyRound } from "lucide-react";
+import { LifeBuoy, Clock, Scale, HelpCircle, ShieldCheck, Trash2, CreditCard, KeyRound, Building2 } from "lucide-react";
 import { LegalShell, Section, Callout, NoteCard, CardGrid, InfoCard, Bullets } from "../components/Legal";
 import { Link } from "../lib/router";
 import { COMPANY_NAME, SUPPORT_EMAIL } from "../lib/siteConfig";
@@ -27,8 +27,8 @@ const Mail = ({ subject }: { subject?: string }) => (
 // OWNER: fill these in before publishing. They must match GRIEVANCE_OFFICER_* in the
 // core settings (shown by GET /legal/grievance) and section 11 of the privacy policy.
 // The square brackets stay visible on the page until then, on purpose.
-const GRIEVANCE_OFFICER_NAME = "[GRIEVANCE OFFICER NAME: to be filled in]";
-const GRIEVANCE_OFFICER_TITLE = "[DESIGNATION]";
+const GRIEVANCE_OFFICER_NAME = "Shubhdeep Singh";
+const GRIEVANCE_OFFICER_TITLE = "Director";
 
 // The support URL the App Store and Google Play listings give, and the "Support and
 // FAQ" row in the app (AccountSettings SUPPORT_URL). Response times are the ones the
@@ -39,7 +39,7 @@ export function SupportPage() {
       eyebrow="Help"
       title="Support"
       intro="Stuck, found a mistake, or have a question about your account or a purchase? Write to us. A person reads every email."
-      updated="19 November 2026"
+      updated="20 November 2026"
     >
       <Callout icon={LifeBuoy} title="Email us">
         <p>
@@ -51,6 +51,20 @@ export function SupportPage() {
           and the build number from Profile → Account help us fix it faster.
         </p>
       </Callout>
+
+      <Section title="Contact details" id="contact">
+        <NoteCard icon={Building2}>
+          <p>
+            <Strong>Cephionix Software Developer OPC Private Limited</Strong> (EarnWings)
+            <br />
+            CIN: U62013PB2026OPC068054
+            <br />
+            Registered office: 49 Gulmohar Complex, Kharar, Punjab 140301, India
+            <br />
+            Email: <Mail subject="EARNWINGS enquiry" />
+          </p>
+        </NoteCard>
+      </Section>
 
       <Section title="How quickly we reply" id="response-times">
         <NoteCard icon={Clock}>
@@ -76,9 +90,9 @@ export function SupportPage() {
             Email us.
           </InfoCard>
           <InfoCard icon={CreditCard} title="Purchases and refunds" accent="gold">
-            Website and Mac purchases can be refunded if you ask within 7 days of paying:
+            Website and Windows purchases can be refunded if you ask within 7 days of paying:
             tap Request a refund next to the purchase on the <A to="/account">account</A> page.
-            Purchases made on iPhone or Android are refunded by Apple or Google under their
+            Purchases made on iPhone, iPad, Mac or Android are refunded by Apple or Google under their
             own rules. Details: <A to="/refunds">Refund policy</A>.
           </InfoCard>
           <InfoCard icon={Trash2} title="Deleting your account" accent="rose">

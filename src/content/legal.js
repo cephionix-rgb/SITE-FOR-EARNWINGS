@@ -64,8 +64,8 @@ export const TERMS = [
         items: [
           "Prices are in Indian rupees and include any taxes shown at checkout.",
           "If a plan renews automatically, we will say so before you buy, and you can cancel before the next renewal. [TODO legal: confirm renewal terms per plan.]",
-          "Plans and add-ons bought on the website or in the Mac app (paid through Razorpay) are refunded in full if you ask within 7 days of paying; the plan ends when the refund is approved and the Fuel that came with it is taken back. Fuel boosts bought there are refunded within 7 days for the part you have not used. The full rules, and how to ask, are in our [Refund and cancellation policy](/refunds).",
-          "After 7 days, except where the law requires otherwise, payments are not refundable. Purchases made in the iPhone or Android app are refunded by Apple or Google under their own rules, and our 7-day rule does not apply to them.",
+          "Plans and add-ons bought on the website or in the Windows app (paid through Razorpay) are refunded in full if you ask within 7 days of paying; the plan ends when the refund is approved and the Fuel that came with it is taken back. Fuel boosts bought there are refunded within 7 days for the part you have not used. The full rules, and how to ask, are in our [Refund and cancellation policy](/refunds).",
+          "After 7 days, except where the law requires otherwise, payments are not refundable. Purchases made in the iPhone, iPad, Mac or Android app are refunded by Apple or Google under their own rules, and our 7-day rule does not apply to them.",
           "Fuel has no cash value and cannot be transferred or exchanged for money. What a Fuel pack includes, and whether it expires, is stated at purchase.",
         ],
       },

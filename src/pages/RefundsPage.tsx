@@ -44,7 +44,7 @@ export function RefundsPage() {
     >
       <Callout icon={RotateCcw} title="Ask within 7 days of paying">
         <p>
-          Plans, add-ons and Fuel boosts bought on this website or in the EARNWINGS Mac app
+          Plans, add-ons and Fuel boosts bought on this website or in the EARNWINGS Windows app
           (paid through <Strong>Razorpay</Strong>) can be refunded if you ask{" "}
           <Strong>within 7 days of paying</Strong>. Plans and add-ons are refunded in full; a
           Fuel boost is refunded for the part you have not used. Purchases made in the iPhone
@@ -55,7 +55,7 @@ export function RefundsPage() {
       <Section title="1. Plans and add-ons" id="plans">
         <NoteCard icon={CreditCard}>
           <p>
-            Bought a plan or an add-on on this website or in the Mac app? Ask within 7 days
+            Bought a plan or an add-on on this website or in the Windows app? Ask within 7 days
             of paying and we refund <Strong>the full amount</Strong>.
           </p>
           <p>
@@ -86,7 +86,7 @@ export function RefundsPage() {
 
       <Section title="3. iPhone and Android purchases" id="app-stores">
         <p>
-          Purchases made in the iPhone or Android app are paid to Apple or Google, and{" "}
+          Purchases made in the iPhone, iPad, Mac or Android app are paid to Apple or Google, and{" "}
           <Strong>they</Strong> decide refunds under their own rules. Our 7-day rule does not
           apply to them, and we cannot refund them ourselves.
         </p>
@@ -105,7 +105,7 @@ export function RefundsPage() {
         <Bullets
           items={[
             <>On this website: sign in on the <A to="/account">account</A> page and tap <Strong>Request a refund</Strong> next to the purchase.</>,
-            <>In the Mac app, or the app in a browser: Settings, then <Strong>Request a refund</Strong> next to the purchase.</>,
+            <>In the Windows app, or the app in a browser: Settings, then <Strong>Request a refund</Strong> next to the purchase.</>,
             "You can say why if you like. It is optional and does not change the answer.",
             "We check the request and reply by email.",
           ]}

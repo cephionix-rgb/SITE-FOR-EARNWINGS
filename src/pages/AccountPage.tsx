@@ -384,7 +384,7 @@ function InvoicesCard() {
         Every payment you have made. Each is also attached to the confirmation email we
         sent at the time.
         {anyRefund && (
-          <> Website and Mac purchases can be refunded if you ask within 7 days of paying:
+          <> Website and Windows purchases can be refunded if you ask within 7 days of paying:
             see our <Link to="/refunds" className="underline" style={{ color: NAVY, fontWeight: 700 }}>refund policy</Link>.</>
         )}
       </p>

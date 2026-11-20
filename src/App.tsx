@@ -24,6 +24,7 @@ const RefundsPage = lazy(() => import("./pages/RefundsPage").then((m) => ({ defa
 const CopyrightPage = lazy(() => import("./pages/CopyrightPage").then((m) => ({ default: m.CopyrightPage })));
 // Account deletion (the URL Google Play's Data safety form asks for) and support.
 const DeleteAccountPage = lazy(() => import("./pages/DeleteAccountPage").then((m) => ({ default: m.DeleteAccountPage })));
+const DeliveryPage = lazy(() => import("./pages/DeliveryPage").then((m) => ({ default: m.DeliveryPage })));
 const SupportPage = lazy(() => import("./pages/SupportPage").then((m) => ({ default: m.SupportPage })));
 // The account + purchase page. Code-split like the rest: it pulls in the API client
 // and is irrelevant to a first-time visitor reading the landing page.
@@ -79,7 +80,10 @@ export default function App() {
     case "/refunds": page = <RefundsPage />; break;
     case "/copyright": page = <CopyrightPage />; break;
     case "/delete-account": page = <DeleteAccountPage />; break;
-    case "/support": page = <SupportPage />; break;
+    case "/support":
+    case "/contact": page = <SupportPage />; break;
+    case "/delivery":
+    case "/shipping": page = <DeliveryPage />; break;
     case "/whats-new": page = <WhatsNewPage />; break;
     case "/how-we-check": page = <HowWeCheckPage />; break;
     case "/report-exam-questions": page = <ReportExamPage />; break;
