@@ -7,7 +7,7 @@ import { QUIZ_PASS_MARK, SUPPORT_EMAIL } from "../lib/siteConfig";
 
 // Primary CTA label (Task 2). Alternatives, kept for easy swapping:
 //   "Get Early Boarding Access" | "Become a Founding Cadet" | "Secure My Founder Wings"
-const CTA_LABEL = "Reserve My Captain Seat";
+const CTA_LABEL = "Reserve my seat";
 
 const ENDPOINT = import.meta.env.VITE_WAITLIST_ENDPOINT as string | undefined;
 const CAPACITY = 200;
@@ -20,10 +20,8 @@ const PERKS = [
   "MCQ banks for those 2 chapters",
   "1 sample paper in every subject",
   "5 RT scenarios",
-  "5 flight plans",
   "5 weight & balance calcs",
   "5 METAR decoding challenges",
-  "5 compete matches vs other cadets",
   "5 Ask-Captain doubts",
 ];
 
@@ -161,7 +159,7 @@ export function Waitlist() {
             key="done"
             initial={{ opacity: 0, scale: 0.94 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="card-soft relative overflow-hidden p-8 text-center"
+            className="join-card relative overflow-hidden p-6 text-center sm:p-8"
           >
             <motion.div
               initial={{ x: -60, y: 30, opacity: 0, rotate: -12 }}
@@ -228,12 +226,11 @@ export function Waitlist() {
             onSubmit={onSubmit}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="card-soft p-6 text-left sm:p-8"
+            className="join-card p-5 text-left sm:p-8"
           >
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-bold" style={{ background: "rgba(201,152,31,0.12)", color: "#886611" }}>
-              <span className="h-2 w-2 rounded-full" style={{ background: "#C9981F" }} />
-              The first {CAPACITY} to join become founder cadets
-            </div>
+            <p className="mb-4 text-[0.8rem] font-semibold" style={{ color: "var(--gold-ink)" }}>
+              The first {CAPACITY} to join become founding cadets.
+            </p>
 
             {/* Honeypot */}
             <input type="text" name="company" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden />
@@ -241,30 +238,30 @@ export function Waitlist() {
             <div className="grid gap-3 sm:grid-cols-2">
               <input
                 name="name"
+                aria-label="Your name"
                 placeholder="Your name"
                 autoComplete="name"
-                className="rounded-xl border px-4 py-3 outline-none focus:ring-2"
-                style={{ background: "#F0F5FF", borderColor: "rgba(27,58,122,0.12)" }}
+                className="field"
               />
               <input
                 name="phone"
                 type="tel"
                 required
                 inputMode="tel"
+                aria-label="Phone number"
                 placeholder="Phone number"
                 autoComplete="tel"
-                className="rounded-xl border px-4 py-3 outline-none focus:ring-2"
-                style={{ background: "#F0F5FF", borderColor: "rgba(27,58,122,0.12)" }}
+                className="field"
               />
             </div>
             <input
               name="email"
               type="email"
               required
-              placeholder="Enter your email"
+              aria-label="Email"
+              placeholder="Email address"
               autoComplete="email"
-              className="mt-3 w-full rounded-xl border px-4 py-3 outline-none focus:ring-2"
-              style={{ background: "#F0F5FF", borderColor: "rgba(27,58,122,0.12)" }}
+              className="field mt-3 w-full"
             />
 
             {/* Willingness-to-pay + training goal */}
@@ -281,17 +278,17 @@ export function Waitlist() {
                   min="1"
                   step="1"
                   inputMode="numeric"
+                  aria-label="Amount you would pay per subject, in rupees"
                   placeholder="Amount / subject"
-                  className="w-full rounded-xl border py-3 pl-8 pr-4 outline-none focus:ring-2"
-                  style={{ background: "#F0F5FF", borderColor: "rgba(27,58,122,0.12)", color: "#1B3A7A" }}
+                  className="field w-full"
+                  style={{ paddingLeft: "2rem" }}
                 />
               </div>
               <select
                 name="examTarget"
                 aria-label="Training goal"
                 defaultValue=""
-                className="rounded-xl border px-4 py-3 outline-none focus:ring-2"
-                style={{ background: "#F0F5FF", borderColor: "rgba(27,58,122,0.12)", color: "#1B3A7A" }}
+                className="field"
               >
                 <option value="" disabled>Training goal</option>
                 {EXAMS.map((x) => (
@@ -313,12 +310,12 @@ export function Waitlist() {
                 </>
               ) : (
                 <>
-                  <Plane size={18} /> {CTA_LABEL}
+                  {CTA_LABEL}
                 </>
               )}
             </button>
             <p className="mt-3 text-center text-xs" style={{ color: "#4A5A78" }}>
-              Full app free for 7 days + 2 chapters &amp; MCQs per subject, 1 sample paper each, and 5× RT, flight plans, W&amp;B, METAR, compete &amp; Ask-Captain. No spam.
+              Free to join. No payment now. No spam.
             </p>
             <p className="mt-1.5 text-center text-xs" style={{ color: "#4A5A78" }}>
               We only use your details to send early-access updates. See our{" "}

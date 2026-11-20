@@ -1,0 +1,35 @@
+{
+  "contentHash": "8f51ce5d1d8f0394",
+  "lastChecked": "18 November 2026",
+  "generated": "2026-11-19T05:35:34.494Z",
+  "files": {
+    "earnwings-pilot-pathway-guide.pdf": {
+      "pages": 19,
+      "bytes": 2035142
+    },
+    "earnwings-medical-guide.pdf": {
+      "pages": 10,
+      "bytes": 1773350
+    },
+    "earnwings-egca-guide.pdf": {
+      "pages": 14,
+      "bytes": 2488088
+    },
+    "earnwings-pariksha-guide.pdf": {
+      "pages": 11,
+      "bytes": 2302301
+    },
+    "earnwings-rtr-guide.pdf": {
+      "pages": 7,
+      "bytes": 1487570
+    },
+    "earnwings-glossary-guide.pdf": {
+      "pages": 8,
+      "bytes": 777509
+    },
+    "earnwings-pilot-guide.pdf": {
+      "pages": 58,
+      "bytes": 6719754
+    }
+  }
+}

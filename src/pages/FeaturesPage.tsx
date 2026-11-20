@@ -4,6 +4,7 @@ import {
   Map, Compass, Radar, Radio, Bot, GraduationCap, BookOpen, Trophy, LayoutDashboard,
   Check, Plane, Smartphone, Monitor, ChevronLeft, ChevronRight, ZoomIn, X, FileText, Hand,
   Sparkles, Coins, Satellite, GitBranch, Users, Flame, ListChecks, CalendarCheck, ShieldCheck,
+  MousePointerClick, PlaneTakeoff,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { Nav } from "../components/Nav";
@@ -14,77 +15,95 @@ import { FAQ_FEATURED } from "../content/faq";
 import { PhoneFrame } from "../components/DeviceFrame";
 import { Link } from "../lib/router";
 import { STATS } from "../lib/data";
-import { STUDY } from "../lib/study";
+import { DownloadFreeButton } from "../components/DownloadBadges";
+import { HERO_FREE_LINE } from "../content/hero";
+import { AezonPortrait } from "../components/AezonPortrait";
+import { INTERACTIVE, INTERACTIVE_REACH } from "../lib/interactive";
 
 type Feat = {
   key: string; icon: LucideIcon; accent: string; title: string;
   tagline: string; desc: string; screen: string; callouts: string[]; points: string[];
+  /** Show Captain Aezon's portrait in place of the icon. */
+  avatar?: boolean;
 };
 
 const FEATURES: Feat[] = [
   {
-    key: "planning", icon: Map, accent: "#2E6BE5", title: "Flight Planning",
-    tagline: "Plan live routes over airways that actually exist.",
-    desc: "Type a departure and destination and EARNWINGS routes you over real ARINC-424 airways — then hands you a full pilot brief you can fly.",
-    screen: "/screens/app-flightplan.webp",
-    callouts: ["ATS airways", "5-algo solver", "Brief PDF"],
+    key: "weather", icon: Radar, accent: "#5BA4E8", title: "Weather & NOTAMs",
+    tagline: "Read the sky before it reads you.",
+    desc: "Live METARs and TAFs for any ICAO code, decoded into plain English, with NOTAMs and satellite imagery beside them.",
+    screen: "/screens/app-metar.webp",
+    callouts: ["METAR · TAF", "NOTAMs", "Satellite"],
     points: [
-      "Real ARINC-424 airways, waypoints & aerodromes",
-      "Compare 5 routing algorithms side-by-side",
-      "Automatic weight & balance, fuel burn and ETE",
-      "One-tap ICAO flight-plan / pilot-brief PDF",
+      "METAR / TAF decode with VFR·MVFR·IFR·LIFR tagging",
+      "A METAR decode challenge to practise against",
+      "NOTAM decode in plain English",
+      "Live satellite imagery",
     ],
   },
   {
-    key: "airways", icon: Compass, accent: "#2E6BE5", title: "Airways & Charts",
-    tagline: "The whole airspace, at your fingertips.",
-    desc: "Explore real worldwide ATS airways, airspace boundaries and approach plates — pan the map, tap a sector, read the chart.",
-    screen: "/screens/worldwide-airways.webp",
-    callouts: ["Global airways", "Live airspace", "Charts"],
+    key: "rt", icon: Radio, accent: "#C9981F", title: "RT Practice",
+    tagline: "Grab the mic. Make the call.",
+    desc: "Speak your radio calls in real-scale 3D at 8 Indian airports, from Delhi and Mumbai to Leh, with Captain Aezon alongside you.",
+    screen: "/screens/app/rt-practice.webp",
+    callouts: ["Speak the call", "Read-back marked", "Real airports"],
     points: [
-      "Real global ATS airways & waypoints on an interactive map",
-      "Airspace boundaries, sectors and FIR crossings",
-      "In-app SID / STAR / IAP approach charts",
-      "Obstacles and aerodrome data baked in",
+      "Voice-first RT(A) practice, pushback to landing",
+      "Your read-back marked as you speak",
+      "8 airports in real-scale 3D, with live aircraft: Delhi, Mumbai, Chennai, Bengaluru, Hyderabad, Jaipur, Chandigarh, Leh",
+      "RT Academy lessons from the phonetic alphabet up",
     ],
   },
   {
-    key: "weather", icon: Radar, accent: "#5BA4E8", title: "Weather & Currency",
-    tagline: "Never fly a stale plan.",
-    desc: "Live weather and NOTAMs reshape your route automatically, and self-updating charts keep every procedure current.",
-    screen: "/screens/airport-chart.webp",
-    callouts: ["METAR · TAF", "Auto-reroute", "Satellite"],
+    key: "interactive", icon: MousePointerClick, accent: "#2E6BE5", title: "Interactive Notes",
+    tagline: "Turn the knob, see the physics.",
+    desc: `${INTERACTIVE.explainerCount} live explainers across ${INTERACTIVE_REACH}: set the altimeter, fly the ILS, block a pitot tube, and watch the instruments respond.`,
+    screen: "/screens/orbit/interactive.webp",
+    callouts: ["Live figures", "Drawn by code", "In the chapter"],
     points: [
-      "METAR / TAF / SIGMET decode with VFR·MVFR·IFR·LIFR tagging",
-      "NOTAM decode → corridor auto-reroute, with provenance",
-      "Self-updating official charts so procedures are always current",
-      "Live satellite imagery — stills + animated loop",
+      `${INTERACTIVE.explainerCount} explainers on ${INTERACTIVE_REACH} of the DGCA syllabus`,
+      "The altimeter, ILS, SSR, pitot-static, ASI, VSI, DC circuits and many more",
+      "Every figure drawn from computed values, never a picture",
+      "Opens beside the notes, flowchart and question bank of each chapter",
     ],
   },
   {
-    key: "rt", icon: Radio, accent: "#C9981F", title: "RT Trainer",
-    tagline: "Grab the mic. ATC is grading you.",
-    desc: "Speak your radio calls in an animated airport scene; speech-to-text scores your phraseology the instant you talk.",
-    screen: "/screens/app-rt.webp",
-    callouts: ["Speak the call", "Auto-scored", "Scenarios"],
+    key: "c172", icon: PlaneTakeoff, accent: "#C9981F", title: "Cessna 172 Trainer",
+    tagline: "Your first cockpit, switch by switch.",
+    desc: "Learn the Cessna 172 cockpit lesson by lesson: watch the video, read the notes, then practise in the 3D cockpit, with emergency drills at the end.",
+    screen: "/screens/orbit/c172.webp",
+    callouts: ["7 lessons", "3D cockpit", "Emergencies"],
     points: [
-      "Voice-first practice with a real Cessna 172 in 3D",
-      "Speech-to-text scores your phraseology instantly",
-      "Local, flight-plan, emergency & enroute scenarios",
-      "Bridges straight from your own flight plan",
+      "7 lessons, from the cockpit tour to shutdown",
+      "Engine start, run-up, six-pack instruments, radios and transponder",
+      "Emergency drills, starting with engine failure after take-off",
+      "Training use only, not for operational use",
     ],
   },
   {
-    key: "captain", icon: Bot, accent: "#1B3A7A", title: "AI Captain",
+    key: "a320", icon: Plane, accent: "#1B3A7A", title: "A320 Cockpit Trainer",
+    tagline: "Every switch on the deck is live.",
+    desc: "Work the A320 flight deck yourself. Pick a procedure and the checklist follows you, then grades the order, the missed items and the time.",
+    screen: "/screens/app/a320-trainer.webp",
+    callouts: ["21 lessons", "31 drills", "How it works"],
+    points: [
+      "21 guided lessons on the flight deck",
+      "31 emergency drills",
+      "System pages that explain how each one works",
+      "Training use only, not for operational use",
+    ],
+  },
+  {
+    key: "captain", icon: Bot, accent: "#1B3A7A", title: "Captain Aezon", avatar: true,
     tagline: "A ground instructor that never bluffs.",
-    desc: "Ask anything. The Captain answers from your own notes, shows its working, quizzes you — and says ‘I don’t know’ rather than inventing.",
+    desc: "Ask Aezon anything. Captain Aezon answers from your own notes, shows his working, quizzes you, and says ‘I don’t know’ rather than inventing.",
     screen: "/screens/app-captain.webp",
-    callouts: ["Your notes", "Quizzes", "Study plan"],
+    callouts: ["Your notes", "Live figures", "Study plan"],
     points: [
       "Answers grounded in your notes with anti-hallucination retrieval",
-      "Markdown + KaTeX, chat memory and follow-ups",
-      "In-chat quizzes and step-by-step METAR decodes",
-      "Exports a personalised study plan to your planner",
+      "Ask how an instrument works and the interactive figure opens inside the answer",
+      "Two modes: Aezon for a quick doubt, Aezon + for a deeper, structured answer",
+      "In-chat quizzes, step-by-step METAR decodes and a study plan for your planner",
     ],
   },
   {
@@ -96,19 +115,19 @@ const FEATURES: Feat[] = [
     points: [
       "Composite papers for every DGCA subject",
       "Theory, numerical & figure questions with SVG instruments",
-      "10,000+ practice questions with per-chapter MCQ banks",
+      "15,000+ practice questions with per-chapter MCQ banks",
       "Full Captain analysis of every answer",
     ],
   },
   {
     key: "content", icon: BookOpen, accent: "#5BA4E8", title: "Ground School",
     tagline: "Your whole ground school, organised.",
-    desc: "Structured notes and video lectures across all five subjects, paced by interactive chapter outlines that track what you’ve finished.",
+    desc: "Structured notes, flowcharts and question banks across all five subjects, paced by interactive chapter outlines that track what you’ve finished.",
     screen: "/screens/app-learn.webp",
-    callouts: ["Paged notes", "Videos", "Progress"],
+    callouts: ["Paged notes", "Flowcharts", "Progress"],
     points: [
       "Clean paged A4 notes across all 5 core subjects",
-      "Video lecture library wired to each subject & chapter",
+      "Flowcharts, summaries and question banks for every chapter",
       "Interactive per-chapter outlines with completion tracking",
       "Screenshot deterrents on the native apps",
     ],
@@ -135,7 +154,7 @@ const FEATURES: Feat[] = [
     points: [
       "A personalised home that greets you by name",
       "Rank, total XP, streak and credits at a glance",
-      "Quick actions into planning, weather and the Captain",
+      "Quick actions into weather, RT practice and Captain Aezon",
       "Your daily deck — quote, streak and what to do next",
     ],
   },
@@ -146,11 +165,10 @@ const MORE: Mini[] = [
   { icon: Sparkles, title: "First-join wizard", body: "Add your documents and the exams you’ve cleared for an exam-aware plan on day one." },
   { icon: Coins, title: "Free tier & AI credits", body: "Start free with Chapter 1 + sample RT; transparent credits power the smart stuff." },
   { icon: Satellite, title: "Satellite imagery", body: "Live satellite stills plus a self-building animated cloud loop." },
-  { icon: GitBranch, title: "Route-solver lab", body: "Compare Dijkstra, A* and 3 more pathfinders on the same route, visually." },
   { icon: Users, title: "Peer RT matches", body: "Practise your radio calls head-to-head against other cadets." },
   { icon: Flame, title: "Streaks & leaderboards", body: "Keep your streak alive and climb the founder leaderboard." },
-  { icon: ListChecks, title: "Custom quizzes", body: "Ask the Captain to build a timed quiz on any topic you choose." },
-  { icon: CalendarCheck, title: "Study-plan export", body: "Turn any Captain chat into a dated plan in your planner." },
+  { icon: ListChecks, title: "Custom quizzes", body: "Ask Aezon to build a timed quiz on any topic you choose." },
+  { icon: CalendarCheck, title: "Study-plan export", body: "Turn any Captain Aezon chat into a dated plan in your planner." },
   { icon: ShieldCheck, title: "Offline & protected", body: "Read notes offline, with native screenshot deterrents on your content." },
 ];
 
@@ -171,9 +189,15 @@ function DeckArrow({ dir, disabled, onClick }: { dir: "prev" | "next"; disabled:
 /** The landing's draggable 3D "flight deck", reused here with every feature screen. */
 function PhoneDeck() {
   const N = FEATURES.length;
-  const [active, setActive] = useState(0);
+  // A deep link such as /features#rt or /features#a320 (used by the Pilot Guide)
+  // opens on that feature and holds it there instead of auto-rotating away.
+  const hashIndex = () => {
+    if (typeof window === "undefined") return -1;
+    return FEATURES.findIndex((f) => `#${f.key}` === window.location.hash);
+  };
+  const [active, setActive] = useState(() => Math.max(0, hashIndex()));
   const [drag, setDrag] = useState(0);
-  const [engaged, setEngaged] = useState(false);
+  const [engaged, setEngaged] = useState(() => hashIndex() >= 0);
   const [hover, setHover] = useState(false);
   const dragging = useRef(false);
   const moved = useRef(false);
@@ -304,7 +328,11 @@ function PhoneDeck() {
           <motion.div key={cur.key} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
             className="rounded-3xl p-6 sm:p-7" style={{ background: "rgba(255,255,255,0.92)", border: "1px solid rgba(27,58,122,0.08)", boxShadow: `0 30px 70px -34px ${cur.accent}55` }}>
             <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl" style={{ background: `${cur.accent}18`, color: cur.accent }}><CurIcon size={24} /></div>
+              {cur.avatar ? (
+                <AezonPortrait size={52} square />
+              ) : (
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl" style={{ background: `${cur.accent}18`, color: cur.accent }}><CurIcon size={24} /></div>
+              )}
               <div>
                 <h3 className="text-2xl font-extrabold leading-none" style={{ color: "#1B3A7A" }}>{cur.title}</h3>
                 <p className="mt-1 text-[14px] font-semibold" style={{ color: cur.accent }}>“{cur.tagline}”</p>
@@ -321,94 +349,6 @@ function PhoneDeck() {
           </motion.div>
         </AnimatePresence>
       </div>
-    </div>
-  );
-}
-
-const STUDY_TABS = [
-  { key: "notes" as const, label: "Notes", icon: BookOpen, accent: "#2E6BE5" },
-  { key: "summaries" as const, label: "Summaries", icon: FileText, accent: "#C9981F" },
-  { key: "flowcharts" as const, label: "Flowcharts", icon: GitBranch, accent: "#1B3A7A" },
-];
-
-/** A 3D coverflow "study pack" — flip through real notes, summaries & flowcharts. */
-function StudyPack() {
-  const [tab, setTab] = useState<"notes" | "summaries" | "flowcharts">("notes");
-  const [idx, setIdx] = useState(0);
-  const [zoom, setZoom] = useState(false);
-  const pages = STUDY[tab];
-  const page = pages[idx];
-  const portrait = tab !== "flowcharts";
-  const meta = STUDY_TABS.find((t) => t.key === tab)!;
-  const cardW = portrait ? 288 : 440;
-  const spread = portrait ? 180 : 240;
-
-  const go = (d: number) => setIdx((v) => (v + d + pages.length) % pages.length);
-
-  return (
-    <div>
-      {/* Type tabs */}
-      <div className="flex flex-wrap items-center justify-center gap-2.5">
-        {STUDY_TABS.map((t) => {
-          const on = t.key === tab; const Icon = t.icon;
-          return (
-            <button key={t.key} onClick={() => { setTab(t.key); setIdx(0); }}
-              className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-bold transition-all"
-              style={on ? { background: t.accent, color: "#fff", boxShadow: `0 12px 26px -12px ${t.accent}` } : { background: "rgba(255,255,255,0.82)", color: "#4A5A78", border: "1px solid rgba(27,58,122,0.12)" }}>
-              <Icon size={16} /> {t.label}
-              <span className="rounded-full px-1.5 text-[11px]" style={{ background: on ? "rgba(255,255,255,0.22)" : "rgba(27,58,122,0.08)" }}>{STUDY[t.key].length}</span>
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Coverflow stage */}
-      <div className="relative mt-8 flex items-center justify-center overflow-hidden" style={{ perspective: 1500, minHeight: 430 }}>
-        <div className="pointer-events-none absolute h-64 w-[70%] rounded-full blur-3xl" style={{ background: `radial-gradient(circle, ${meta.accent}40, transparent 70%)` }} />
-        {pages.map((p, i) => {
-          const off = i - idx; const a = Math.abs(off); const isA = a === 0;
-          return (
-            <motion.button key={p.img} onClick={() => (isA ? setZoom(true) : setIdx(i))}
-              className="absolute overflow-hidden rounded-xl bg-white"
-              style={{ width: cardW, transformStyle: "preserve-3d", cursor: isA ? "zoom-in" : "pointer", zIndex: 40 - Math.round(a * 10), border: "1px solid rgba(255,255,255,0.7)", boxShadow: isA ? "0 44px 80px -30px rgba(13,36,80,0.65)" : "0 24px 44px -26px rgba(13,36,80,0.5)" }}
-              animate={{ x: off * spread, rotateY: -off * (portrait ? 26 : 20), scale: isA ? 1 : 0.82, z: isA ? 0 : -240, opacity: a > 1.55 ? 0 : 1, filter: isA ? "none" : "brightness(0.82) saturate(0.85)" }}
-              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}>
-              <img src={p.img} alt={`${p.title} ${tab}`} className="block w-full" draggable={false} />
-              {isA && <span className="pointer-events-none absolute bottom-2 right-2 flex h-7 w-7 items-center justify-center rounded-full text-white" style={{ background: "rgba(13,36,80,0.55)" }}><ZoomIn size={14} /></span>}
-            </motion.button>
-          );
-        })}
-      </div>
-
-      {/* Caption + controls */}
-      <div className="mt-6 flex items-center justify-center gap-4">
-        <button onClick={() => go(-1)} aria-label="Previous" className="flex h-9 w-9 items-center justify-center rounded-full" style={{ background: "rgba(27,58,122,0.08)", color: "#1B3A7A" }}><ChevronLeft size={18} /></button>
-        <AnimatePresence mode="wait">
-          <motion.div key={page.img} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }} className="min-w-[220px] text-center">
-            <div className="text-[11px] font-bold uppercase tracking-widest" style={{ color: meta.accent }}>{page.title}</div>
-            <div className="text-[15px] font-bold" style={{ color: "#1B3A7A" }}>{page.topic}</div>
-          </motion.div>
-        </AnimatePresence>
-        <button onClick={() => go(1)} aria-label="Next" className="flex h-9 w-9 items-center justify-center rounded-full" style={{ background: "rgba(27,58,122,0.08)", color: "#1B3A7A" }}><ChevronRight size={18} /></button>
-      </div>
-      <div className="mt-3 flex items-center justify-center gap-2">
-        {pages.map((_, i) => (
-          <button key={i} onClick={() => setIdx(i)} aria-label={`Page ${i + 1}`} className="h-2 rounded-full transition-all" style={{ width: i === idx ? 24 : 8, background: i === idx ? meta.accent : "rgba(27,58,122,0.2)" }} />
-        ))}
-      </div>
-      <p className="mt-3 text-center text-xs" style={{ color: "#4A5A78" }}>Tap the front page for full size</p>
-
-      {/* Lightbox */}
-      <AnimatePresence>
-        {zoom && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setZoom(false)}
-            className="fixed inset-0 z-[100] flex items-center justify-center p-4" style={{ background: "rgba(6,11,28,0.92)" }}>
-            <button onClick={() => setZoom(false)} aria-label="Close" className="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full text-white" style={{ background: "rgba(255,255,255,0.12)" }}><X size={22} /></button>
-            <motion.img initial={{ scale: 0.94 }} animate={{ scale: 1 }} exit={{ scale: 0.94 }} src={page.img} alt="" onClick={(e) => e.stopPropagation()}
-              className="max-h-[92vh] max-w-[94vw] rounded-lg object-contain shadow-2xl" />
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }
@@ -453,21 +393,9 @@ export function FeaturesPage() {
         </section>
 
         {/* Interactive explorer */}
-        <section className="mt-8">
+        <section className="-mx-5 mt-8 px-5 sm:mx-0 sm:px-0" style={{ overflowX: "clip" }}>
           <h2 className="sr-only">Explore every feature</h2>
           <PhoneDeck />
-        </section>
-
-        {/* Notes, summaries & flowcharts — interactive coverflow */}
-        <section id="study" className="mt-16 scroll-mt-24">
-          <div className="text-center">
-            <span className="eyebrow"><BookOpen size={14} /> Learn it once, remember it</span>
-            <h2 className="mt-3 text-2xl font-black sm:text-3xl" style={{ color: "#0D1629" }}>Notes, summaries &amp; flowcharts</h2>
-            <p className="mx-auto mt-2 max-w-2xl text-[15px] leading-7" style={{ color: "#4A5A78" }}>
-              Every chapter is turned into beautiful full-page notes, a single-glance summary and a concept flowchart. Flip through the real thing — tap a page for full size.
-            </p>
-          </div>
-          <div className="mt-8"><StudyPack /></div>
         </section>
 
         {/* More in the cockpit */}
@@ -496,7 +424,7 @@ export function FeaturesPage() {
           <div>
             <h2 className="text-2xl font-black" style={{ color: "#1B3A7A" }}>One app, every platform</h2>
             <p className="mt-2 max-w-xl text-[15px] leading-7" style={{ color: "#41527A" }}>
-              iOS, Android, Web, Mac and Windows from a single codebase — your progress, plans and perks follow you across every device.
+              iOS, Android, the web and Mac from a single codebase — your progress, plans and perks follow you across every device.
             </p>
           </div>
           <div className="flex items-center gap-4 justify-self-start sm:justify-self-end" style={{ color: "#1B3A7A" }}>
@@ -529,11 +457,11 @@ export function FeaturesPage() {
         <section className="mt-16 overflow-hidden rounded-3xl px-6 py-12 text-center" style={{ background: "linear-gradient(150deg,#0f2450,#0a1836)" }}>
           <h2 className="text-3xl font-black text-white">Get all of it — earn your wings</h2>
           <p className="mx-auto mt-3 max-w-lg text-[15px] leading-7" style={{ color: "#93A9D6" }}>
-            Founder cadets get the full app for a week, plus RT sessions, unlocked chapters, sample papers, flight plans and more.
+            {HERO_FREE_LINE}
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-            <Link to="/#waitlist" className="btn-gold"><Plane size={18} /> Reserve My Captain Seat</Link>
-            <Link to="/#play" className="rounded-full px-5 py-3 text-sm font-bold text-white" style={{ background: "rgba(255,255,255,0.1)" }}>Try it live</Link>
+            <DownloadFreeButton where="features" />
+            <Link to="/live" className="rounded-full px-5 py-3 text-sm font-bold text-white" style={{ background: "rgba(255,255,255,0.1)" }}>Watch the live airports</Link>
           </div>
         </section>
       </main>

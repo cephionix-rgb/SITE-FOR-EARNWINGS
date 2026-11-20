@@ -27,14 +27,12 @@ async function responsive(srcName, baseName, widths, { avifQ, webpQ, jpegQ }) {
   }
 }
 
-// hero-clouds: full-bleed sky. Quality raised (4.1b-2) so the open-blue gradient
-// does not band on mobile, where the CSS blur is disabled. Still ~98% smaller.
-await responsive("hero-clouds.png", "hero-clouds", [1024, 1920], { avifQ: 60, webpQ: 74, jpegQ: 72 });
+// (hero-clouds photo plate and the paper-airplane intro poster were removed in
+// Nov 2026: owner rule, no generated imagery on the site. The sky is code-drawn.)
 
-// india-flightmap (below-fold map) + intro poster.
+// india-flightmap (below-fold map).
 await sharp(`${SRC}/india-flightmap.png`).resize({ width: 840, withoutEnlargement: true }).avif({ quality: 55 }).toFile(`${OUT}/india-flightmap.avif`);
 await sharp(`${SRC}/india-flightmap.png`).resize({ width: 840, withoutEnlargement: true }).webp({ quality: 70 }).toFile(`${OUT}/india-flightmap.webp`);
-await responsive("paper-airplane-intro-poster.jpg", "intro-poster", [1024, 1920], { avifQ: 48, webpQ: 60, jpegQ: 64 });
 
 // logo-mark (512 source): hero illustration + nav icon + splash. LOSSLESS WebP,
 // sized to 2x of each render size. 512 stays for the desktop hero LCP (~560px).
@@ -56,8 +54,7 @@ await sharp(`${SRC}/logo-mark.png`).resize(32, 32).png().toFile(`${OUT}/favicon-
 await sharp(`${SRC}/logo-mark.png`).resize(180, 180).png().toFile(`${OUT}/apple-touch-icon-180.png`);
 
 const report = [
-  "hero-clouds-1920.avif", "hero-clouds-1920.webp", "hero-clouds-1920.jpg",
-  "india-flightmap.webp", "intro-poster-1920.webp",
+  "india-flightmap.webp",
   "logo-mark.webp", "logo-mark-320.webp", "logo-mark-96.webp", "logo-mark-96.png",
   "logo-full-160.webp", "logo-full-160.png",
   "favicon-32.png", "apple-touch-icon-180.png",

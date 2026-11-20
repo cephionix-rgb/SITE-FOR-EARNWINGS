@@ -41,10 +41,8 @@ var PERKS = {
   mcqChapters:           2,   // MCQs for those first 2 chapters, every subject
   samplePapersPerSubject:1,   // 1 sample paper unlocked in every subject
   rtSessions:            5,   // 5 RT (radio-telephony) scenarios
-  flightPlans:           5,   // 5 flight plans
   weightAndBalance:      5,   // 5 weight & balance calculations
   metarChallenges:       5,   // 5 METAR decoding challenges
-  competeMatches:        5,   // 5 compete (head-to-head) matches vs other cadets
   captainDoubts:         5    // 5 doubts to Ask Captain
 };
 
@@ -58,10 +56,8 @@ var COMMANDER_PERKS = {
   mcqChapters:           4,   // MCQs for those first 4 chapters
   samplePapersPerSubject:1,
   rtSessions:            10,
-  flightPlans:           10,
   weightAndBalance:      10,
   metarChallenges:       10,
-  competeMatches:        10,
   captainDoubts:         10
 };
 
@@ -236,7 +232,7 @@ function _sendWelcomeEmail(email, name, position, code) {
     'First 2 chapters of all 5 subjects unlocked',
     '1 sample paper in every subject',
     'MCQs for your first 2 chapters',
-    '5 live flight plans',
+    '5 METAR decoding challenges',
     '5 Ask-Captain doubts',
     '5 weight & balance calculations'
   ].map(function (p) {

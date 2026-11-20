@@ -60,12 +60,20 @@ export function CopyrightPage() {
         </p>
       </Callout>
 
+      <p className="text-[14.5px] leading-relaxed" style={{ color: "#41527A" }}>
+        <strong style={{ color: "#0D1629" }}>Third-party material is not ours.</strong> Maps, satellite imagery, terrain,
+        weather, live aircraft data, some 3D models, voices, fonts and open-source software come from other organisations and
+        people, keep their own licences, and are listed with their required credits in{" "}
+        <Link to="/terms#credits" className="font-semibold underline" style={{ color: "#2E6BE5" }}>Data and third-party material</Link>.
+        Nothing on this page limits any right their licences give you.
+      </p>
+
       <Section title="What is protected" id="protected">
         <CardGrid>
           <InfoCard icon={Code2} title="The application itself" accent="sky">
             All source code, architecture, database design, APIs and integrations
             behind EARNWINGS — including the flight-planning and routing engines,
-            the radio-telephony trainer, and the AI Captain's prompts, retrieval
+            the radio-telephony trainer, and Captain Aezon's prompts, retrieval
             and grading logic. Built in-house by {COMPANY_NAME}, owned entirely by{" "}
             {COMPANY_NAME}.
           </InfoCard>
@@ -110,7 +118,7 @@ export function CopyrightPage() {
           The most valuable thing about EARNWINGS is not any single screen or any
           single note — it is the arrangement. How five dense DGCA subjects are cut
           into chapters a student can actually finish. Which topic comes before
-          which. What the AI Captain is allowed to answer from and what it must
+          which. What Captain Aezon is allowed to answer from and what it must
           refuse. How a flight plan is broken into the steps a student learns in
           order. How progress is scored, ranked and rewarded so someone keeps going.
         </p>
@@ -138,7 +146,7 @@ export function CopyrightPage() {
             "Using our screens or content in a pitch deck, tender, brochure, course material or comparison.",
             "Scraping this site or the app, or using our content to train, fine-tune or evaluate an AI model.",
             "Using our name, logo, or a confusingly similar mark, domain or app name.",
-            "Reverse engineering the platform, the AI Captain's prompts, or the flight-planning logic.",
+            "Reverse engineering the platform, Captain Aezon's prompts, or the flight-planning logic.",
             "Circumventing the watermarks, paging or other technical measures that protect our notes.",
           ]}
         />

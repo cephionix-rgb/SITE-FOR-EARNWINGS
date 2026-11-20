@@ -29,6 +29,16 @@
   --gold-light: #f5d97a;
   --surface: #f7faff;
   --cloud: #ebf3ff;
+  /* redesign tokens (Nov 2026) */
+  --ink: #0b1a33;
+  --ink-2: #33415e; /* body copy on light: 9.9:1 on #f7faff */
+  --ink-3: #56648a; /* secondary copy: 5.6:1 on #f7faff */
+  --gold-ink: #8a6510; /* gold used as TEXT on light: 5.3:1 */
+  --gold-fill: #e0b03c;
+  --rule: rgba(11, 26, 51, 0.1);
+  --nav-h: 60px;
+  --font-display: "Archivo", "Inter", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
 }
 
 @theme inline {
@@ -60,4 +70,9 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
   --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-gold-ink: var(--gold-ink);
 }

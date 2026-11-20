@@ -11,5 +11,9 @@ export const HERO_H1_BRAND = " with EARNWINGS"; // sr-only brand suffix in the h
 // "student pilot" — while describing what the app genuinely is. The phrases were
 // missing from the site entirely, so it could not rank for them.
 export const HERO_INTRO =
-  "The student pilot app for DGCA CPL and ATPL: online ground classes, real-airway flight planning, voice radio-telephony, an AI ground instructor and full mock exams — one cockpit. Walk into your exam prepared, not just studied.";
-export const HERO_CTA = "Reserve My Captain Seat";
+  "The DGCA CPL study app: notes, flowcharts, question banks and timed mock papers for every subject, plus voice RT practice in real 3D airports and an A320 flight-deck trainer.";
+export const HERO_CTA = "Download free";
+// Owner rule: the app download and the live aircraft view are free for everyone;
+// buying a plan unlocks the study content.
+export const HERO_FREE_LINE =
+  "Free on iPhone, Android and Mac. Live 3D airports are free for everyone; a plan unlocks the full study content.";

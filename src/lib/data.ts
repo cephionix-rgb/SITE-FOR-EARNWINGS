@@ -4,8 +4,8 @@
 
 export const STATS = [
   { value: "5", label: "Core subjects" },
-  { value: "10,000+", label: "Practice questions" },
-  { value: "∞", label: "RT scenarios" },
+  { value: "15,000+", label: "Practice questions" },
+  { value: "4", label: "Real 3D airports" },
   { value: "15", label: "Ranks to climb" },
 ] as const;
 
@@ -21,19 +21,6 @@ export type Feature = {
 
 export const FEATURES: Feature[] = [
   {
-    key: "flight-planning",
-    title: "Real Flight Planning",
-    desc: "Plan live routes over real ATS airways with NOTAM-aware reroutes, weight & balance and a 5-algorithm solver.",
-    screen: "/screens/app-flightplan.webp",
-    accent: "#2E6BE5",
-    tagline: "From VIDP to VOMM in three taps — on airways that actually exist.",
-    highlights: [
-      "Real ARINC-424 airways, waypoints & aerodromes",
-      "NOTAM-aware auto-reroute around closed airspace",
-      "Weight & balance + a 5-algorithm route solver",
-    ],
-  },
-  {
     key: "rt-trainer",
     title: "Radio Telephony Trainer",
     desc: "Voice-first RT practice in an animated airport scene — speak the call, get scored instantly.",
@@ -48,15 +35,15 @@ export const FEATURES: Feature[] = [
   },
   {
     key: "ai-captain",
-    title: "AI Captain",
+    title: "Captain Aezon",
     desc: "Your personal DGCA ground instructor. Grounded in your notes, it explains, quizzes and never invents.",
     screen: "/screens/app-captain.webp",
     accent: "#1B3A7A",
     tagline: "A ground instructor that never sleeps — and never bluffs.",
     highlights: [
       "Answers grounded in your own notes, never invented",
-      "In-chat quizzes and step-by-step METAR decodes",
-      "Exports a personalised study plan to your planner",
+      "Ask how an instrument works and the live figure opens in the answer",
+      "In-chat quizzes, METAR decodes and a study plan for your planner",
     ],
   },
   {
@@ -113,12 +100,12 @@ export const RANK_LADDER: Rank[] = [
   { level: 1, name: "Cadet", xp: 0, perk: "Welcome kit · Chapter 1 unlocked", milestone: false },
   { level: 2, name: "Student Pilot", xp: 250, perk: "Weekly streak-freeze", milestone: false },
   { level: 3, name: "First Solo", xp: 600, perk: "Solo RT scenarios unlocked", milestone: true },
-  { level: 4, name: "Cross-Country", xp: 1100, perk: "Flight planner unlocked", milestone: false },
+  { level: 4, name: "Cross-Country", xp: 1100, perk: "A320 trainer lessons", milestone: false },
   { level: 5, name: "Night Rating", xp: 1800, perk: "Night-ops weather pack", milestone: false },
-  { level: 6, name: "Instrument Rating", xp: 2700, perk: "Full airways & charts", milestone: false },
+  { level: 6, name: "Instrument Rating", xp: 2700, perk: "Full aerodrome charts", milestone: false },
   { level: 7, name: "CPL Holder", xp: 3800, perk: "DGCA mock exams unlocked", milestone: true },
   { level: 8, name: "Multi-Engine", xp: 5100, perk: "Advanced weight & balance", milestone: false },
-  { level: 9, name: "Type Rating", xp: 6600, perk: "AI Captain Pro", milestone: false },
+  { level: 9, name: "Type Rating", xp: 6600, perk: "Captain Aezon priority access", milestone: false },
   { level: 10, name: "First Officer", xp: 8300, perk: "Leaderboard badge · +50 credits", milestone: true },
   { level: 11, name: "Senior F/O", xp: 9200, perk: "Peer RT matches", milestone: false },
   { level: 12, name: "Line Captain", xp: 10200, perk: "Mentor mode", milestone: false },

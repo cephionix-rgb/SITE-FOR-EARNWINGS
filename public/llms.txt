@@ -1,9 +1,9 @@
 # EARNWINGS
 
 > EARNWINGS is a DGCA CPL and ATPL exam-preparation app for student pilots in
-> India. It combines online ground classes, a 10,000+ question bank, timed mock
-> exams, flight planning over real ATS airways, a voice radio-telephony trainer
-> and an AI ground instructor in a single app. Built and owned by Cephionix.
+> India. It combines online ground classes, a 15,000+ question bank, timed mock
+> exams, a voice radio-telephony trainer set in real-scale 3D airports, an A320
+> flight-deck trainer and an AI ground instructor in a single app. Built and owned by Cephionix.
 
 A plain-text summary for AI assistants, following the llms.txt convention.
 Every statement here is factual and matches the website.
@@ -16,7 +16,7 @@ Every statement here is factual and matches the website.
 - **Status**: pre-launch, onboarding a founding cohort via a waitlist
 - **Regulator coverage**: DGCA (India) TODAY. Transport Canada, then EASA, then
   the FAA are on the roadmap — planned, not shipped, and no dates announced.
-- **Platforms**: iOS, Android, Web, macOS, Windows
+- **Platforms**: iOS, Android, Web, macOS (Windows planned)
 - **Website**: https://earnwings.org
 
 ## What it is NOT
@@ -39,16 +39,23 @@ Radio Telephony (RTR).
 ## Main features
 
 - **Ground classes**: every chapter as full-page visual notes, a one-glance
-  summary and a concept flowchart, plus video lectures.
-- **Question bank**: 10,000+ practice questions, marked instantly, with working
+  summary and a concept flowchart (video lectures coming soon).
+- **Question bank**: 15,000+ practice questions, marked instantly, with working
   shown on numericals.
 - **Mock exams**: composite papers per subject using DGCA marks, timing and
   figure questions, followed by an analysis of every wrong answer.
-- **AI Captain**: an AI ground instructor that answers strictly from the course
-  material, cites its source, and says so when the material does not cover a
-  question rather than inventing an answer.
-- **Flight planning**: real ATS airways, waypoints and aerodromes, NOTAM-aware
-  rerouting, weight & balance, and a printable pilot brief.
+- **Interactive notes**: live explainers inside the chapters (the pressure
+  altimeter, the ILS, SSR, pitot-static blockages, DC circuits and more), every
+  figure drawn by code from computed values. 100+ chapters have one.
+- **Captain Aezon** ("Ask Aezon"): an AI ground instructor that answers strictly
+  from the course material, cites its source, and says so when the material does
+  not cover a question rather than inventing an answer. Two modes: Aezon for a
+  quick doubt, Aezon + for a deeper, structured answer; questions about an
+  instrument open its interactive figure in the answer.
+- **Cessna 172 trainer**: seven cockpit lessons from the cockpit tour to
+  shutdown, with emergency drills. Training use only.
+- **A320 cockpit trainer**: a live A320 flight deck with 21 guided lessons,
+  31 emergency drills and pages on how each system works. Training use only.
 - **Weather**: live METAR, TAF and SIGMET decoding, plus satellite imagery.
 - **Radio telephony trainer**: voice-first practice against a narrated
   controller; speech-to-text scores the phraseology you actually say.
@@ -61,7 +68,7 @@ Radio Telephony (RTR).
 - [Features](https://earnwings.org/features) — every feature in detail, FAQ
 - [Why EARNWINGS](https://earnwings.org/why-earnwings) — 24 documented gaps in DGCA ground school and how each is closed
 - [About](https://earnwings.org/about) — how it is built, principles, the company
-- [Privacy Policy](https://earnwings.org/privacy) · [Terms](https://earnwings.org/terms) · [Copyright & IP](https://earnwings.org/copyright)
+- [Privacy Policy](https://earnwings.org/privacy) · [Terms](https://earnwings.org/terms) · [Refund policy](https://earnwings.org/refunds) · [Copyright & IP](https://earnwings.org/copyright)
 
 ## Contact
 

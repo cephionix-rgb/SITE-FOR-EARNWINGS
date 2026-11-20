@@ -25,6 +25,9 @@ export const SUPPORT_EMAIL = "support@earnwings.org";
  */
 export const COMPANY_NAME = "Cephionix";
 
+/** Cephionix's own company website (EarnWings is a Cephionix product). */
+export const COMPANY_URL = "https://www.cephionix.com";
+
 /** Cephionix's other product — the FTO management platform. */
 export const NEURALWINGS_URL = "https://neuralwings.org";
 
@@ -39,7 +42,7 @@ export const QUIZ_PASS_MARK = 8;
 export const siteStats = {
   subjects: 5, // DGCA exam subjects
   chapters: 202, // sum of every module chapter (see FlightPathScroll ROWS)
-  questions: 10000, // practice questions — rendered as "10,000+"
+  questions: 15000, // practice questions (15,486 in the bank, Nov 2026) — rendered as "15,000+"
   ranks: 15, // Cadet -> Commander ladder
 } as const;
 
@@ -58,7 +61,7 @@ export const FOUNDER_SEATS = 200;
 export const CREDIBILITY_LINE =
   "Built with a DGCA Chief Ground Instructor and a flight instructor, and shaped by student pilots preparing right now.";
 
-/** What the AI Captain is trained on (Task 5). */
+/** What Captain Aezon is trained on (Task 5). */
 export const AI_CAPTAIN_TRAINED =
   "Trained on the full aviation syllabus across every DGCA subject, plus real-world flight scenarios.";
 
@@ -87,3 +90,83 @@ export const TESTIMONIALS: Testimonial[] = [];
  */
 export type Instructor = { name: string; title: string; credentials?: string; image?: string };
 export const INSTRUCTORS: Instructor[] = [];
+
+/**
+ * Where the EarnWings web app (and its 3D airport viewer) is served from.
+ *
+ * Set at BUILD time with the env var VITE_APP_HOST_URL (no trailing slash), e.g.
+ *   VITE_APP_HOST_URL=https://app.earnwings.org npm run build
+ * or by adding it to .env.production. The fallback below is a temporary
+ * Cloudflare tunnel and WILL change: update the env var, then rebuild and deploy.
+ *
+ * Two other places must agree with it, or the live view stays blank:
+ *   1. This site's CSP frame-src (vercel.json and public/_headers) must allow the
+ *      host. It currently allows https://*.trycloudflare.com; add the permanent
+ *      app domain when there is one.
+ *   2. The APP host must allow earnwings.org to frame airport3d.html: its nginx
+ *      `location = /airport3d.html` sends `frame-ancestors 'self' capacitor://localhost
+ *      https://localhost`, which must also list https://earnwings.org.
+ */
+export const APP_HOST_URL: string = (
+  (import.meta.env.VITE_APP_HOST_URL as string | undefined) || "https://optimal-bufing-joshua-villas.trycloudflare.com"
+).replace(/\/+$/, "");
+
+/**
+ * The app downloads page (iPhone, Android, Mac), served by the same app host. It has
+ * one section per platform: #iphone (install link), #android (APK) and #mac (dmg).
+ * Override with VITE_APP_DOWNLOAD_URL. Owner rule: downloading the app and the live
+ * aircraft view are FREE for everyone; a purchase buys the study content.
+ */
+export const APP_DOWNLOAD_URL: string =
+  (import.meta.env.VITE_APP_DOWNLOAD_URL as string | undefined) || `${APP_HOST_URL}/downloads/`;
+
+/**
+ * Store listings. Empty until the apps are published there; while empty, the badges
+ * say "Download for iPhone / Android" and point at the downloads page instead of
+ * claiming a store listing that does not exist yet.
+ */
+export const APP_STORE_URL: string = (import.meta.env.VITE_APP_STORE_URL as string | undefined) || "";
+export const PLAY_STORE_URL: string = (import.meta.env.VITE_PLAY_STORE_URL as string | undefined) || "";
+
+export type Platform = "iphone" | "android" | "mac";
+/** Where a download badge for one platform goes. */
+export function downloadHref(p?: Platform): string {
+  if (p === "iphone" && APP_STORE_URL) return APP_STORE_URL;
+  if (p === "android" && PLAY_STORE_URL) return PLAY_STORE_URL;
+  return p ? `${APP_DOWNLOAD_URL}#${p}` : APP_DOWNLOAD_URL;
+}
+
+/** The airports shown in the "Live at our airports" view. */
+/** `runways`: approximate headings (degrees) of each runway, used only to draw
+ *  the schematic poster shown before the live view loads. Not for navigation. */
+export type LiveAirport = { icao: string; city: string; name: string; runways: { hdg: number; label: string }[] };
+export const LIVE_AIRPORTS: LiveAirport[] = [
+  { icao: "VIDP", city: "Delhi", name: "Indira Gandhi International", runways: [{ hdg: 90, label: "09/27" }, { hdg: 100, label: "10/28" }, { hdg: 110, label: "11/29" }] },
+  { icao: "VABB", city: "Mumbai", name: "Chhatrapati Shivaji Maharaj International", runways: [{ hdg: 90, label: "09/27" }, { hdg: 140, label: "14/32" }] },
+  { icao: "VOMM", city: "Chennai", name: "Chennai International", runways: [{ hdg: 70, label: "07/25" }, { hdg: 120, label: "12/30" }] },
+  { icao: "VILH", city: "Leh", name: "Kushok Bakula Rimpochee", runways: [{ hdg: 70, label: "07/25" }] },
+  { icao: "VOBL", city: "Bengaluru", name: "Kempegowda International", runways: [{ hdg: 90, label: "09L/27R" }, { hdg: 90, label: "09R/27L" }] },
+  { icao: "VOHY", city: "Hyderabad", name: "Begumpet", runways: [{ hdg: 90, label: "09/27" }] },
+  { icao: "VIJP", city: "Jaipur", name: "Jaipur International", runways: [{ hdg: 80, label: "08/26" }] },
+  { icao: "VICG", city: "Chandigarh", name: "Shaheed Bhagat Singh International", runways: [{ hdg: 110, label: "11/29" }] },
+];
+
+/**
+ * URL of the embeddable live spectator view for one airport. The app reads:
+ *   icao=XXXX   which airport
+ *   mode=live   real ADS-B traffic instead of the simulated fleet
+ *   embed=1     the minimal "watch the airport" UI (LIVE badge + attribution, no
+ *               student controls), auto-following landings and take-offs
+ * The embed also listens for postMessage({ type: "ew3d-visibility", visible })
+ * from this page, which pauses rendering and live polling when scrolled away.
+ *
+ * Optional: VITE_LIVE_CORE_URL (https only) is passed as &core=... to point the
+ * embed's live-traffic requests at a specific core API host.
+ * The embed posts { type: "ew3d-status", icao, caption, callsign, simulated, live }
+ * back to this page, which shows LIVE vs SIMULATED and the caption under the view.
+ */
+const LIVE_CORE_URL = ((import.meta.env.VITE_LIVE_CORE_URL as string | undefined) || "").replace(/\/+$/, "");
+export function liveAirportUrl(icao: string): string {
+  const core = LIVE_CORE_URL.startsWith("https://") ? `&core=${encodeURIComponent(LIVE_CORE_URL)}` : "";
+  return `${APP_HOST_URL}/airport3d.html?icao=${encodeURIComponent(icao)}&mode=live&embed=1${core}`;
+}

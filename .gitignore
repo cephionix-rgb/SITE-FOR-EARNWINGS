@@ -14,3 +14,4 @@ public/assets/product-film-poster.jpg
 
 # Build artifact — rewritten by every tsc run, and it blocked branch switches.
 tsconfig.tsbuildinfo
+.pdf-build/

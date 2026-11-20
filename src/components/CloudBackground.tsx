@@ -1,52 +1,231 @@
+import { useEffect, useRef } from "react";
+
 /**
- * Site-wide animated cloud sky. Rendered INLINE (it used to be an <iframe>
- * pointing at public/clouds-bg.html, which was an entire extra document to
- * parse, lay out and keep in memory). Fixed behind all page content (z-index
- * -10), pointer-events none. The plate is served as optimised AVIF/WebP via
- * image-set with a JPEG fallback. Classes are ewsky-prefixed so they cannot
- * collide with app styles. All three layers drift + breathe on every screen
- * size (blur is only trimmed on mobile for scroll perf); animation is fully
- * disabled for prefers-reduced-motion.
+ * Site-wide sky, fixed behind all page content (z-index -10, pointer-events none).
+ *
+ * The clouds are DRAWN IN CODE (no photos, no generated imagery): each cloud is
+ * a seeded cluster of soft puffs painted in three passes (blue-grey underside,
+ * white body, warm sunlit top). They are rendered ONCE per layer into a
+ * wrap-around tile, and the tile is then only ever moved, never repainted:
+ *
+ *   - 3 parallax layers (far / mid / near) at ~8, ~16 and ~28 px per second;
+ *   - each layer is a strip (not the full screen), so overdraw stays ~1.3 screens;
+ *   - motion is a Web Animations translate3d loop, which runs on the compositor
+ *     thread: it keeps drifting smoothly while the page scrolls and costs the
+ *     main thread nothing;
+ *   - rendered at up to 2x device pixels on phones (crisp on a 3x iPhone) and
+ *     1.5x on desktop, where the layers are much wider;
+ *   - paused while the tab is hidden; static under prefers-reduced-motion or
+ *     Save-Data (the clouds are still drawn, they just do not move).
+ *
+ * History: this replaced (1) six animated full-screen CSS photo layers that held
+ * desktop at 30-40 fps, then (2) a full-canvas repaint loop that was smooth but
+ * looked soft and static on iPhone.
  */
-const CSS = `
-.ewsky{position:fixed;inset:0;z-index:-10;overflow:hidden;pointer-events:none;background:linear-gradient(180deg,#EAF4FF 0%,#D9EAFC 38%,#C9E0F8 66%,#E8F2FF 100%);}
-.ewsky-sun{position:absolute;left:74%;top:6%;width:54vmax;height:54vmax;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(255,247,220,0.9) 0%,rgba(245,217,122,0.32) 28%,rgba(245,217,122,0.09) 46%,transparent 62%);filter:blur(6px);animation:ewsky-sun 20s ease-in-out infinite alternate;}
-@keyframes ewsky-sun{from{opacity:.8;transform:translate(-50%,-50%) scale(1);}to{opacity:1;transform:translate(-50%,-50%) scale(1.12);}}
-.ewsky-cloud{position:absolute;inset:-18%;background-position:center;background-size:cover;background-repeat:no-repeat;background-image:url('/assets/hero-clouds-1920.jpg');background-image:image-set(url('/assets/hero-clouds-1920.avif') type('image/avif'),url('/assets/hero-clouds-1920.webp') type('image/webp'),url('/assets/hero-clouds-1920.jpg') type('image/jpeg'));filter:blur(1.5px);will-change:transform;}
-.ewsky-c1{opacity:.58;animation:ewsky-d1 20s ease-in-out infinite alternate;}
-.ewsky-c2{opacity:.66;animation:ewsky-d2 16s ease-in-out infinite alternate;}
-.ewsky-c3{opacity:.48;animation:ewsky-d3 26s ease-in-out infinite alternate;}
-@keyframes ewsky-d1{0%{transform:translate(-6%,-2%) scale(1.06);}50%{transform:translate(2%,2%) scale(1.17);}100%{transform:translate(6%,-2%) scale(1.06);}}
-@keyframes ewsky-d2{0%{transform:translate(6%,2%) scale(1.10);}50%{transform:translate(-2%,-2%) scale(1.22);}100%{transform:translate(-6%,2%) scale(1.10);}}
-@keyframes ewsky-d3{0%{transform:translate(-5%,3%) scale(1.16);}50%{transform:translate(2%,-2%) scale(1.06);}100%{transform:translate(5%,3%) scale(1.16);}}
-.ewsky-wash{position:absolute;inset:0;background:linear-gradient(180deg,rgba(244,249,255,0.34) 0%,rgba(244,249,255,0.14) 45%,rgba(244,249,255,0.36) 100%);}
-/* Mobile: the cloud plate is a wide landscape with clouds in the top-right and
-   bottom-left and clear sky through the middle. On a narrow portrait viewport a
-   centred 'cover' crops straight into that empty middle, so the phone looked
-   cloudless. Aim each layer at a cloud region instead so real clouds fill the
-   screen; keep all three drifting (blur only trimmed for scroll perf). */
-@media (max-width:768px){
-  /* Size by width so the whole landscape (both cloud groups) shows as a band
-     instead of cover cropping into the empty-sky middle; stack the three layers
-     at top / middle / bottom so clouds fill the phone with sky peeking between. */
-  .ewsky-cloud{filter:blur(1px);background-size:135% auto;}
-  .ewsky-c1{background-position:60% 6%;opacity:.72;}
-  .ewsky-c2{background-position:15% 52%;opacity:.76;}
-  .ewsky-c3{background-position:85% 100%;opacity:.7;}
-  .ewsky-wash{opacity:.5;}
+
+type LayerSpec = {
+  top: number; // fraction of viewport height
+  height: number; // fraction of viewport height
+  speed: number; // px per second
+  opacity: number;
+  count: number; // clouds per 1000 px of tile
+  size: [number, number]; // cloud width as a fraction of the strip height
+  base: [number, number]; // cloud base position within the strip (fraction)
+  tint: number; // 0..1 how blue the underside is
+};
+
+const LAYERS: LayerSpec[] = [
+  { top: 0.02, height: 0.42, speed: 8, opacity: 0.62, count: 3.2, size: [0.5, 0.9], base: [0.45, 0.85], tint: 0.9 },
+  { top: 0.3, height: 0.42, speed: 16, opacity: 0.82, count: 2.2, size: [0.75, 1.25], base: [0.55, 0.85], tint: 0.7 },
+  { top: 0.6, height: 0.42, speed: 28, opacity: 0.92, count: 1.6, size: [1.0, 1.6], base: [0.6, 0.9], tint: 0.55 },
+];
+
+/** Small deterministic PRNG so the sky looks the same on every visit. */
+function rng(seed: number) {
+  let a = seed >>> 0;
+  return () => {
+    a = (a + 0x6d2b79f5) >>> 0;
+    let t = a;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
 }
-@media (prefers-reduced-motion:reduce){.ewsky-cloud,.ewsky-sun{animation:none;}}
-`;
+
+type Puff = { x: number; y: number; r: number };
+
+/** One cumulus: a dome of many small, soft puffs over a flattish base, with a
+ *  ring of tiny "cauliflower" puffs along the upper edge for detail. */
+function makeCloud(cx: number, base: number, w: number, r: () => number): Puff[] {
+  const h = w * (0.3 + r() * 0.14);
+  const puffs: Puff[] = [];
+  const n = 55 + Math.floor(r() * 25);
+  for (let i = 0; i < n; i++) {
+    const u = (r() + r() - 1); // -1..1, centre-weighted
+    const d = Math.abs(u);
+    const x = cx + (u * w) / 2;
+    const up = h * Math.sqrt(Math.max(0, 1 - d * d)) * Math.pow(r(), 0.7);
+    const rad = h * (0.2 + r() * 0.22) * (1 - d * 0.4);
+    puffs.push({ x, y: base - up * 0.7 - rad * 0.2, r: rad });
+  }
+  // detail along the top silhouette
+  const m = 18 + Math.floor(r() * 12);
+  for (let i = 0; i < m; i++) {
+    const u = (r() - 0.5) * 1.8;
+    const d = Math.min(1, Math.abs(u));
+    const x = cx + (u * w) / 2;
+    const top = h * Math.sqrt(Math.max(0, 1 - d * d)) * 0.85;
+    puffs.push({ x, y: base - top * 0.82 + h * 0.06, r: h * (0.09 + r() * 0.09) });
+  }
+  return puffs;
+}
+
+function puff(ctx: CanvasRenderingContext2D, x: number, y: number, rad: number, stops: [number, string][]) {
+  const g = ctx.createRadialGradient(x, y, 0, x, y, rad);
+  for (const [o, c] of stops) g.addColorStop(o, c);
+  ctx.fillStyle = g;
+  ctx.fillRect(x - rad, y - rad, rad * 2, rad * 2);
+}
+
+/** Paint one wrap-around tile (width T) for a layer; returns the canvas. */
+function renderTile(spec: LayerSpec, T: number, H: number, dpr: number, seed: number): HTMLCanvasElement {
+  const c = document.createElement("canvas");
+  c.width = Math.round(T * dpr);
+  c.height = Math.round(H * dpr);
+  const ctx = c.getContext("2d")!;
+  ctx.scale(dpr, dpr);
+  const r = rng(seed);
+  const n = Math.max(2, Math.round((spec.count * T) / 1000));
+  const clouds: Puff[][] = [];
+  for (let i = 0; i < n; i++) {
+    const w = H * (spec.size[0] + r() * (spec.size[1] - spec.size[0]));
+    const cx = ((i + 0.15 + r() * 0.7) / n) * T;
+    const base = H * (spec.base[0] + r() * (spec.base[1] - spec.base[0]));
+    clouds.push(makeCloud(cx, base, w, r));
+  }
+  const shade = `rgba(${Math.round(196 - 30 * spec.tint)},${Math.round(212 - 18 * spec.tint)},${Math.round(236 - 4 * spec.tint)},`;
+  // Draw each cloud at x, x-T and x+T so the tile wraps seamlessly.
+  for (const off of [-T, 0, T]) {
+    for (const cl of clouds) {
+      // 1. cool underside, offset down
+      for (const p of cl) puff(ctx, p.x + off, p.y + p.r * 0.45, p.r * 1.15, [[0, shade + "0.42)"], [0.5, shade + "0.2)"], [1, shade + "0)"]]);
+    }
+    for (const cl of clouds) {
+      // 2. body: soft falloff, no hard rim
+      for (const p of cl) puff(ctx, p.x + off, p.y, p.r, [[0, "rgba(255,255,255,0.85)"], [0.45, "rgba(255,255,255,0.55)"], [0.8, "rgba(255,255,255,0.12)"], [1, "rgba(255,255,255,0)"]]);
+    }
+    for (const cl of clouds) {
+      // 3. warm sunlit tops (sun up and to the right)
+      for (const p of cl) puff(ctx, p.x + off + p.r * 0.2, p.y - p.r * 0.38, p.r * 0.7, [[0, "rgba(255,250,236,0.55)"], [1, "rgba(255,250,236,0)"]]);
+    }
+  }
+  return c;
+}
+
+/** Reduced motion or Save-Data: draw, but do not animate. */
+export function wantsStaticMotion(): boolean {
+  if (typeof window === "undefined") return true;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return true;
+  const conn = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
+  return !!conn?.saveData;
+}
+
+const idle = (fn: () => void) => {
+  const ric = (window as Window & { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number }).requestIdleCallback;
+  if (ric) ric(fn, { timeout: 1200 });
+  else window.setTimeout(fn, 60);
+};
 
 export function CloudBackground() {
+  const hostRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const host = hostRef.current;
+    if (!host) return;
+    const anims: Animation[] = [];
+    const els: HTMLDivElement[] = [];
+    let cancelled = false;
+    const still = wantsStaticMotion();
+    const W = window.innerWidth;
+    const VH = Math.max(window.innerHeight, 640);
+    const phone = W <= 768;
+    const dpr = Math.min(window.devicePixelRatio || 1, phone ? 2 : 1.5);
+    const T = Math.round(Math.max(W * 1.3, 900));
+
+    const build = (i: number) => {
+      if (cancelled || i >= LAYERS.length) return;
+      const spec = LAYERS[i];
+      const H = Math.round(VH * spec.height);
+      const tile = renderTile(spec, T, H, dpr, 1009 * (i + 1));
+      if (cancelled) return;
+      // The strip is two canvases side by side (the tile and a copy), moved as
+      // one composited layer. Canvases rather than a CSS background image:
+      // an image would count as the page's Largest Contentful Paint and, since
+      // the sky paints after load on idle, it held mobile LCP back by ~1 s.
+      const el = document.createElement("div");
+      Object.assign(el.style, {
+        position: "absolute",
+        left: "0",
+        top: `${spec.top * 100}%`,
+        width: `${T * 2}px`,
+        height: `${H}px`,
+        display: "flex",
+        opacity: "0",
+        transition: "opacity 1.2s ease",
+        willChange: "transform",
+        transform: "translate3d(0,0,0)",
+      } as Partial<CSSStyleDeclaration>);
+      const copy = document.createElement("canvas");
+      copy.width = tile.width;
+      copy.height = tile.height;
+      copy.getContext("2d")!.drawImage(tile, 0, 0);
+      for (const cv of [tile, copy]) {
+        Object.assign(cv.style, { width: `${T}px`, height: `${H}px`, flex: "none", display: "block" } as Partial<CSSStyleDeclaration>);
+        el.appendChild(cv);
+      }
+      host.appendChild(el);
+      els.push(el);
+      // Start each layer at a different phase so they never line up.
+      const phase = ((i * 0.37) % 1) * T;
+      if (!still && typeof el.animate === "function") {
+        const a = el.animate(
+          [{ transform: `translate3d(${-phase}px,0,0)` }, { transform: `translate3d(${-phase - T}px,0,0)` }],
+          { duration: (T / spec.speed) * 1000, iterations: Infinity, easing: "linear" },
+        );
+        if (document.hidden) a.pause();
+        anims.push(a);
+      } else {
+        el.style.transform = `translate3d(${-phase}px,0,0)`;
+      }
+      requestAnimationFrame(() => (el.style.opacity = String(spec.opacity)));
+      idle(() => build(i + 1));
+    };
+    idle(() => build(0));
+
+    const onVis = () => anims.forEach((a) => (document.hidden ? a.pause() : a.play()));
+    document.addEventListener("visibilitychange", onVis);
+    return () => {
+      cancelled = true;
+      document.removeEventListener("visibilitychange", onVis);
+      anims.forEach((a) => a.cancel());
+      els.forEach((d) => d.remove());
+    };
+  }, []);
+
   return (
-    <div className="ewsky" aria-hidden>
-      <style dangerouslySetInnerHTML={{ __html: CSS }} />
-      <div className="ewsky-sun" />
-      <div className="ewsky-cloud ewsky-c3" />
-      <div className="ewsky-cloud ewsky-c1" />
-      <div className="ewsky-cloud ewsky-c2" />
-      <div className="ewsky-wash" />
-    </div>
+    <div
+      ref={hostRef}
+      aria-hidden
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: -10,
+        overflow: "hidden",
+        pointerEvents: "none",
+        contain: "strict",
+        background:
+          "radial-gradient(60vmax 60vmax at 78% 4%, rgba(255,252,240,0.9), rgba(255,240,205,0.25) 35%, rgba(255,240,205,0) 62%), linear-gradient(180deg,#DCEBFF 0%,#CFE3FA 38%,#C2DBF7 66%,#E4EFFD 100%)",
+      }}
+    />
   );
 }

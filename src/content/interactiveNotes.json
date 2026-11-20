@@ -1,0 +1,751 @@
+{
+ "syncedAt": "2026-11-20",
+ "explainerCount": 142,
+ "chapterCount": 202,
+ "totalChapters": 202,
+ "chapters": {
+  "ELEC:1": [
+   "DC circuits: Ohm's law and Kirchhoff",
+   "DC circuits drill: specimen questions"
+  ],
+  "ELEC:10": [
+   "DC circuits drill: specimen questions",
+   "DC circuits: Ohm's law and Kirchhoff",
+   "DC motors, commutation and back EMF",
+   "Bonding, static wicks and screening"
+  ],
+  "ELEC:11": [
+   "Alternating current: sine, RMS, reactance and power factor",
+   "Alternators, three phase and the CSD"
+  ],
+  "ELEC:12": [
+   "Alternators, three phase and the CSD",
+   "Alternating current: sine, RMS, reactance and power factor",
+   "Transformers, TRUs and inverters"
+  ],
+  "ELEC:13": [
+   "Hydraulic systems",
+   "The aircraft electrical system",
+   "Landing gear"
+  ],
+  "ELEC:14": [
+   "Transformers, TRUs and inverters",
+   "Semiconductors: diodes and transistors"
+  ],
+  "ELEC:15": [
+   "AC motors: rotating field and slip"
+  ],
+  "ELEC:16": [
+   "Semiconductors: diodes and transistors",
+   "Transformers, TRUs and inverters"
+  ],
+  "ELEC:17": [
+   "Logic gates and truth tables"
+  ],
+  "ELEC:2": [
+   "Switches: toggles, guards, switch lights and sensors"
+  ],
+  "ELEC:3": [
+   "The aircraft electrical system"
+  ],
+  "ELEC:4": [
+   "The aircraft electrical system"
+  ],
+  "ELEC:5": [
+   "Magnetos and ignition"
+  ],
+  "ELEC:6": [
+   "The aircraft electrical system"
+  ],
+  "ELEC:7": [
+   "DC motors, commutation and back EMF"
+  ],
+  "ELEC:8": [
+   "The aircraft electrical system"
+  ],
+  "ELEC:9": [
+   "Bonding, static wicks and screening"
+  ],
+  "GNAV:1": [
+   "Latitude, longitude and the graticule",
+   "Departure: east–west distance"
+  ],
+  "GNAV:10": [
+   "The 1 in 60 rule"
+  ],
+  "GNAV:11": [
+   "The 1 in 60 rule"
+  ],
+  "GNAV:12": [
+   "The 1 in 60 rule",
+   "Descent planning"
+  ],
+  "GNAV:13": [
+   "Topographical maps and map reading",
+   "Chart scale"
+  ],
+  "GNAV:14": [
+   "Great circles, rhumb lines and convergency"
+  ],
+  "GNAV:15": [
+   "Departure: east–west distance"
+  ],
+  "GNAV:16": [
+   "Chart scale",
+   "Topographical maps and map reading"
+  ],
+  "GNAV:17": [
+   "Chart projections and their properties",
+   "Lambert's conformal chart: the cone"
+  ],
+  "GNAV:18": [
+   "Great circles, rhumb lines and convergency",
+   "Chart projections and their properties",
+   "Mercator charts: scale"
+  ],
+  "GNAV:19": [
+   "Mercator charts: scale"
+  ],
+  "GNAV:2": [
+   "Great circles, rhumb lines and convergency",
+   "Latitude, longitude and the graticule"
+  ],
+  "GNAV:21": [
+   "Lambert's conformal chart: the cone",
+   "Chart projections and their properties",
+   "Lambert's conformal chart: routes and scale"
+  ],
+  "GNAV:22": [
+   "Lambert's conformal chart: routes and scale",
+   "Lambert's conformal chart: the cone"
+  ],
+  "GNAV:23": [
+   "The polar stereographic chart",
+   "Chart projections and their properties",
+   "Grid navigation"
+  ],
+  "GNAV:24": [
+   "Time (1): the orbit, the seasons and the day",
+   "Time (2): UTC, local mean time and the date line"
+  ],
+  "GNAV:25": [
+   "Time (2): UTC, local mean time and the date line",
+   "Time (3): sunrise, sunset and twilight"
+  ],
+  "GNAV:26": [
+   "Time (3): sunrise, sunset and twilight",
+   "Time (1): the orbit, the seasons and the day"
+  ],
+  "GNAV:27": [
+   "Grid navigation",
+   "The polar stereographic chart"
+  ],
+  "GNAV:28": [
+   "Plotting: position lines and fixes",
+   "Lambert's conformal chart: routes and scale"
+  ],
+  "GNAV:29": [
+   "The magnetic compass",
+   "Hard iron, deviation curves and the swing"
+  ],
+  "GNAV:3": [
+   "The magnetic compass",
+   "Hard iron, deviation curves and the swing"
+  ],
+  "GNAV:30": [
+   "Hard iron, deviation curves and the swing"
+  ],
+  "GNAV:4": [
+   "The navigation computer: slide-rule face"
+  ],
+  "GNAV:5": [
+   "Time, speed, distance and fuel",
+   "The navigation computer: slide-rule face"
+  ],
+  "GNAV:6": [
+   "TAS from CAS"
+  ],
+  "GNAV:7": [
+   "The triangle of velocities"
+  ],
+  "GNAV:8": [
+   "The triangle of velocities"
+  ],
+  "GNAV:9": [
+   "The triangle of velocities"
+  ],
+  "INAV:1": [
+   "Instrument characteristics and definitions"
+  ],
+  "INAV:10": [
+   "The magnetic compass",
+   "Aircraft magnetism and the compass swing",
+   "The remote indicating compass"
+  ],
+  "INAV:11": [
+   "The attitude indicator",
+   "The heading indicator and drift",
+   "The inertial navigation system",
+   "The IRS and the ring laser gyro"
+  ],
+  "INAV:12": [
+   "The heading indicator and drift",
+   "The remote indicating compass"
+  ],
+  "INAV:13": [
+   "The attitude indicator"
+  ],
+  "INAV:14": [
+   "The turn coordinator"
+  ],
+  "INAV:15": [
+   "The turn coordinator"
+  ],
+  "INAV:16": [
+   "Aircraft magnetism and the compass swing"
+  ],
+  "INAV:17": [
+   "The remote indicating compass"
+  ],
+  "INAV:18": [
+   "The inertial navigation system",
+   "The IRS and the ring laser gyro"
+  ],
+  "INAV:19": [
+   "The IRS and the ring laser gyro",
+   "The inertial navigation system"
+  ],
+  "INAV:2": [
+   "Pitot-static blockages",
+   "The pressure altimeter",
+   "The airspeed indicator",
+   "The air data computer"
+  ],
+  "INAV:20": [
+   "The radio altimeter",
+   "GPWS and EGPWS"
+  ],
+  "INAV:21": [
+   "The flight management system",
+   "EFIS: the PFD and the ND"
+  ],
+  "INAV:22": [
+   "GPWS and EGPWS",
+   "The radio altimeter"
+  ],
+  "INAV:23": [
+   "SSR and the transponder",
+   "GPWS and EGPWS"
+  ],
+  "INAV:3": [
+   "Air temperature: SAT, RAT and TAT"
+  ],
+  "INAV:4": [
+   "The airspeed indicator",
+   "Pitot-static blockages"
+  ],
+  "INAV:5": [
+   "The pressure altimeter",
+   "Pitot-static blockages",
+   "Instrument characteristics and definitions"
+  ],
+  "INAV:6": [
+   "The vertical speed indicator",
+   "Pitot-static blockages"
+  ],
+  "INAV:7": [
+   "TAS from CAS",
+   "High-speed flight: Mach, shocks and sweep",
+   "Air temperature: SAT, RAT and TAT"
+  ],
+  "INAV:8": [
+   "The air data computer",
+   "Air temperature: SAT, RAT and TAT"
+  ],
+  "INAV:9": [
+   "The magnetic compass",
+   "Aircraft magnetism and the compass swing"
+  ],
+  "MASS:1": [
+   "Time, speed, distance and fuel",
+   "CG calculations: moments, the load sheet and the envelope"
+  ],
+  "MASS:2": [
+   "CG calculations: moments, the load sheet and the envelope"
+  ],
+  "MASS:3": [
+   "PET and PSR"
+  ],
+  "MET1:1": [
+   "ISA, lapse rates and stability"
+  ],
+  "MET1:10": [
+   "Optical phenomena"
+  ],
+  "MET1:11": [
+   "Fronts and their weather",
+   "Airframe icing"
+  ],
+  "MET1:12": [
+   "Airframe icing"
+  ],
+  "MET1:13": [
+   "Thunderstorms and microbursts",
+   "Airborne weather radar: tilt, gain and shadows"
+  ],
+  "MET1:14": [
+   "Fronts and their weather"
+  ],
+  "MET1:15": [
+   "Jet streams, CAT and mountain waves"
+  ],
+  "MET1:16": [
+   "Thunderstorms and microbursts",
+   "Jet streams, CAT and mountain waves"
+  ],
+  "MET1:17": [
+   "Climatology of India"
+  ],
+  "MET1:18": [
+   "Climatology of India",
+   "Visibility and fog"
+  ],
+  "MET1:19": [
+   "Pressure systems, wind and the altimeter",
+   "Jet streams, CAT and mountain waves",
+   "Climatology of India"
+  ],
+  "MET1:2": [
+   "Pressure systems, wind and the altimeter",
+   "The pressure altimeter"
+  ],
+  "MET1:3": [
+   "ISA, lapse rates and stability"
+  ],
+  "MET1:4": [
+   "ISA, lapse rates and stability"
+  ],
+  "MET1:5": [
+   "Visibility and fog"
+  ],
+  "MET1:6": [
+   "Pressure systems, wind and the altimeter",
+   "Optical phenomena"
+  ],
+  "MET1:7": [
+   "Visibility and fog"
+  ],
+  "MET1:8": [
+   "ISA, lapse rates and stability",
+   "Fronts and their weather"
+  ],
+  "MET1:9": [
+   "ISA, lapse rates and stability"
+  ],
+  "MET2:1": [
+   "Reading a METAR and a TAF"
+  ],
+  "MET2:2": [
+   "Reading a METAR and a TAF"
+  ],
+  "MET2:3": [
+   "Reading a METAR and a TAF"
+  ],
+  "MET2:4": [
+   "Reading a METAR and a TAF",
+   "ROFOR: the route forecast"
+  ],
+  "MET2:5": [
+   "ROFOR: the route forecast"
+  ],
+  "MET2:6": [
+   "Reading a METAR and a TAF",
+   "Aeronautical information: AIP, NOTAM and AIC",
+   "ROFOR: the route forecast"
+  ],
+  "PERF:1": [
+   "Performance: declared distances and take-off speeds"
+  ],
+  "PERF:2": [
+   "Ground effect",
+   "Performance: declared distances and take-off speeds",
+   "Take-off distance: s = V²/2a"
+  ],
+  "PERF:3": [
+   "Take-off distance: s = V²/2a"
+  ],
+  "PERF:4": [
+   "The climb: angle and rate"
+  ],
+  "PERF:5": [
+   "Descent planning"
+  ],
+  "PERF:6": [
+   "Drag and the drag curve",
+   "Cabin pressurisation"
+  ],
+  "PERF:7": [
+   "Ground effect",
+   "Landing gear",
+   "Hydraulic systems"
+  ],
+  "POF:1": [
+   "Principles of flight: overview and definitions"
+  ],
+  "POF:10": [
+   "Stability: CG, neutral point and the three axes",
+   "CG calculations: moments, the load sheet and the envelope",
+   "Control surfaces, trim and flaps",
+   "The spin and its recovery"
+  ],
+  "POF:11": [
+   "Control surfaces, trim and flaps",
+   "Stability: CG, neutral point and the three axes"
+  ],
+  "POF:12": [
+   "Forces in a turn",
+   "Drag and the drag curve"
+  ],
+  "POF:13": [
+   "High-speed flight: Mach, shocks and sweep"
+  ],
+  "POF:14": [
+   "High-speed flight: Mach, shocks and sweep"
+  ],
+  "POF:15": [
+   "Forces in a turn",
+   "The spin and its recovery"
+  ],
+  "POF:16": [
+   "Thunderstorms and microbursts"
+  ],
+  "POF:17": [
+   "Propellers: fixed pitch and constant speed"
+  ],
+  "POF:2": [
+   "ISA, lapse rates and stability"
+  ],
+  "POF:3": [
+   "Lift, angle of attack and the stall"
+  ],
+  "POF:4": [
+   "Lift, angle of attack and the stall"
+  ],
+  "POF:5": [
+   "Lift, angle of attack and the stall"
+  ],
+  "POF:6": [
+   "Drag and the drag curve",
+   "Ground effect",
+   "The climb: angle and rate"
+  ],
+  "POF:7": [
+   "The spin and its recovery",
+   "Lift, angle of attack and the stall",
+   "Forces in a turn"
+  ],
+  "POF:8": [
+   "Lift, angle of attack and the stall",
+   "Control surfaces, trim and flaps"
+  ],
+  "POF:9": [
+   "Airframe icing"
+  ],
+  "PWR:1": [
+   "The four-stroke piston engine"
+  ],
+  "PWR:10": [
+   "Light-aircraft fuel systems"
+  ],
+  "PWR:11": [
+   "The four-stroke piston engine"
+  ],
+  "PWR:12": [
+   "Propellers: fixed pitch and constant speed"
+  ],
+  "PWR:13": [
+   "The turbofan engine"
+  ],
+  "PWR:14": [
+   "The turbofan engine"
+  ],
+  "PWR:15": [
+   "The turbofan engine"
+  ],
+  "PWR:16": [
+   "The turbofan engine"
+  ],
+  "PWR:17": [
+   "The turbofan engine"
+  ],
+  "PWR:18": [
+   "The turbofan engine"
+  ],
+  "PWR:19": [
+   "Gas turbine lubrication"
+  ],
+  "PWR:2": [
+   "The four-stroke piston engine"
+  ],
+  "PWR:20": [
+   "The turbofan engine"
+  ],
+  "PWR:21": [
+   "Reverse thrust"
+  ],
+  "PWR:22": [
+   "Hydraulic systems",
+   "Landing gear"
+  ],
+  "PWR:23": [
+   "Magnetos and ignition"
+  ],
+  "PWR:24": [
+   "Engine starting and the APU"
+  ],
+  "PWR:25": [
+   "Aviation fuels: types, water and waxing"
+  ],
+  "PWR:26": [
+   "Light-aircraft fuel systems"
+  ],
+  "PWR:27": [
+   "Cabin pressurisation"
+  ],
+  "PWR:3": [
+   "Piston engine lubrication"
+  ],
+  "PWR:4": [
+   "Piston engine cooling"
+  ],
+  "PWR:5": [
+   "Magnetos and ignition"
+  ],
+  "PWR:6": [
+   "Light-aircraft fuel systems",
+   "Aviation fuels: types, water and waxing"
+  ],
+  "PWR:7": [
+   "The carburettor and carburettor icing"
+  ],
+  "PWR:8": [
+   "The carburettor and carburettor icing"
+  ],
+  "PWR:9": [
+   "The carburettor and carburettor icing"
+  ],
+  "REGS:1": [
+   "Declared distances and emergency phases",
+   "Airspace classes and VMC minima"
+  ],
+  "REGS:10": [
+   "Runway markings and ground-air signals",
+   "Declared distances and emergency phases",
+   "Runway lights: 900, 300, 0"
+  ],
+  "REGS:11": [
+   "Runway lights: 900, 300, 0",
+   "Declared distances and emergency phases",
+   "Runway markings and ground-air signals"
+  ],
+  "REGS:12": [
+   "Holding entries and approach categories",
+   "Approach control: departures and the holding stack"
+  ],
+  "REGS:13": [
+   "The ILS: localizer and glide slope",
+   "Holding entries and approach categories"
+  ],
+  "REGS:14": [
+   "The pressure altimeter"
+  ],
+  "REGS:15": [
+   "The Aircraft Rules, 1937, by the numbers",
+   "Nationality and registration marks",
+   "Licences, hours and medicals"
+  ],
+  "REGS:16": [
+   "Licences, hours and medicals"
+  ],
+  "REGS:17": [
+   "Minimum fuel: taxi, trip, contingency, alternate, reserve"
+  ],
+  "REGS:18": [
+   "Wake turbulence separation"
+  ],
+  "REGS:19": [
+   "RT numbers and Q codes",
+   "Phraseology: the alphabet and numbers",
+   "Radio failure: what everyone expects you to do"
+  ],
+  "REGS:2": [
+   "Freedoms of the air"
+  ],
+  "REGS:20": [
+   "Radio failure: what everyone expects you to do",
+   "RT numbers and Q codes"
+  ],
+  "REGS:21": [
+   "Accident, serious incident or incident"
+  ],
+  "REGS:22": [
+   "Aviation security: Annex 17 in layers"
+  ],
+  "REGS:23": [
+   "Fits, faints and runway illusions",
+   "Human factors models: SHEL and arousal"
+  ],
+  "REGS:24": [
+   "Human factors models: SHEL and arousal",
+   "Fits, faints and runway illusions"
+  ],
+  "REGS:3": [
+   "Nationality and registration marks"
+  ],
+  "REGS:4": [
+   "Marshalling signals",
+   "Cruising levels, lights and right of way"
+  ],
+  "REGS:5": [
+   "Airspace classes and VMC minima",
+   "Cruising levels, lights and right of way"
+  ],
+  "REGS:6": [
+   "Separation minima in area control",
+   "Airspace classes and VMC minima",
+   "Using radar: separation and Mode C",
+   "Wake turbulence separation"
+  ],
+  "REGS:7": [
+   "Approach control: departures and the holding stack",
+   "Holding entries and approach categories",
+   "Wake turbulence separation"
+  ],
+  "REGS:8": [
+   "Using radar: separation and Mode C",
+   "Separation minima in area control"
+  ],
+  "REGS:9": [
+   "AIRAC and the AIS products",
+   "Aeronautical information: AIP, NOTAM and AIC"
+  ],
+  "RNAV:1": [
+   "Radio waves: frequency, wavelength, polarisation",
+   "Radio frequency bands and their uses"
+  ],
+  "RNAV:10": [
+   "MLS: scanning beams and time reference"
+  ],
+  "RNAV:11": [
+   "Radar principles: PRF, pulse width and beamwidth",
+   "The radio altimeter"
+  ],
+  "RNAV:12": [
+   "SSR and the transponder",
+   "Radar principles: PRF, pulse width and beamwidth"
+  ],
+  "RNAV:13": [
+   "Airborne weather radar: tilt, gain and shadows",
+   "Radar principles: PRF, pulse width and beamwidth"
+  ],
+  "RNAV:14": [
+   "SSR and the transponder"
+  ],
+  "RNAV:15": [
+   "DME: slant range"
+  ],
+  "RNAV:16": [
+   "Area navigation: waypoints, cross-track error and RNP",
+   "The flight management system"
+  ],
+  "RNAV:17": [
+   "EFIS: the PFD and the ND",
+   "The air data computer",
+   "The flight management system"
+  ],
+  "RNAV:18": [
+   "GNSS: four satellites, DOP, RAIM and GAGAN"
+  ],
+  "RNAV:2": [
+   "Radio propagation: ground, sky and space waves",
+   "VHF range and the limits of radio"
+  ],
+  "RNAV:3": [
+   "Modulation: AM, FM, phase and pulse"
+  ],
+  "RNAV:4": [
+   "Antennae: dipoles, polar diagrams, loop and sense"
+  ],
+  "RNAV:5": [
+   "Doppler radar: groundspeed and drift"
+  ],
+  "RNAV:6": [
+   "VDF: QDM, QDR, QTE and QUJ"
+  ],
+  "RNAV:7": [
+   "NDB and ADF: relative bearing",
+   "Modulation: AM, FM, phase and pulse",
+   "Antennae: dipoles, polar diagrams, loop and sense",
+   "Plotting: position lines and fixes"
+  ],
+  "RNAV:8": [
+   "The VOR: radials, OBS and TO/FROM",
+   "Plotting: position lines and fixes"
+  ],
+  "RNAV:9": [
+   "The ILS: localizer and glide slope",
+   "MLS: scanning beams and time reference"
+  ],
+  "RTR:1": [
+   "Radio in aviation: one frequency, many stations",
+   "Radio frequency bands and their uses",
+   "Radio equipment: squelch, AGC and duplex"
+  ],
+  "RTR:10": [
+   "Line-up, take-off and departure"
+  ],
+  "RTR:11": [
+   "MAYDAY, PAN PAN and the emergency squawks"
+  ],
+  "RTR:12": [
+   "SSR and the transponder",
+   "VHF range and the limits of radio",
+   "MAYDAY, PAN PAN and the emergency squawks"
+  ],
+  "RTR:2": [
+   "Radio frequency bands and their uses",
+   "Radio waves: frequency, wavelength, polarisation",
+   "Radio in aviation: one frequency, many stations"
+  ],
+  "RTR:3": [
+   "VHF range and the limits of radio",
+   "Radio propagation: ground, sky and space waves"
+  ],
+  "RTR:4": [
+   "Radio equipment: squelch, AGC and duplex",
+   "VDF: QDM, QDR, QTE and QUJ",
+   "Radio in aviation: one frequency, many stations"
+  ],
+  "RTR:5": [
+   "Phraseology: the alphabet and numbers",
+   "Call structure and readbacks"
+  ],
+  "RTR:6": [
+   "SSR and the transponder",
+   "MAYDAY, PAN PAN and the emergency squawks"
+  ],
+  "RTR:7": [
+   "Aeronautical information: AIP, NOTAM and AIC"
+  ],
+  "RTR:8": [
+   "Call structure and readbacks",
+   "Phraseology: the alphabet and numbers",
+   "Pushback, start-up and taxi"
+  ],
+  "RTR:9": [
+   "Pushback, start-up and taxi",
+   "Call structure and readbacks",
+   "Line-up, take-off and departure"
+  ]
+ }
+}

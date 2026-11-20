@@ -7,6 +7,8 @@ import { CloudBackground } from "../components/CloudBackground";
 import { Link } from "../lib/router";
 import { GLOSSARY, GLOSSARY_CATEGORIES, GLOSSARY_H1, GLOSSARY_INTRO } from "../content/glossary";
 import { CONTACT_EMAIL, FOUNDER_SEATS } from "../lib/siteConfig";
+import { DownloadFreeButton } from "../components/DownloadBadges";
+import { HERO_FREE_LINE } from "../content/hero";
 
 const INK = "#0D1629";
 const NAVY = "#1B3A7A";
@@ -170,13 +172,11 @@ export function GlossaryPage() {
             Every one of these is inside the app
           </h2>
           <p className="mx-auto mt-3 max-w-lg text-[15px] leading-7" style={{ color: "#93A9D6" }}>
-            Not as a glossary — as chapters, question banks, real flight plans and live weather. The
-            first {FOUNDER_SEATS} to join become Founding Cadets.
+            Not as a glossary — as chapters, question banks, radio practice and live weather.
+            {HERO_FREE_LINE}
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-            <Link to="/#waitlist" className="btn-gold">
-              <Plane size={18} /> Reserve My Captain Seat
-            </Link>
+            <DownloadFreeButton where="glossary" />
             <Link
               to="/faq"
               className="rounded-full px-5 py-3 text-sm font-bold text-white"

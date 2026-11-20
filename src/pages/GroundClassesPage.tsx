@@ -15,6 +15,8 @@ import { CloudBackground } from "../components/CloudBackground";
 import { Link } from "../lib/router";
 import { GC_FAQ, GC_H1, GC_HONESTY, GC_INTRO, INCLUDED, SYLLABUS } from "../content/groundClasses";
 import { FOUNDER_SEATS, siteStats } from "../lib/siteConfig";
+import { DownloadFreeButton } from "../components/DownloadBadges";
+import { HERO_FREE_LINE } from "../content/hero";
 
 const INK = "#0D1629";
 const NAVY = "#1B3A7A";
@@ -58,9 +60,7 @@ export function GroundClassesPage() {
               {GC_INTRO}
             </p>
             <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
-              <Link to="/#waitlist" className="btn-gold">
-                <Plane size={18} /> Reserve My Captain Seat
-              </Link>
+              <DownloadFreeButton where="ground_classes" />
               <Link to="/features" className="btn-ghost text-sm">
                 See everything inside
               </Link>
@@ -256,13 +256,10 @@ export function GroundClassesPage() {
             Start your ground classes with {siteStats.chapters} chapters ready
           </h2>
           <p className="mx-auto mt-3 max-w-lg text-[15px] leading-7" style={{ color: "#93A9D6" }}>
-            The first {FOUNDER_SEATS} to join become Founding Cadets — the full app free for a week, with the
-            first chapters of every subject unlocked.
+            {HERO_FREE_LINE}
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-            <Link to="/#waitlist" className="btn-gold">
-              <Plane size={18} /> Reserve My Captain Seat
-            </Link>
+            <DownloadFreeButton where="ground_classes" />
             <Link
               to="/why-earnwings"
               className="rounded-full px-5 py-3 text-sm font-bold text-white"

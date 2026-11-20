@@ -15,7 +15,7 @@ export const FAQ_CATEGORIES = [
   "About EARNWINGS",
   "Ground classes & study material",
   "Exams & practice",
-  "The AI Captain",
+  "Captain Aezon",
   "Flying, weather & radio",
   "Access & launch",
 ];
@@ -27,7 +27,7 @@ export const FAQ = [
     category: "About EARNWINGS",
     featured: true,
     q: "What is EARNWINGS?",
-    a: "EARNWINGS is an all-in-one study app for DGCA CPL and ATPL aspirants. It brings ground school, real-airway flight planning, a voice radio-telephony trainer, an AI Captain and full mock exams together in one place, so your notes, your practice, your flight plans and your progress all live in the same app instead of a dozen disconnected ones.",
+    a: "EARNWINGS is an all-in-one study app for DGCA CPL and ATPL aspirants. It brings ground school, a voice radio-telephony trainer set in real 3D airports, an A320 flight-deck trainer, Captain Aezon and full mock exams together in one place, so your notes, your practice and your progress all live in the same app instead of a dozen disconnected ones.",
   },
   {
     category: "About EARNWINGS",
@@ -48,7 +48,7 @@ export const FAQ = [
   {
     category: "About EARNWINGS",
     q: "Which devices can I use it on?",
-    a: "EARNWINGS is built for iOS, Android, Web, Mac and Windows from a single codebase, and your progress, plans and perks follow you across every device you sign in on. Study on a laptop at home, revise on your phone at the airfield, and pick up exactly where you stopped.",
+    a: "EARNWINGS runs on iPhone, iPad, Android, the web and Mac from a single codebase (a Windows app is planned), and your progress, plans and perks follow you across every device you sign in on. Study on a laptop at home, revise on your phone at the airfield, and pick up exactly where you stopped.",
   },
 
   // ── Ground classes & study material ───────────────────────────────────────
@@ -56,7 +56,7 @@ export const FAQ = [
     category: "Ground classes & study material",
     featured: true,
     q: "Which exams and subjects does it cover?",
-    a: "EARNWINGS covers the DGCA ground subjects for CPL and ATPL, along with radio-telephony practice, flight planning over real airways, and timed mock exams for every subject. The syllabus is broken into 12 modules and 202 chapters, kept in the order you actually sit them.",
+    a: "EARNWINGS covers the DGCA ground subjects for CPL and ATPL, along with radio-telephony practice and timed mock exams for every subject. The syllabus is broken into 12 modules and 202 chapters, kept in the order you actually sit them.",
   },
   {
     category: "Ground classes & study material",
@@ -71,7 +71,7 @@ export const FAQ = [
   {
     category: "Ground classes & study material",
     q: "Are there video lectures?",
-    a: "Yes. Recorded lectures are wired to the specific subject and chapter you are studying, so the video and the notes cover the same ground instead of sending you elsewhere to find the explanation.",
+    a: "Coming soon. Recorded lectures are being prepared and will be wired to the specific subject and chapter you are studying, so the video and the notes cover the same ground. Until then every chapter has notes, a summary, a concept flowchart and its question bank.",
   },
   {
     category: "Ground classes & study material",
@@ -88,7 +88,7 @@ export const FAQ = [
   {
     category: "Exams & practice",
     q: "How many practice questions are there?",
-    a: "Over 10,000 practice questions across the subjects, organised by chapter so you can drill exactly the topic you just studied rather than working through an undifferentiated pile.",
+    a: "Over 15,000 practice questions across the subjects, organised by chapter so you can drill exactly the topic you just studied rather than working through an undifferentiated pile.",
   },
   {
     category: "Exams & practice",
@@ -104,7 +104,7 @@ export const FAQ = [
   {
     category: "Exams & practice",
     q: "Do numerical questions show the working?",
-    a: "Yes. Numericals are solved step by step rather than showing only the final answer, and you can ask the AI Captain to re-explain any individual step you did not follow. A red cross with no explanation teaches you nothing.",
+    a: "Yes. Numericals are solved step by step rather than showing only the final answer, and you can ask Captain Aezon to re-explain any individual step you did not follow. A red cross with no explanation teaches you nothing.",
   },
   {
     category: "Exams & practice",
@@ -112,20 +112,20 @@ export const FAQ = [
     a: "Accuracy is tracked per subject and per chapter, so your weak area is a number on your dashboard instead of a feeling. Most attempts are lost on the subject a cadet has been quietly avoiding, and this is designed to make that impossible to avoid.",
   },
 
-  // ── The AI Captain ────────────────────────────────────────────────────────
+  // ── Captain Aezon ────────────────────────────────────────────────────────
   {
-    category: "The AI Captain",
-    q: "What is the AI Captain?",
+    category: "Captain Aezon",
+    q: "What is Captain Aezon?",
     a: "It is a ground instructor built into the app that answers your doubts at any hour, from your own course material. It explains concepts, decodes METARs step by step, quizzes you inside the chat, and can turn a conversation into a study plan you send to your planner.",
   },
   {
-    category: "The AI Captain",
+    category: "Captain Aezon",
     featured: true,
-    q: "Does the AI Captain make things up?",
-    a: "No. The AI Captain answers from the course material and shows its source. When it does not know something, it says so rather than inventing an answer. A confident wrong answer is worse than no answer when you are revising for an exam.",
+    q: "Does Captain Aezon make things up?",
+    a: "No. Captain Aezon answers from the course material and shows its source. When it does not know something, it says so rather than inventing an answer. A confident wrong answer is worse than no answer when you are revising for an exam.",
   },
   {
-    category: "The AI Captain",
+    category: "Captain Aezon",
     q: "Can it build me a study plan?",
     a: "Yes. It can lay out what to study and in what order based on the papers you have already cleared and the ones you are targeting, and export that plan into your planner so it becomes a schedule rather than advice you forget.",
   },
@@ -133,18 +133,18 @@ export const FAQ = [
   // ── Flying, weather & radio ───────────────────────────────────────────────
   {
     category: "Flying, weather & radio",
-    q: "Can I plan real flights, or is it a simulation?",
-    a: "Real ones. You plan over genuine ATS airways, waypoints and aerodromes — not a simplified map — and get a printable pilot brief at the end. Plan Delhi to Chennai in EARNWINGS and you are planning it over airways that actually exist.",
+    q: "Can I practise in a real airport, or is it a simulation?",
+    a: "Both, in the sense that matters. The RT practice and the A320 trainer are set in real-scale 3D models of 8 Indian airports (Delhi, Mumbai, Chennai, Bengaluru, Hyderabad Begumpet, Jaipur, Chandigarh and Leh), and the live view shows the real traffic moving at those airports. It is a training tool, not an operational one.",
   },
   {
     category: "Flying, weather & radio",
     q: "Does it handle NOTAMs and live weather?",
-    a: "Yes. NOTAMs are fetched, decoded and applied to your route, so the planner reroutes around closed airspace and shows you why. Live METARs, TAFs and SIGMETs are decoded group by group with flight categories, alongside satellite imagery.",
+    a: "Yes. NOTAMs are fetched and decoded in plain English. Live METARs, TAFs and SIGMETs are decoded group by group with flight categories, alongside satellite imagery.",
   },
   {
     category: "Flying, weather & radio",
     q: "Can I do weight and balance calculations?",
-    a: "Yes — weight and balance and centre-of-gravity calculations are built into the plans you build, with the envelope drawn out. It stops being a one-off classroom example and becomes something you have done many times before an examiner ever asks.",
+    a: "Yes. The weight and balance calculator works out the mass and centre of gravity and draws the envelope, so you can check a loading as many times as you like. It stops being a one-off classroom example and becomes something you have done many times before an examiner ever asks.",
   },
   {
     category: "Flying, weather & radio",
@@ -173,7 +173,7 @@ export const FAQ = [
   {
     category: "Access & launch",
     q: "What do founding cadets actually get?",
-    a: "The full app free for a week, the first chapters of every subject unlocked with their MCQ banks, one sample paper per subject, and five each of RT scenarios, flight plans, weight and balance calculations, METAR challenges, compete matches and Ask-Captain doubts. Clear the Cadet to Commander quiz on the site and every five becomes ten.",
+    a: "The full app free for a week, the first chapters of every subject unlocked with their MCQ banks, one sample paper per subject, and five each of RT scenarios, weight and balance calculations, METAR challenges and Ask-Captain doubts. Clear the Cadet to Commander quiz on the site and every five becomes ten.",
   },
 ];
 

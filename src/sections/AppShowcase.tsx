@@ -10,7 +10,6 @@ const PLATFORMS = [
   { label: "Android", icon: Smartphone },
   { label: "Web", icon: Globe },
   { label: "macOS", icon: Monitor },
-  { label: "Windows", icon: Monitor },
 ];
 
 const SYNCS = [

@@ -7,6 +7,8 @@ import { CloudBackground } from "../components/CloudBackground";
 import { Link } from "../lib/router";
 import { CATEGORIES, PROBLEMS, WHY_H1, WHY_INTRO, type Category, type Severity } from "../content/whyEarnwings";
 import { FOUNDER_SEATS, siteStats } from "../lib/siteConfig";
+import { DownloadFreeButton } from "../components/DownloadBadges";
+import { HERO_FREE_LINE } from "../content/hero";
 
 const INK = "#0D1629";
 const NAVY = "#1B3A7A";
@@ -80,9 +82,7 @@ export function WhyEarnwingsPage() {
               {WHY_INTRO}
             </p>
             <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
-              <Link to="/#waitlist" className="btn-gold">
-                <Plane size={18} /> Reserve My Captain Seat
-              </Link>
+              <DownloadFreeButton where="why" />
               <a href="#report" className="btn-ghost text-sm">
                 Read the gap report ↓
               </a>
@@ -270,13 +270,10 @@ export function WhyEarnwingsPage() {
             You've seen the gaps. Now close them.
           </h2>
           <p className="mx-auto mt-3 max-w-lg text-[15px] leading-7" style={{ color: "#93A9D6" }}>
-            The first {FOUNDER_SEATS} to join become Founding Cadets — early access, founder perks, and the
-            full app free for a week.
+            {HERO_FREE_LINE}
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-            <Link to="/#waitlist" className="btn-gold">
-              <Plane size={18} /> Reserve My Captain Seat
-            </Link>
+            <DownloadFreeButton where="why" />
             <Link
               to="/features"
               className="rounded-full px-5 py-3 text-sm font-bold text-white"
@@ -285,11 +282,11 @@ export function WhyEarnwingsPage() {
               Explore the cockpit
             </Link>
             <Link
-              to="/#play"
+              to="/live"
               className="rounded-full px-5 py-3 text-sm font-bold text-white"
               style={{ background: "rgba(255,255,255,0.1)" }}
             >
-              Try it live
+              Watch the live airports
             </Link>
           </div>
         </section>

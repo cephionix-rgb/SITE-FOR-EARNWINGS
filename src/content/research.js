@@ -73,7 +73,7 @@ export const RESEARCH = [
     finding:
       "Participants who studied prose passages and were then tested on them retained more when measured a week later than those who simply restudied the same passages — and retention improved with more testing opportunities. The effect held even when tests were given without feedback. The authors describe retrieval practice as a powerful mnemonic enhancer, not merely a way of measuring what is already known.",
     soWhat:
-      "A test is not an assessment at the end of studying; it is the studying. This is why EARNWINGS puts a question bank against every chapter and a full timed paper against every subject, and why the AI Captain quizzes you inside the conversation instead of only answering.",
+      "A test is not an assessment at the end of studying; it is the studying. This is why EARNWINGS puts a question bank against every chapter and a full timed paper against every subject, and why Captain Aezon quizzes you inside the conversation instead of only answering.",
   },
 ];
 
@@ -81,7 +81,7 @@ export const RESEARCH = [
 export const RESEARCH_RESPONSE = [
   {
     evidence: "Practice testing is one of only two high-utility techniques",
-    built: "10,000+ questions organised by chapter, plus composite mock papers per subject using real DGCA marks and timing.",
+    built: "15,000+ questions organised by chapter, plus composite mock papers per subject using real DGCA marks and timing.",
   },
   {
     evidence: "Distributed practice is the other",

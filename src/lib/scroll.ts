@@ -11,7 +11,7 @@ export function prefersReducedMotion(): boolean {
 let lenisInstance: Lenis | null = null;
 
 /** Height of the fixed nav — every hash landing clears it. */
-const NAV_OFFSET = 80;
+const NAV_OFFSET = 72;
 
 // The intro overlay locks the body and pins the page to the top while it plays,
 // so any scroll done underneath it is thrown away. HeroIntro reports its state
@@ -93,18 +93,14 @@ export function useLenis() {
       smoothWheel: true,
       wheelMultiplier: 1,
       touchMultiplier: 1.5,  // mobile keeps native momentum; Lenis just tunes it
+      autoRaf: true,
     });
     lenisInstance = lenis;
 
-    let raf = 0;
-    function loop(time: number) {
-      lenis.raf(time);
-      raf = requestAnimationFrame(loop);
-    }
-    raf = requestAnimationFrame(loop);
-
+    // Lenis drives itself (autoRaf). GSAP used to be its clock, but nothing on
+    // the site animates with GSAP any more, and dropping it takes ~80 KB of
+    // script off the first load on phones.
     return () => {
-      cancelAnimationFrame(raf);
       lenis.destroy();
       lenisInstance = null;
     };

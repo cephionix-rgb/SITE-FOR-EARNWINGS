@@ -14,21 +14,21 @@
     <link rel="icon" type="image/png" sizes="96x96" href="/assets/favicon-96.png?v=2" />
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon-180.png?v=2" />
     <link rel="manifest" href="/site.webmanifest" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#EBF3FF" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#F7FAFF" />
 
     <!-- Home-route SEO. scripts/gen-routes.mjs (postbuild) rewrites the title,
          description, canonical and og/twitter tags per route for /features,
          /about, /privacy and /terms. Keep these single-line so the regex holds. -->
     <title>EARNWINGS — DGCA Ground Classes &amp; Pilot Exam Prep App</title>
-    <meta name="description" content="EARNWINGS is the student pilot app for DGCA CPL and ATPL: online ground classes, 10,000+ practice questions, mock exams, real-airway flight planning, an RT trainer and an AI Captain." />
+    <meta name="description" content="EARNWINGS is the student pilot app for DGCA CPL: notes, flowcharts, 15,000+ practice questions and timed mock papers, RT practice in 3D airports and an A320 flight-deck trainer." />
     <link rel="canonical" href="https://earnwings.org/" />
 
     <meta property="og:site_name" content="EARNWINGS" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://earnwings.org/" />
     <meta property="og:title" content="EARNWINGS — DGCA Ground Classes and Pilot Exam Prep App" />
-    <meta property="og:description" content="Pass DGCA faster. Real-airway flight planning, RT trainer, AI Captain and full mock exams in one app." />
+    <meta property="og:description" content="Pass DGCA faster. DGCA ground school, voice RT practice in real 3D airports and an A320 flight-deck trainer, in one app." />
     <meta property="og:image" content="https://earnwings.org/assets/og-image.jpg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
@@ -36,7 +36,7 @@
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="EARNWINGS — DGCA Ground Classes and Pilot Exam Prep App" />
-    <meta name="twitter:description" content="Pass DGCA faster. Flight planning, RT trainer, AI Captain and mock exams in one app." />
+    <meta name="twitter:description" content="Pass DGCA faster. Ground school, voice RT practice and an A320 flight-deck trainer in one app." />
     <meta name="twitter:image" content="https://earnwings.org/assets/og-image.jpg" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -44,28 +44,22 @@
     <!-- Fonts loaded non-render-blocking (display=swap paints system fallback
          first, then swaps) so they do not delay FCP/LCP. -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Oswald:wght@500;600;700&family=Sora:wght@600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800&family=IBM+Plex+Mono:wght@500;600&family=Inter:wght@400;500;600;700;800&family=Oswald:wght@600;700&display=swap"
       rel="stylesheet"
       media="print"
       onload="this.media='all'"
     />
     <noscript>
       <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Oswald:wght@500;600;700&family=Sora:wght@600;700;800&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800&family=IBM+Plex+Mono:wght@500;600&family=Inter:wght@400;500;600;700;800&family=Oswald:wght@600;700&display=swap"
         rel="stylesheet"
       />
     </noscript>
 
-    <!-- Preload the LCP intro poster (only the variant matching the viewport). -->
-    <link rel="preload" as="image" href="/assets/intro-poster-1920.jpg" media="(min-width: 768px)" />
-    <link rel="preload" as="image" href="/assets/paper-airplane-mobile-poster.jpg" media="(max-width: 767px)" />
-
-    <!-- The cloud backdrop is the measured LCP element, but React renders it, so
-         the browser could not discover it until hydration — it was requested late
-         and at default priority. Preloading it here (8-17 KB) makes it
-         discoverable in the initial HTML. Types/sizes mirror CloudLayers.tsx. -->
-    <link rel="preload" as="image" href="/assets/hero-clouds-1024.avif" type="image/avif" fetchpriority="high" media="(max-width: 767px)" />
-    <link rel="preload" as="image" href="/assets/hero-clouds-1920.avif" type="image/avif" fetchpriority="high" media="(min-width: 768px)" />
+    <!-- Preload the LCP image (the hero poster), one variant per layout. -->
+    <!-- Hero film posters (the hero's LCP image): one per layout, WebP. -->
+    <link rel="preload" as="image" type="image/webp" href="/media/hero/hero-loop-1920x1080-poster.webp" media="(min-width: 768px)" fetchpriority="high" />
+    <link rel="preload" as="image" type="image/webp" href="/media/hero/hero-loop-1080x1350-poster.webp" media="(max-width: 767px)" fetchpriority="high" />
   </head>
   <body>
     <div id="root"></div>

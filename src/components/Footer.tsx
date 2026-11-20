@@ -1,7 +1,9 @@
 import type { ReactNode } from "react";
 import { Instagram, Youtube, Mail, ExternalLink } from "lucide-react";
 import { Link } from "../lib/router";
-import { COMPANY_NAME, CONTACT_EMAIL, NEURALWINGS_URL, SUPPORT_EMAIL } from "../lib/siteConfig";
+import { COMPANY_NAME, COMPANY_URL, CONTACT_EMAIL, NEURALWINGS_URL, SUPPORT_EMAIL, downloadHref } from "../lib/siteConfig";
+import { DownloadBadges } from "./DownloadBadges";
+import { GUIDE_MENU, guideHref } from "../content/guideSlugs";
 
 const SOCIALS = [
   { Icon: Instagram, href: "https://www.instagram.com/flywithearnwings/", label: "Instagram" },
@@ -26,8 +28,8 @@ function Ext({ href, children }: { href: string; children: ReactNode }) {
 export function Footer() {
   return (
     <footer style={{ background: "#0D2450", color: "#C7D6F0" }}>
-      <div className="mx-auto grid max-w-7xl gap-10 px-6 py-14 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="sm:col-span-2 lg:col-span-1">
+      <div className="mx-auto grid max-w-7xl grid-cols-2 gap-x-6 gap-y-10 px-6 py-14 lg:grid-cols-5" style={{ paddingBottom: "max(3.5rem, calc(env(safe-area-inset-bottom) + 2rem))" }}>
+        <div className="col-span-2 lg:col-span-1">
           <Link
             to="/"
             className="inline-flex items-center rounded-2xl bg-white/95 px-3 py-2 shadow-lg"
@@ -49,8 +51,14 @@ export function Footer() {
             A product of {COMPANY_NAME}
           </p>
           <p className="mt-3 max-w-xs text-sm" style={{ color: "#93A9D6" }}>
-            The all-in-one training cockpit for future pilots. Learn, plan, practice
-            and earn your wings.
+            DGCA ground school, radio practice and an A320 flight-deck trainer for student pilots in India.
+          </p>
+          <p className="mt-5 text-xs font-semibold uppercase tracking-[0.14em]" style={{ color: "#F2CD6B" }}>
+            Download free
+          </p>
+          <DownloadBadges where="footer" tone="dark" className="mt-2" />
+          <p className="mt-2 max-w-xs text-xs leading-5" style={{ color: "#93A9D6" }}>
+            The app and live 3D airports are free for everyone. A plan unlocks the study content.
           </p>
           <ul className="mt-4 space-y-1 text-sm" style={{ color: "#93A9D6" }}>
             <li>
@@ -69,18 +77,35 @@ export function Footer() {
         </div>
 
         <div>
-          <h2 className="mb-3 text-sm font-bold uppercase tracking-wider" style={{ color: "#F5D97A" }}>
+          <h2 className="font-mono-data mb-3 text-[11.5px] font-semibold uppercase tracking-[0.14em]" style={{ color: "#F2CD6B" }}>
             Product
           </h2>
           <ul className="space-y-2 text-sm">
             <li><Link to="/features" className="hover:text-white">Features</Link></li>
-            <li><Link to="/#play" className="hover:text-white">Try it live</Link></li>
-            <li><Link to="/#app" className="hover:text-white">The app</Link></li>
-            <li><Link to="/#journey" className="hover:text-white">Your journey</Link></li>
+            <li><Link to="/#inside" className="hover:text-white">Inside the app</Link></li>
+            <li><Link to="/live" className="hover:text-white">Live airports</Link></li>
+            <li><Link to="/#journey" className="hover:text-white">Commander quiz</Link></li>
             <li><Link to="/dgca-ground-classes" className="hover:text-white">DGCA ground classes</Link></li>
             <li><Link to="/faq" className="hover:text-white">FAQ</Link></li>
             <li><Link to="/aviation-glossary" className="hover:text-white">Aviation glossary</Link></li>
-            <li><Link to="/#waitlist" className="hover:text-white">Reserve seat</Link></li>
+            <li><Link to="/live" className="hover:text-white">Live at our airports</Link></li>
+            <li><Link to="/dgca" className="hover:text-white">DGCA sample questions</Link></li>
+            <li><Link to="/whats-new" className="hover:text-white">What's new</Link></li>
+            <li><Link to="/how-we-check" className="hover:text-white">How we check content</Link></li>
+            <li><Link to="/report-exam-questions" className="hover:text-white">Report your exam questions</Link></li>
+            <li><a href={downloadHref()} target="_blank" rel="noopener noreferrer" className="hover:text-white">Download free</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h2 className="font-mono-data mb-3 text-[11.5px] font-semibold uppercase tracking-[0.14em]" style={{ color: "#F2CD6B" }}>
+            Pilot Guide
+          </h2>
+          <ul className="space-y-2 text-sm">
+            <li><Link to="/guide" className="hover:text-white">Become a pilot: overview</Link></li>
+            {GUIDE_MENU.map((g) => (
+              <li key={g.slug}><Link to={guideHref(g.slug)} className="hover:text-white">{g.label}</Link></li>
+            ))}
           </ul>
         </div>
 
@@ -88,11 +113,12 @@ export function Footer() {
             two products share one company footer. Sibling products live on the
             Neural Wings site, so those entries point there. */}
         <div>
-          <h2 className="mb-3 text-sm font-bold uppercase tracking-wider" style={{ color: "#F5D97A" }}>
+          <h2 className="font-mono-data mb-3 text-[11.5px] font-semibold uppercase tracking-[0.14em]" style={{ color: "#F2CD6B" }}>
             {COMPANY_NAME}
           </h2>
           <ul className="space-y-2 text-sm">
-            <li><Ext href={`${NEURALWINGS_URL}/about`}>About {COMPANY_NAME}</Ext></li>
+            <li><Ext href={`${COMPANY_URL}/about`}>About {COMPANY_NAME}</Ext></li>
+            <li><Ext href={COMPANY_URL}>cephionix.com</Ext></li>
             <li><Ext href={NEURALWINGS_URL}>Neural Wings</Ext></li>
             <li><Link to="/" className="hover:text-white">EARNWINGS (Cadet Prep)</Link></li>
             <li><Ext href={`${NEURALWINGS_URL}/about#verios`}>VERIOS (Oncology)</Ext></li>
@@ -102,12 +128,16 @@ export function Footer() {
             <li><Ext href={`${NEURALWINGS_URL}/about#careers`}>Careers</Ext></li>
             <li><Link to="/privacy" className="hover:text-white">Privacy Policy</Link></li>
             <li><Link to="/terms" className="hover:text-white">Terms of Service</Link></li>
+            <li><Link to="/refunds" className="hover:text-white">Refund policy</Link></li>
+            <li><Link to="/terms#credits" className="hover:text-white">Data &amp; credits</Link></li>
             <li><Link to="/copyright" className="hover:text-white">Copyright &amp; IP</Link></li>
+            <li><Link to="/support" className="hover:text-white">Support</Link></li>
+            <li><Link to="/delete-account" className="hover:text-white">Delete your account</Link></li>
           </ul>
         </div>
 
         <div>
-          <h2 className="mb-3 text-sm font-bold uppercase tracking-wider" style={{ color: "#F5D97A" }}>
+          <h2 className="font-mono-data mb-3 text-[11.5px] font-semibold uppercase tracking-[0.14em]" style={{ color: "#F2CD6B" }}>
             Follow
           </h2>
           <div className="flex gap-3">
@@ -157,11 +187,15 @@ export function Footer() {
           EARNWINGS is a product of {COMPANY_NAME} · Made for DGCA aspirants in
           India
         </span>
-        <span className="flex items-center gap-4">
+        <span className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
           <Link to="/about" className="hover:text-white">About</Link>
           <Link to="/privacy" className="hover:text-white">Privacy</Link>
           <Link to="/terms" className="hover:text-white">Terms</Link>
+          <Link to="/refunds" className="hover:text-white">Refunds</Link>
+          <Link to="/terms#credits" className="hover:text-white">Credits</Link>
           <Link to="/copyright" className="hover:text-white">Copyright &amp; IP</Link>
+          <Link to="/support" className="hover:text-white">Support</Link>
+          <Link to="/delete-account" className="hover:text-white">Delete account</Link>
         </span>
       </div>
     </footer>

@@ -1,40 +1,49 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { motion } from "motion/react";
 import { Bot, Radio } from "lucide-react";
+import { gsap, useGSAP } from "../lib/gsap";
 import { inView, rise, stagger } from "../lib/motion";
+import { prefersReducedMotion } from "../lib/scroll";
 import { siteStats, CREDIBILITY_LINE, AI_CAPTAIN_TRAINED } from "../lib/siteConfig";
 import { Testimonials } from "../components/Testimonials";
 
-/** Count-up number that animates once when it scrolls into view. */
+/**
+ * Count-up number that animates once when it scrolls into view.
+ *
+ * GSAP tweens a plain object and pushes each frame into React state, so the
+ * number rides the same ticker as the rest of the site's animations — and
+ * ScrollTrigger replaces the hand-rolled IntersectionObserver + rAF loop.
+ * Under reduced motion the final value is shown immediately.
+ */
 function Counter({ to, suffix = "", label }: { to: number; suffix?: string; label: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const [n, setN] = useState(0);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    let raf = 0;
-    const io = new IntersectionObserver(
-      ([e]) => {
-        if (!e.isIntersecting) return;
-        io.disconnect();
-        const start = performance.now();
-        const dur = 1200;
-        const tick = (t: number) => {
-          const p = Math.min(1, (t - start) / dur);
-          const eased = 1 - Math.pow(1 - p, 3);
-          setN(Math.round(to * eased));
-          if (p < 1) raf = requestAnimationFrame(tick);
-        };
-        raf = requestAnimationFrame(tick);
-      },
-      { threshold: 0.4 },
-    );
-    io.observe(el);
-    return () => {
-      io.disconnect();
-      cancelAnimationFrame(raf);
-    };
-  }, [to]);
+
+  useGSAP(
+    () => {
+      if (prefersReducedMotion()) {
+        setN(to);
+        return;
+      }
+      const counter = { value: 0 };
+      gsap.to(counter, {
+        value: to,
+        duration: 1.2,
+        ease: "power3.out",
+        snap: { value: 1 },
+        onUpdate: () => setN(counter.value),
+        scrollTrigger: {
+          trigger: ref.current,
+          // Matches the old IntersectionObserver threshold of 0.4 — the number
+          // starts climbing once the tile is properly on screen, not at its edge.
+          start: "top 75%",
+          once: true,
+        },
+      });
+    },
+    { scope: ref, dependencies: [to] },
+  );
+
   return (
     <div ref={ref} className="text-center">
       <div className="text-[2.4rem] font-black leading-none" style={{ color: "#1B3A7A" }}>
@@ -50,7 +59,7 @@ function Counter({ to, suffix = "", label }: { to: number; suffix?: string; labe
 
 /**
  * Proof / trust band (Task 5). Every number reads from siteStats. Credibility
- * and AI-Captain lines come from siteConfig. Testimonials render only when real
+ * and Captain Aezon lines come from siteConfig. Testimonials render only when real
  * quotes exist.
  */
 export function ProofBand() {
@@ -58,7 +67,7 @@ export function ProofBand() {
     {
       icon: Bot,
       accent: "#1B3A7A",
-      title: "An AI Captain that never bluffs",
+      title: "Captain Aezon never bluffs",
       desc: AI_CAPTAIN_TRAINED,
     },
     {

@@ -5,14 +5,17 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "node scripts/sync-interactive.mjs && tsc -b && vite build",
     "postbuild": "node scripts/gen-routes.mjs",
     "og": "node scripts/make-og.mjs",
     "images": "node scripts/make-images.mjs",
     "favicons": "node scripts/make-favicons.mjs",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "guides:pdf": "node scripts/make-guide-pdfs.mjs"
   },
   "dependencies": {
+    "@gsap/react": "^2.1.2",
+    "gsap": "^3.15.0",
     "lenis": "^1.1.18",
     "lucide-react": "^0.487.0",
     "motion": "^12.23.24",
@@ -25,6 +28,8 @@
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.4",
     "lighthouse": "^13.4.1",
+    "pdf-lib": "^1.17.1",
+    "playwright": "^1.65.1",
     "sharp": "^0.35.3",
     "tailwindcss": "^4.1.12",
     "typescript": "^5.6.3",

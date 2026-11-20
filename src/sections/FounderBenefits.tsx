@@ -11,7 +11,7 @@ import { SectionCTA } from "../components/SectionCTA";
  */
 const BENEFITS = [
   "Exclusive Commander badge",
-  "Priority access to AI Captain",
+  "Priority access to Captain Aezon",
   "Lifetime Founding Member status",
   "Early access to every new module",
   "Founder certificate",

@@ -2,6 +2,7 @@ import { useMemo, useRef, useState, type ReactNode } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Plane, Trophy, Gift, Check, X, Zap, ChevronRight, Sparkles, Lock } from "lucide-react";
 import { inView, rise } from "../lib/motion";
+import { SectionHead } from "../components/SectionHead";
 import { QUIZ_PASS_MARK as PASS } from "../lib/siteConfig";
 
 const ENDPOINT = import.meta.env.VITE_WAITLIST_ENDPOINT as string | undefined;
@@ -48,10 +49,8 @@ const PERKS: { label: string; cadet: string; commander: string; up: boolean }[] 
   { label: "Chapter MCQ sets", cadet: "2", commander: "4", up: true },
   { label: "Sample paper / subject", cadet: "1", commander: "1", up: false },
   { label: "RT scenarios", cadet: "5", commander: "10", up: true },
-  { label: "Flight plans", cadet: "5", commander: "10", up: true },
   { label: "Weight & balance", cadet: "5", commander: "10", up: true },
   { label: "METAR challenges", cadet: "5", commander: "10", up: true },
-  { label: "Compete matches", cadet: "5", commander: "10", up: true },
   { label: "Ask-Captain doubts", cadet: "5", commander: "10", up: true },
 ];
 
@@ -180,25 +179,14 @@ export function JourneySection() {
   const q = QUIZ[qi];
 
   return (
-    <section id="journey" className="section">
-      <motion.div variants={rise} initial="hidden" whileInView="show" viewport={inView} className="mx-auto max-w-2xl text-center">
-        <span className="eyebrow"><Zap size={14} /> Gamified journey</span>
-        <h2 className="mt-3 text-[clamp(2rem,4.5vw,3.2rem)] font-black leading-tight" style={{ color: "#0D1629" }}>
-          Climb from <span style={{ color: "#5BA4E8" }}>Cadet</span> to <span className="text-gradient-gold">Commander</span>
-        </h2>
-        <p className="mt-4 text-lg" style={{ color: "#40506e" }}>
-          DGCA prep is a grind — so every chapter, mock and flight plan earns XP and moves you up a rank.
-          Prove your basics: answer <b>{PASS} of {QUIZ.length}</b> aviation questions correctly to earn your{" "}
-          <b style={{ color: "#C9981F" }}>Commander Wings</b> — and every founder perk <b>doubles</b>.
-        </p>
-        <p className="mt-3 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[13px] font-bold"
-          style={{ background: "rgba(27,58,122,0.07)", color: "#1B3A7A" }}>
-          <Lock size={13} /> One attempt only — like the real checkride, there is no retake.
-        </p>
-      </motion.div>
-
+    <section id="journey" className="band pt-0">
+      <div className="wrap">
+      <SectionHead
+        title={<>Score {PASS} of {QUIZ.length}. <span style={{ color: "#6B7896" }}>Double your perks.</span></>}
+        lede={<>Ten basic aviation questions. Pass and you earn Commander Wings, and every founder perk of five becomes ten. One attempt only, like the real checkride.</>}
+      />
       <motion.div variants={rise} initial="hidden" whileInView="show" viewport={inView}
-        className="relative mx-auto mt-12 grid max-w-5xl gap-6 rounded-[2rem] p-4 sm:p-6 md:grid-cols-[280px_1fr]"
+        className="relative mt-10 grid gap-5 rounded-[24px] p-3 sm:p-5 md:grid-cols-[280px_1fr]"
         style={{ background: "linear-gradient(180deg,#EBF3FF,#DCEBFB)", border: "1px solid rgba(27,58,122,0.08)", boxShadow: "0 40px 90px -40px rgba(27,58,122,0.35)" }}>
         <Burst trigger={burst} />
 
@@ -316,6 +304,7 @@ export function JourneySection() {
           )}
         </div>
       </motion.div>
+      </div>
     </section>
   );
 }

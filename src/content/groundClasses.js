@@ -44,12 +44,12 @@ export const INCLUDED = [
     body: "Every chapter rewritten as notes you can revise from, plus a one-glance summary and a concept flowchart for the same topic.",
   },
   {
-    title: "Video lectures",
-    body: "Recorded lectures wired to the subject and chapter you are on, so the video and the notes cover the same ground.",
+    title: "Video lectures (coming soon)",
+    body: "Recorded lectures are being prepared, wired to the subject and chapter you are on, so the video and the notes will cover the same ground.",
   },
   {
     title: "Chapter question banks",
-    body: "10,000+ practice questions marked instantly, with the working shown on numericals rather than just a right-or-wrong.",
+    body: "15,000+ practice questions marked instantly, with the working shown on numericals rather than just a right-or-wrong.",
   },
   {
     title: "Timed DGCA mock papers",
@@ -57,11 +57,11 @@ export const INCLUDED = [
   },
   {
     title: "An AI instructor on call",
-    body: "The AI Captain answers from your own notes, cites the source, and says so plainly when the material does not cover it.",
+    body: "Captain Aezon answers from your own notes, cites the source, and says so plainly when the material does not cover it.",
   },
   {
     title: "The flying side too",
-    body: "Real-airway flight planning, weight & balance, live METAR/TAF decoding and a voice radio-telephony trainer that scores your phraseology.",
+    body: "Voice radio-telephony practice in real 3D airports, an A320 flight-deck trainer, weight & balance and live METAR/TAF decoding.",
   },
 ];
 
@@ -70,7 +70,7 @@ export const INCLUDED = [
 export const GC_FAQ = [
   {
     q: "Are these live DGCA ground classes?",
-    a: "No. EARNWINGS is a self-paced ground school app, not a live instructor-led batch. You study the notes, videos and question banks on your own schedule, and the AI Captain answers doubts from the course material at any time.",
+    a: "No. EARNWINGS is a self-paced ground school app, not a live instructor-led batch. You study the notes, videos and question banks on your own schedule, and Captain Aezon answers doubts from the course material at any time.",
   },
   {
     q: "Which DGCA subjects do the ground classes cover?",

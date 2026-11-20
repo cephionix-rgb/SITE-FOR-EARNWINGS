@@ -27,6 +27,8 @@ import { FEATURES } from "../lib/data";
 import { FAQ } from "../content/faq";
 import { prefersReducedMotion } from "../lib/scroll";
 import { inView, rise } from "../lib/motion";
+import { DownloadFreeButton } from "../components/DownloadBadges";
+import { HERO_FREE_LINE } from "../content/hero";
 import {
   AI_CAPTAIN_TRAINED,
   COMPANY_NAME,
@@ -132,7 +134,7 @@ function CountUp({ to, decorate }: { to: number; decorate?: (n: number) => strin
 const SCATTERED = [
   "Five dense subjects across a shelf of books",
   "A question bank PDF with no marking scheme",
-  "Flight planning practised on paper, never on real airways",
+  "Cockpit flows learned from a diagram, never with the switches",
   "RT rehearsed in a classroom, if at all",
   "Weather chased across three different websites",
   "Progress tracked in a notebook — or not at all",
@@ -141,7 +143,7 @@ const SCATTERED = [
 const COCKPIT = [
   `${siteStats.chapters} chapters mapped to the DGCA ground syllabus`,
   `${siteStats.questions.toLocaleString("en-IN")}+ questions marked the way the exam marks them`,
-  "Real ATS airways, NOTAM-aware, with a printable pilot brief",
+  "An A320 flight deck where every switch is live, with graded procedures",
   "Voice RT that scores your phraseology as you speak it",
   "Live METARs, TAFs and SIGMETs, decoded line by line",
   `XP, ${siteStats.ranks} ranks and a journey map that shows the climb`,
@@ -247,12 +249,12 @@ const LEGS: Leg[] = [
   {
     code: "03 · THE CAPTAIN",
     title: "Ground the AI in that material",
-    body: "The AI Captain answers from those notes and shows where the answer came from. Where the material doesn't cover something, it says so — it is built to refuse rather than to invent.",
+    body: "Captain Aezon answers from those notes and shows where the answer came from. Where the material doesn't cover something, it says so — it is built to refuse rather than to invent.",
   },
   {
     code: "04 · REAL DATA",
     title: "Wire in real aviation data",
-    body: "Real ATS airways, waypoints and aerodromes; live METARs, TAFs and SIGMETs; NOTAM-aware rerouting and published procedures. Plan Delhi to Chennai and you are planning it over airways that exist.",
+    body: "Real-scale 3D models of 8 airports (Delhi, Mumbai, Chennai, Bengaluru, Hyderabad, Jaipur, Chandigarh and Leh) with live traffic; live METARs, TAFs and SIGMETs; published charts for the radio scenarios. Practise a call to Delhi Ground and you are practising it at the real airport, at real scale.",
   },
   {
     code: "05 · THE EXAM",
@@ -412,12 +414,12 @@ const BELIEFS: { icon: LucideIcon; title: string; body: ReactNode }[] = [
   {
     icon: Compass,
     title: "Real, not simulated",
-    body: "Real ATS airways, real METARs, real DGCA marking. If it is in the app, it is grounded in genuine aviation data — never a plausible-looking mock-up.",
+    body: "Real airports, real METARs, real DGCA marking. If it is in the app, it is grounded in genuine aviation data — never a plausible-looking mock-up.",
   },
   {
     icon: ShieldCheck,
     title: "It never bluffs",
-    body: "The AI Captain answers from the course material and cites its source. Asked something the notes do not cover, it says so. A confident wrong answer is worse than no answer.",
+    body: "Captain Aezon answers from the course material and cites its source. Asked something the notes do not cover, it says so. A confident wrong answer is worse than no answer.",
   },
   {
     icon: Gavel,
@@ -427,7 +429,7 @@ const BELIEFS: { icon: LucideIcon; title: string; body: ReactNode }[] = [
   {
     icon: LayoutGrid,
     title: "One cockpit, not twelve tabs",
-    body: "Ground school, flight planning, radio telephony, weather, mock exams and progress belong on one panel. Switching apps mid-study is how momentum dies.",
+    body: "Ground school, radio telephony, the flight deck, weather, mock exams and progress belong on one panel. Switching apps mid-study is how momentum dies.",
   },
   {
     icon: Trophy,
@@ -495,7 +497,7 @@ export function AboutPage() {
             </h1>
             <p className="mx-auto mt-4 max-w-2xl text-lg leading-8" style={{ color: "#40506e" }}>
               EARNWINGS is the all-in-one training cockpit for the next generation of Indian aviators —
-              where ground school, flight planning, radio telephony and DGCA exam prep finally live in
+              where ground school, radio telephony, flight-deck practice and DGCA exam prep finally live in
               one place.
             </p>
             <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
@@ -519,13 +521,13 @@ export function AboutPage() {
           <Heading
             eyebrow="Why we built it"
             title="Becoming a pilot is hard enough without the tooling fighting you"
-            lede="Becoming a commercial pilot in India means juggling five dense DGCA subjects, thousands of practice questions, real flight planning over live airways, radio-telephony fluency and a mountain of paperwork — usually across a dozen disconnected books, apps and coaching centres."
+            lede="Becoming a commercial pilot in India means juggling five dense DGCA subjects, thousands of practice questions, radio-telephony fluency and a mountain of paperwork — usually across a dozen disconnected books, apps and coaching centres."
           />
           <ProblemAndFix />
           <p className="mx-auto mt-8 max-w-2xl text-center text-[16.5px] leading-8" style={{ color: BODY }}>
             We are building EARNWINGS so an aspiring pilot can open one app and{" "}
             <strong style={{ color: NAVY }}>learn, plan, practise and track the whole journey</strong> —
-            grounded in real aviation data, guided by an AI captain that never bluffs, and turned into a
+            grounded in real aviation data, guided by Captain Aezon, who never bluffs, and turned into a
             climb you actually want to make.
           </p>
         </section>
@@ -743,13 +745,10 @@ export function AboutPage() {
         >
           <h2 className="text-3xl font-black text-white">Be one of the first to earn your wings</h2>
           <p className="mx-auto mt-3 max-w-lg text-[15px] leading-7" style={{ color: "#93A9D6" }}>
-            We are onboarding in small batches before launch — the first {FOUNDER_SEATS} to join become
-            Founding Cadets, with early access and founder perks.
+            {HERO_FREE_LINE}
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-            <Link to="/#waitlist" className="btn-gold">
-              <Plane size={18} /> Reserve My Captain Seat
-            </Link>
+            <DownloadFreeButton where="about" />
             <Link
               to="/features"
               className="rounded-full px-5 py-3 text-sm font-bold text-white"
@@ -758,11 +757,11 @@ export function AboutPage() {
               Explore the cockpit
             </Link>
             <Link
-              to="/#play"
+              to="/live"
               className="rounded-full px-5 py-3 text-sm font-bold text-white"
               style={{ background: "rgba(255,255,255,0.1)" }}
             >
-              Try it live
+              Watch the live airports
             </Link>
           </div>
         </section>

@@ -7,108 +7,29 @@
 // on a web page would hand the course to anyone with a browser and a screenshot key.
 //
 // WHY BUYING HAPPENS HERE
-// An in-app purchase on iOS costs 30%. On a ₹34,999 Cadet Pro that is ₹10,500 — about
-// eighteen times that student's entire annual AI cost. The app carries no purchase UI
-// at all; it points here. The server-side flow (checkout token → hosted Razorpay page →
+// An in-app purchase on iOS costs 30%. On the ₹59,999 CPL Complete that would be
+// ₹18,000. The website takes payment by Razorpay at our own price. The server-side flow (checkout token → hosted Razorpay page →
 // signed webhook) is the same one the app used to drive, unchanged.
 import { useCallback, useEffect, useState } from "react";
 import { motion } from "motion/react";
-import { BookOpen, Check, Crown, Download, FileText, Loader2, LogOut, Radio, Rocket, Zap } from "lucide-react";
+import { BookOpen, Check, Crown, Download, FileText, Loader2, LogOut, Radio, Rocket, Smartphone, Users, X, Zap } from "lucide-react";
 
 import { PageShell } from "../components/PageShell";
 import {
-  ApiError, api, Boost, Invoice, Me, MyPlan, Offer, Plan, SubjectOption,
-  downloadInvoice, getToken, rupees, setToken,
+  ApiError, api, Boost, Invoice, Me, MyPlan, Offer, Plan, Providers, SubjectOption,
+  downloadInvoice, getToken, resumeSession, rupees, setSessionUser, signOut,
 } from "../lib/api";
+import { downloadHref } from "../lib/siteConfig";
+import { Link } from "../lib/router";
+import { AuthCard, Card, FinishSetup, needsSetup } from "./AccountAuth";
 
 const NAVY = "#1B3A7A";
 const MUTED = "#41527A";
 const GOLD = "#C9981F";
 
-function Card({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) {
-  return (
-    <div className="rounded-2xl p-5"
-      style={{ background: "#fff", boxShadow: "0 2px 14px rgba(27,58,122,0.10)", ...style }}>
-      {children}
-    </div>
-  );
-}
-
 // ─────────────────────────── sign in ───────────────────────────
-
-function SignIn({ onDone }: { onDone: (u: Me) => void }) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [sent, setSent] = useState(false);
-
-  async function submit(e: React.FormEvent) {
-    e.preventDefault();
-    setBusy(true); setError(null);
-    try {
-      const r = await api.login(email.trim(), password);
-      setToken(r.token);
-      onDone(r.user);
-    } catch (err) {
-      // The server's own words. "this account signs in with Google" is the single
-      // most useful thing it can say, and a generic message would send them to the
-      // reset flow to set a password for an account they can already reach.
-      setError(err instanceof ApiError ? err.message : "Could not sign in.");
-    } finally { setBusy(false); }
-  }
-
-  async function forgot() {
-    if (!email.trim()) { setError("Enter your email first."); return; }
-    setBusy(true); setError(null);
-    try { await api.forgot(email.trim()); setSent(true); }
-    catch { setSent(true); }   // the endpoint never says whether an account exists
-    finally { setBusy(false); }
-  }
-
-  return (
-    <Card style={{ maxWidth: 420, margin: "0 auto" }}>
-      <h2 className="text-xl font-bold" style={{ color: NAVY }}>Sign in</h2>
-      <p className="mt-1 text-sm" style={{ color: MUTED }}>
-        Use the same account as the EARNWINGS app.
-      </p>
-
-      {sent ? (
-        <div className="mt-5 rounded-xl p-4 text-sm" style={{ background: "#EBF3FF", color: NAVY }}>
-          If that email has an EARNWINGS account, a reset link is on its way.
-          <div className="mt-2 text-xs" style={{ color: MUTED }}>
-            A password can be reset once every 3 days.
-          </div>
-        </div>
-      ) : (
-        <form onSubmit={submit} className="mt-5 space-y-3">
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)}
-            placeholder="you@example.com" autoComplete="email" required
-            className="w-full rounded-xl px-3 py-2.5 text-sm"
-            style={{ border: "1px solid #D9E2F5", color: NAVY }} />
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password" autoComplete="current-password" required
-            className="w-full rounded-xl px-3 py-2.5 text-sm"
-            style={{ border: "1px solid #D9E2F5", color: NAVY }} />
-          {error && (
-            <div className="rounded-xl px-3 py-2 text-sm" style={{ background: "#FDF3E7", color: GOLD }}>
-              {error}
-            </div>
-          )}
-          <button type="submit" disabled={busy}
-            className="w-full rounded-xl py-3 text-sm font-bold text-white disabled:opacity-60"
-            style={{ background: NAVY, border: "none" }}>
-            {busy ? "Signing in…" : "Sign in"}
-          </button>
-          <button type="button" onClick={forgot} className="text-xs underline"
-            style={{ color: MUTED }}>
-            Forgot your password?
-          </button>
-        </form>
-      )}
-    </Card>
-  );
-}
+// Sign in, create an account and finish setting it up live in AccountAuth.tsx: the
+// same core endpoints, and the same rules, as the app's sign-up and onboarding.
 
 // ─────────────────────────── profile ───────────────────────────
 //
@@ -164,10 +85,26 @@ function Profile({ me, plan, onSignOut }: { me: Me; plan: MyPlan | null; onSignO
             : "—"} />
       </div>
 
-      <p className="mt-4 text-[11px]" style={{ color: "#8AA3D4", lineHeight: 1.6 }}>
-        Your notes, question bank, RT trainer and flight planning live in the EARNWINGS
-        app. This page is your account and your plan.
-      </p>
+      {me.guardian?.limited && (
+        <div className="mt-4 rounded-xl px-3.5 py-3 text-xs" style={{ background: "rgba(245,217,122,0.14)", color: "#F5D97A" }}>
+          Waiting for your parent or guardian to approve your account
+          {me.guardian.guardian_email ? <> ({me.guardian.guardian_email})</> : null}. Until they do, you can
+          study the free content in the app but can't buy a plan.
+        </div>
+      )}
+
+      <div className="mt-5 flex flex-col gap-3 rounded-2xl p-4 sm:flex-row sm:items-center"
+        style={{ background: "rgba(255,255,255,0.08)" }}>
+        <Smartphone size={22} style={{ color: "#F5D97A" }} className="shrink-0" />
+        <p className="flex-1 text-[12.5px]" style={{ color: "#C9D6EC", lineHeight: 1.6 }}>
+          Studying happens in the EARNWINGS app: notes, question bank, RT trainer and A320
+          trainer. Sign in there with this same account. This page is your account and your plan.
+        </p>
+        <a href={downloadHref()} target="_blank" rel="noopener noreferrer"
+          className="btn-gold shrink-0 text-[14px]" style={{ minHeight: 40, padding: "0.45rem 1rem", borderRadius: 11 }}>
+          Download the app
+        </a>
+      </div>
     </div>
   );
 }
@@ -331,12 +268,102 @@ function FuelCard({ plan }: { plan: MyPlan }) {
   );
 }
 
+/** The refund line under one invoice. Everything it says comes from core (`refund`):
+ *  the site never decides eligibility itself, it only shows the server's answer.
+ *  App Store and Google Play purchases are refunded by Apple or Google, so for those
+ *  this shows only a link to the store's own refund page: no button, no form. */
+function RefundLine({ inv, open, onOpen, onClose, onSent }: {
+  inv: Invoice; open: boolean; onOpen: () => void; onClose: () => void;
+  onSent: (message: string) => void;
+}) {
+  const r = inv.refund;
+  const [reason, setReason] = useState("");
+  const [sending, setSending] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+  if (!r) return null;
+
+  const store = r.rail === "apple" || r.rail === "google";
+  const storeLabel = r.rail === "apple" ? "Ask Apple for a refund" : "Ask Google Play for a refund";
+
+  async function send(e: React.FormEvent) {
+    e.preventDefault();
+    if (r?.purchase_id == null) return;
+    setSending(true); setErr(null);
+    try {
+      const res = await api.requestRefund(r.purchase_id, reason);
+      setReason("");
+      onSent(res.message);
+    } catch (x) {
+      setErr(x instanceof ApiError ? x.message : "Could not send that. Try again.");
+    } finally {
+      setSending(false);
+    }
+  }
+
+  return (
+    <div className="mt-2 border-t pt-2" style={{ borderColor: "#E4ECFB" }}>
+      {r.request && (
+        <div className="text-[11px]" style={{ color: NAVY, fontWeight: 700 }}>{r.request.status_label}</div>
+      )}
+      {r.why && <div className="text-[11px]" style={{ color: MUTED }}>{r.why}</div>}
+      {store ? (
+        r.store_refund_url && (
+          <a href={r.store_refund_url} target="_blank" rel="noopener noreferrer"
+            className="mt-1 inline-block text-[11px] underline" style={{ color: NAVY, fontWeight: 800 }}>
+            {storeLabel}
+          </a>
+        )
+      ) : r.eligible && r.purchase_id != null && !open ? (
+        <button onClick={onOpen}
+          className="mt-1.5 rounded-lg px-3 py-2 text-[11px]"
+          style={{ background: "#EDF2FB", color: NAVY, fontWeight: 800 }}>
+          Request a refund
+        </button>
+      ) : null}
+      {!store && r.eligible && open && (
+        <form onSubmit={send} className="mt-2 space-y-2">
+          {r.refund_inr > 0 && (
+            <div className="text-[11px]" style={{ color: MUTED }}>
+              If we approve it, {rupees(r.refund_inr)} goes back to the card, UPI or bank account you paid with.
+            </div>
+          )}
+          <label className="block text-xs font-bold" style={{ color: MUTED }}>Why are you asking? (optional)
+            <textarea className="mt-1 w-full rounded-xl border px-3 py-2.5 text-sm outline-none"
+              style={{ borderColor: "#D5E0F2", color: NAVY, minHeight: 60, background: "#fff" }}
+              value={reason} maxLength={500} onChange={(e) => setReason(e.target.value)} />
+          </label>
+          {err && <div className="text-xs" style={{ color: "#B3261E" }}>{err}</div>}
+          <div className="flex gap-2">
+            <button type="submit" disabled={sending}
+              className="rounded-lg px-3 py-2 text-[11px] text-white disabled:opacity-50"
+              style={{ background: NAVY, fontWeight: 800 }}>
+              {sending ? "Sending…" : "Send refund request"}
+            </button>
+            <button type="button" onClick={onClose} disabled={sending}
+              className="rounded-lg px-3 py-2 text-[11px]"
+              style={{ background: "#EDF2FB", color: NAVY, fontWeight: 800 }}>
+              Cancel
+            </button>
+          </div>
+        </form>
+      )}
+    </div>
+  );
+}
+
 function InvoicesCard() {
   const [items, setItems] = useState<Invoice[]>([]);
   const [busy, setBusy] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
+  // Which invoice has its refund form open (one at a time), and the server's reply
+  // after a request was sent.
+  const [refundOpen, setRefundOpen] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
 
-  useEffect(() => { api.invoices().then((r) => setItems(r.items)).catch(() => {}); }, []);
+  const load = useCallback(() => {
+    api.invoices().then((r) => setItems(r.items)).catch(() => {});
+  }, []);
+  useEffect(() => { load(); }, [load]);
 
   // Nothing bought yet is the normal state for most accounts, and an empty "Invoices"
   // heading with nothing under it looks like a fault. Render nothing instead.
@@ -349,29 +376,45 @@ function InvoicesCard() {
     finally { setBusy(null); }
   }
 
+  const anyRefund = items.some((i) => i.refund);
+
   return (
     <SectionCard icon={<FileText size={15} />} title="Invoices">
       <p className="mt-2.5 text-sm" style={{ color: MUTED }}>
         Every payment you have made. Each is also attached to the confirmation email we
         sent at the time.
+        {anyRefund && (
+          <> Website and Mac purchases can be refunded if you ask within 7 days of paying:
+            see our <Link to="/refunds" className="underline" style={{ color: NAVY, fontWeight: 700 }}>refund policy</Link>.</>
+        )}
       </p>
+      {notice && (
+        <div className="mt-3 rounded-xl p-4 text-sm" style={{ background: "#E9F7EF", color: NAVY }}>
+          <b>Request sent.</b> {notice}
+        </div>
+      )}
       <div className="mt-3 space-y-2">
         {items.map((inv) => (
-          <div key={inv.number} className="flex items-center gap-3 rounded-xl px-3.5 py-3"
-            style={{ background: "#F6F9FF" }}>
-            <div className="min-w-0 flex-1">
-              <div className="truncate text-sm" style={{ color: NAVY, fontWeight: 700 }}>{inv.item}</div>
-              <div className="text-[11px]" style={{ color: MUTED }}>
-                {inv.number} · {new Date(inv.issued_at).toLocaleDateString("en-IN",
-                  { day: "numeric", month: "short", year: "numeric" })}
+          <div key={inv.number} className="rounded-xl px-3.5 py-3" style={{ background: "#F6F9FF" }}>
+            <div className="flex items-center gap-3">
+              <div className="min-w-0 flex-1">
+                <div className="truncate text-sm" style={{ color: NAVY, fontWeight: 700 }}>{inv.item}</div>
+                <div className="text-[11px]" style={{ color: MUTED }}>
+                  {inv.number} · {new Date(inv.issued_at).toLocaleDateString("en-IN",
+                    { day: "numeric", month: "short", year: "numeric" })}
+                </div>
               </div>
+              <div className="text-sm" style={{ color: NAVY, fontWeight: 800 }}>{rupees(inv.total_inr)}</div>
+              <button onClick={() => get(inv)} disabled={busy === inv.number}
+                className="flex items-center gap-1.5 rounded-lg px-3 py-2 text-[11px] text-white disabled:opacity-50"
+                style={{ background: NAVY, fontWeight: 800 }}>
+                <Download size={11} /> {busy === inv.number ? "…" : "PDF"}
+              </button>
             </div>
-            <div className="text-sm" style={{ color: NAVY, fontWeight: 800 }}>{rupees(inv.total_inr)}</div>
-            <button onClick={() => get(inv)} disabled={busy === inv.number}
-              className="flex items-center gap-1.5 rounded-lg px-3 py-2 text-[11px] text-white disabled:opacity-50"
-              style={{ background: NAVY, fontWeight: 800 }}>
-              <Download size={11} /> {busy === inv.number ? "…" : "PDF"}
-            </button>
+            <RefundLine inv={inv} open={refundOpen === inv.number}
+              onOpen={() => { setRefundOpen(inv.number); setNotice(null); }}
+              onClose={() => setRefundOpen(null)}
+              onSent={(m) => { setRefundOpen(null); setNotice(m); load(); }} />
           </div>
         ))}
       </div>
@@ -436,7 +479,7 @@ function PlanCard({ p, onBuy, busy }: { p: Plan; onBuy: () => void; busy: boolea
 
         {/* EMI is a FLOOR, never a quote — principal ÷ tenure with no interest assumed,
             so whatever the student's bank offers can only meet or exceed it. */}
-        {p.emi_available && (
+        {p.emi_available && !p.enquiry_only && (
           <div className="mt-2 text-[11px]" style={{ color: MUTED }}>
             or from <b style={{ color: NAVY }}>{rupees(p.emi_from_inr)}/mo</b> on EMI
           </div>
@@ -461,10 +504,129 @@ function PlanCard({ p, onBuy, busy }: { p: Plan; onBuy: () => void; busy: boolea
         </ul>
 
         <button onClick={onBuy} disabled={busy || soon}
-          className="mt-auto w-full rounded-xl py-2.5 text-[13px] text-white transition disabled:opacity-55"
+          className="mt-auto inline-flex w-full items-center justify-center gap-1.5 rounded-xl py-2.5 text-[13px] text-white transition disabled:opacity-55"
           style={{ background: soon ? "#9AA9C4" : a, fontWeight: 800, marginTop: "1.25rem" }}>
-          {soon ? "Coming soon" : busy ? "Opening checkout…" : free ? "Start free" : `Buy ${p.name}`}
+          {soon ? "Coming soon"
+            : p.enquiry_only ? (<><Users size={14} /> Join the next batch</>)
+            : busy ? "Opening checkout…" : free ? "Start free" : `Buy ${p.name}`}
         </button>
+        {p.enquiry_only && (
+          <p className="mt-2 text-[10.5px] leading-snug" style={{ color: MUTED }}>
+            Seats in the next live batch are arranged with you directly. Nothing is charged here.
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+
+// ─────────────────────── join the next batch ───────────────────────
+// An ENQUIRY-ONLY plan (core setting "plans.enquiry_only") is shown but not sold: the
+// owner arranges live-batch seats with each student directly until a batch is opened.
+// This sends name, phone, preferred start month and a note; nothing is charged.
+
+function nextMonths(count = 12): { value: string; label: string }[] {
+  const now = new Date();
+  return Array.from({ length: count }, (_, i) => {
+    const d = new Date(now.getFullYear(), now.getMonth() + i, 1);
+    return { value: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`,
+             label: d.toLocaleDateString("en-IN", { month: "long", year: "numeric" }) };
+  });
+}
+
+function JoinBatch({ plan, me, onClose }: { plan: Plan; me: Me | null; onClose: () => void }) {
+  const [name, setName] = useState(me?.name || "");
+  const [phone, setPhone] = useState("");
+  const [month, setMonth] = useState("");
+  const [note, setNote] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+  const [done, setDone] = useState<string | null>(null);
+  const months = nextMonths();
+
+  useEffect(() => {
+    if (!me) return;
+    api.myEnquiries().then((r) => {
+      setName((n) => n || r.prefill.name);
+      setPhone((p) => p || r.prefill.phone);
+    }).catch(() => {});
+  }, [me]);
+
+  const ready = name.trim().length >= 2 && (phone.match(/\d/g) || []).length >= 8;
+
+  async function send(e: React.FormEvent) {
+    e.preventDefault();
+    if (!ready) return;
+    setBusy(true); setErr(null);
+    try {
+      const r = await api.createEnquiry({ plan_id: plan.id, name: name.trim(), phone: phone.trim(),
+                                          start_month: month || null, note: note.trim() || null });
+      setDone(r.message);
+    } catch (x) {
+      setErr(x instanceof ApiError ? x.message : "Could not send that. Try again.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  const input = "mt-1 w-full rounded-xl border px-3 py-2.5 text-sm outline-none";
+  const inputStyle = { borderColor: "#D5E0F2", color: NAVY } as const;
+  return (
+    <div role="dialog" aria-modal="true" aria-label="Join the next batch"
+      className="fixed inset-0 z-50 flex items-end justify-center p-4 sm:items-center"
+      style={{ background: "rgba(11,22,46,0.45)" }} onClick={onClose}>
+      <div className="w-full max-w-md rounded-2xl p-5" style={{ background: "#fff" }}
+        onClick={(e) => e.stopPropagation()}>
+        <div className="flex items-start gap-3">
+          <div className="flex-1">
+            <div className="text-lg font-extrabold" style={{ color: NAVY }}>Join the next batch</div>
+            <div className="mt-0.5 text-xs" style={{ color: MUTED }}>
+              {plan.name} · {rupees(plan.price_inr)}. Tell us how to reach you and we'll call you about the next batch.
+            </div>
+          </div>
+          <button onClick={onClose} aria-label="Close" className="rounded-full p-1.5" style={{ background: "#EDF2FB" }}>
+            <X size={14} style={{ color: NAVY }} />
+          </button>
+        </div>
+
+        {!me ? (
+          <p className="mt-4 text-sm" style={{ color: MUTED }}>
+            Sign in at the top of this page first, so we can attach your request to your account.
+          </p>
+        ) : done ? (
+          <div className="mt-4 rounded-xl p-4 text-sm" style={{ background: "#E9F7EF", color: NAVY }}>
+            <b>Request sent.</b> {done}
+          </div>
+        ) : (
+          <form onSubmit={send} className="mt-4 space-y-3">
+            <label className="block text-xs font-bold" style={{ color: MUTED }}>Your name
+              <input className={input} style={inputStyle} value={name} maxLength={120} autoComplete="name"
+                onChange={(e) => setName(e.target.value)} />
+            </label>
+            <label className="block text-xs font-bold" style={{ color: MUTED }}>Phone number
+              <input className={input} style={inputStyle} value={phone} maxLength={20} inputMode="tel"
+                autoComplete="tel" placeholder="+91 98765 43210" onChange={(e) => setPhone(e.target.value)} />
+            </label>
+            <label className="block text-xs font-bold" style={{ color: MUTED }}>When would you like to start?
+              <select className={input} style={inputStyle} value={month} onChange={(e) => setMonth(e.target.value)}>
+                <option value="">No preference</option>
+                {months.map((m) => <option key={m.value} value={m.value}>{m.label}</option>)}
+              </select>
+            </label>
+            <label className="block text-xs font-bold" style={{ color: MUTED }}>Anything we should know? (optional)
+              <textarea className={input} style={{ ...inputStyle, minHeight: 70 }} value={note} maxLength={500}
+                onChange={(e) => setNote(e.target.value)} />
+            </label>
+            {err && <div className="text-xs" style={{ color: GOLD }}>{err}</div>}
+            <button type="submit" disabled={!ready || busy}
+              className="w-full rounded-xl py-2.5 text-sm font-bold text-white disabled:opacity-55"
+              style={{ background: NAVY }}>
+              {busy ? "Sending…" : "Send my request"}
+            </button>
+            <p className="text-[11px]" style={{ color: MUTED }}>Nothing is charged and no payment details are asked for.</p>
+          </form>
+        )}
       </div>
     </div>
   );
@@ -482,11 +644,13 @@ export function AccountPage() {
   const [loading, setLoading] = useState(true);
   const [buying, setBuying] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [joinPlan, setJoinPlan] = useState<Plan | null>(null);
+  const [providers, setProviders] = useState<Providers | null>(null);
 
   const loadAccount = useCallback(async () => {
     try {
       const p = await api.myPlan();
-      setMe(p.user); setPlan(p);
+      setMe(p.user); setPlan(p); setSessionUser(p.user);
     } catch {
       // A stale token is cleared by the client; fall back to the sign-in form.
       setMe(null); setPlan(null);
@@ -497,11 +661,21 @@ export function AccountPage() {
     // The catalogue is public — it renders for a signed-out visitor too, which is the
     // point of a pricing page.
     api.plans().then((r) => { setPlans(r.plans); setBoosts(r.boosts); setOffer(r.offer ?? null); }).catch(() => {});
-    (getToken() ? loadAccount() : Promise.resolve()).finally(() => setLoading(false));
+    api.providers().then(setProviders).catch(() => setProviders(null));
+    // Slide the 7-day web session forward first, then read the account.
+    (getToken() ? resumeSession().then(() => (getToken() ? loadAccount() : undefined)) : Promise.resolve())
+      .finally(() => setLoading(false));
   }, [loadAccount]);
 
+  function doSignOut() {
+    signOut(); setMe(null); setPlan(null);
+  }
+
+  const settingUp = needsSetup(me);
+
   async function buy(kind: "plan" | "boost", id: string) {
-    if (!me) { setError("Sign in first — a plan is attached to your account."); return; }
+    if (!me) { setError("Sign in or create an account first. A plan is attached to your account."); return; }
+    if (settingUp) { setError("Finish setting up your account first (above)."); return; }
     setBuying(id); setError(null);
     try {
       const r = await api.checkout(kind, id);
@@ -516,18 +690,23 @@ export function AccountPage() {
   return (
     <PageShell
       eyebrow="Your account"
-      title={me ? `Welcome back, ${me.name.split(" ")[0]}` : "Sign in to EARNWINGS"}
+      title={me ? (settingUp ? "Almost there" : `Welcome back, ${(me.name || "").split(" ")[0] || "cadet"}`)
+        : "Sign in to EARNWINGS"}
       subtitle={me
-        ? "Your plan, your Fuel, and everything you can add to it."
-        : "Sign in to see your plan, or browse what's available below."}
+        ? (settingUp ? "A couple of quick steps and your account is ready."
+                     : "Your plan, your Fuel, and everything you can add to it.")
+        : "Sign in or create a free account to see your plan, or browse what's available below."}
     >
       <div className="space-y-8">
         {loading ? (
           <div className="flex justify-center py-10"><Loader2 className="animate-spin" style={{ color: NAVY }} /></div>
+        ) : me && settingUp ? (
+          <FinishSetup me={me} providers={providers} onSignOut={doSignOut}
+            onDone={(u) => { setMe(u); loadAccount(); }} />
         ) : me ? (
-          <Profile me={me} plan={plan} onSignOut={() => { setToken(null); setMe(null); setPlan(null); }} />
+          <Profile me={me} plan={plan} onSignOut={doSignOut} />
         ) : (
-          <SignIn onDone={(u) => { setMe(u); loadAccount(); }} />
+          <AuthCard providers={providers} onSession={(u) => { setMe(u); loadAccount(); }} />
         )}
 
         {/* What they bought and what powers it. Only for a paying account — there is
@@ -570,7 +749,8 @@ export function AccountPage() {
             {plans.map((p, i) => (
               <motion.div key={p.id} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }} transition={{ delay: i * 0.04 }}>
-                <PlanCard p={p} busy={buying === p.id} onBuy={() => buy("plan", p.id)} />
+                <PlanCard p={p} busy={buying === p.id}
+                  onBuy={() => (p.enquiry_only ? setJoinPlan(p) : buy("plan", p.id))} />
               </motion.div>
             ))}
           </div>
@@ -581,7 +761,7 @@ export function AccountPage() {
             <Zap size={20} style={{ color: GOLD }} /> Refuel
           </h2>
           <p className="mt-2 text-sm" style={{ color: MUTED }}>
-            Fuel powers Captain Aezon, flight plans, the planner and RT sessions. Quizzes,
+            Fuel powers Captain Aezon, the planner and RT sessions. Quizzes,
             mock tests and your notes never cost Fuel. Refuel packs never expire — and you
             can buy them on any plan, including the free one.
           </p>
@@ -605,6 +785,8 @@ export function AccountPage() {
             ))}
           </div>
         </section>
+
+        {joinPlan && <JoinBatch plan={joinPlan} me={me} onClose={() => setJoinPlan(null)} />}
 
         <div className="flex items-center gap-2 text-xs" style={{ color: MUTED }}>
           <Crown size={13} style={{ color: GOLD }} />

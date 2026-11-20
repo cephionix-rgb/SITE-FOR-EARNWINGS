@@ -1,7 +1,7 @@
 {
   "name": "EARNWINGS",
   "short_name": "EARNWINGS",
-  "description": "DGCA CPL and ATPL prep - flight planning, RT trainer, AI Captain and mock exams.",
+  "description": "DGCA CPL and ATPL prep - flight planning, RT trainer, Captain Aezon and mock exams.",
   "start_url": "/",
   "display": "standalone",
   "theme_color": "#EBF3FF",
