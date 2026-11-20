@@ -21,7 +21,7 @@ export const TERMS = [
     id: "acceptance",
     title: "1. Who we are and what you agree to",
     blocks: [
-      { t: "p", text: "EarnWings is built, owned and operated by **Cephionix Software Developer OPC Private Limited** (\"Cephionix\", \"we\", \"us\", \"our\"), a company registered in India with its registered office at 49 Gulmohar Complex, Kharar, Rupnagar, Punjab 140301, India. These terms apply when you use the EarnWings website, join the waitlist, or use the EarnWings app on the web, iPhone, iPad, Android, Mac or Windows (together, \"the Service\")." },
+      { t: "p", text: "EarnWings is built, owned and operated by **Cephionix Software Developer OPC Private Limited** (\"Cephionix\", \"we\", \"us\", \"our\"), a company registered in India (CIN U62013PB2026OPC068054) with its registered office at 49 Gulmohar Complex, Kharar, Rupnagar, Punjab 140301, India. These terms apply when you use the EarnWings website, join the waitlist, or use the EarnWings app on the web, iPhone, iPad, Android, Mac or Windows (together, \"the Service\")." },
       { t: "p", text: "By using the Service you agree to these terms and to our [Privacy Policy](/privacy). If you do not agree, please do not use the Service." },
     ],
   },
@@ -190,7 +190,7 @@ export const TERMS = [
     id: "law",
     title: "14. Governing law and disputes",
     blocks: [
-      { t: "p", text: "These terms are governed by the laws of India. Disputes will be heard by the courts at [TODO legal: city], unless the law gives you the right to use another forum." },
+      { t: "p", text: "These terms are governed by the laws of India. Disputes will be heard by the courts at Mohali (S.A.S. Nagar), Punjab, unless the law gives you the right to use another forum." },
     ],
   },
   {
