@@ -52,7 +52,7 @@ export function PrivacyPage() {
           Digital Personal Data Protection Act, 2023 (the DPDP Act), {COMPANY_NAME} is the{" "}
           <Strong>Data Fiduciary</Strong> for the personal data described here, and you are the
           Data Principal. This policy explains what we collect when you join the EARNWINGS
-          waitlist, use this website, or use the EARNWINGS app on iPhone, Android, Mac or the
+          waitlist, use this website, or use the EARNWINGS app on iPhone, iPad, Android, Mac, Windows or the
           web, why we collect it, and the choices you have.{" "}
           <Strong>We do not sell your personal data, show ads, or track you across other apps.</Strong>
         </p>
@@ -63,7 +63,8 @@ export function PrivacyPage() {
           <InfoCard icon={ClipboardList} title="Waitlist details" accent="gold">
             The name, email address, phone number and target exam you submit when joining
             the waitlist, the price you told us you would pay, and your quiz score if you
-            took the quiz.
+            took the quiz. If you ask to join a batch for a classroom plan, the phone number
+            you give so our team can call you back.
           </InfoCard>
           <InfoCard icon={UserRound} title="Account & profile" accent="sky">
             Your name, email and password (stored only as a secure hash), or your Google or
@@ -162,8 +163,8 @@ export function PrivacyPage() {
       <Section title="4. Payments" id="payments">
         <Bullets
           items={[
-            <>On this website and in the Mac app, payments are handled by <Strong>Razorpay</Strong>.</>,
-            <>On iPhone and iPad, payments are handled by <Strong>Apple In-App Purchase</Strong>.</>,
+            <>On this website and in the Windows app, payments are handled by <Strong>Razorpay</Strong>.</>,
+            <>On iPhone, iPad and Mac, payments are handled by <Strong>Apple In-App Purchase</Strong>.</>,
             <>On Android, payments are handled by <Strong>Google Play Billing</Strong>.</>,
             "We never see your card number. Apple and Google refund store purchases under their own rules.",
           ]}
